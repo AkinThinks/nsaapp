@@ -409,11 +409,19 @@ pre, code {
     padding-top: max(0px, env(safe-area-inset-top));
   }
   
-  /* Mobile navigation needs safe area */
+  /* Mobile navigation needs safe area - always fixed at bottom */
   .mobile-nav {
-    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
     padding-left: max(0.5rem, env(safe-area-inset-left));
     padding-right: max(0.5rem, env(safe-area-inset-right));
+    z-index: 60 !important;
+    will-change: transform;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
   }
   
   /* Fixed top elements need safe area */
@@ -442,7 +450,66 @@ pre, code {
 /* Fallback for browsers that don't support env() */
 @supports not (padding: max(0px)) {
   .mobile-nav {
-    padding-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    position: fixed !important;
+    bottom: 0 !important;
+    z-index: 60 !important;
+  }
+}
+
+/* Ensure mobile nav is always visible and fixed - CRITICAL for mobile UX */
+@media (max-width: 767px) {
+  .mobile-nav {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 60 !important;
+    transform: translateZ(0) !important;
+    -webkit-transform: translateZ(0) !important;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    will-change: transform;
+    /* Ensure it stays on top during scroll */
+    isolation: isolate;
+  }
+  
+  /* Prevent body scroll issues on mobile */
+  body {
+    padding-bottom: 0;
+  }
+  
+  /* Ensure main content has proper padding for fixed nav */
+  main.mobile-main-padding,
+  main {
+    padding-bottom: 80px !important; /* Space for 64px nav + safe area */
+  }
+  
+  /* Smooth scrolling with nav always visible */
+  html {
+    scroll-padding-bottom: 80px;
+  }
+  
+  /* Ensure pages have proper bottom spacing on mobile */
+  [class*="min-h-screen"][class*="pb-20"] {
+    padding-bottom: 80px !important;
+  }
+}
+
+/* Touch optimization for mobile nav buttons */
+@media (max-width: 767px) {
+  .mobile-nav a,
+  .mobile-nav button {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  
+  .mobile-nav a:active,
+  .mobile-nav button:active {
+    transform: scale(0.95);
+    transition: transform 0.1s ease;
   }
 }
 

@@ -36,19 +36,18 @@ export function MobileNav() {
 
   return (
     <>
-      {/* Bottom Navigation Bar */}
-      <motion.nav
-        initial={{ y: 100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-        className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-lg border-t border-border mobile-nav safe-bottom safe-left safe-right"
+      {/* Bottom Navigation Bar - Always Fixed at Bottom of Viewport */}
+      <nav
+        className="md:hidden fixed bottom-0 left-0 right-0 z-[60] bg-background/98 backdrop-blur-xl border-t border-border/50 shadow-[0_-2px_10px_rgba(0,0,0,0.05)] mobile-nav"
         style={{
-          paddingBottom: 'max(1rem, env(safe-area-inset-bottom))',
+          paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom))',
           paddingLeft: 'max(0.5rem, env(safe-area-inset-left))',
           paddingRight: 'max(0.5rem, env(safe-area-inset-right))',
         }}
+        role="navigation"
+        aria-label="Main navigation"
       >
-        <div className="flex items-center justify-around h-16 px-2">
+        <div className="flex items-center justify-around h-[64px] px-1">
           {mainNavItems.map((item) => {
             const isActive = pathname === item.href
             const Icon = item.icon
@@ -56,40 +55,41 @@ export function MobileNav() {
               <Link 
                 key={item.href} 
                 href={item.href} 
-                className="flex-1 touch-target"
+                className="flex-1 flex flex-col items-center justify-center min-h-[56px] min-w-[56px] rounded-lg transition-all duration-200 active:scale-95 touch-manipulation"
                 aria-label={item.label}
+                aria-current={isActive ? 'page' : undefined}
               >
-                <motion.div
-                  whileTap={{ scale: 0.9 }}
+                <div
                   className={`
-                    flex flex-col items-center justify-center py-2 rounded-xl transition-colors
-                    min-h-[44px] min-w-[44px]
+                    flex flex-col items-center justify-center gap-1 w-full h-full rounded-lg transition-colors duration-200
                     ${isActive 
-                      ? 'text-accent' 
-                      : 'text-muted-foreground'
+                      ? 'text-accent bg-accent/10' 
+                      : 'text-muted-foreground active:bg-muted/50'
                     }
                   `}
                 >
-                  <Icon className="w-5 h-5" aria-hidden="true" />
-                  <span className="text-xs font-medium mt-1">{item.label}</span>
-                </motion.div>
+                  <Icon className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
+                  <span className="text-[10px] font-medium leading-tight">{item.label}</span>
+                </div>
               </Link>
             )
           })}
           
           {/* Menu Button */}
-          <motion.button
-            whileTap={{ scale: 0.9 }}
+          <button
             onClick={() => setIsDrawerOpen(true)}
-            className="flex-1 flex flex-col items-center justify-center py-2 text-muted-foreground touch-target min-h-[44px] min-w-[44px]"
+            className="flex-1 flex flex-col items-center justify-center min-h-[56px] min-w-[56px] rounded-lg transition-all duration-200 active:scale-95 touch-manipulation"
             aria-label="Open menu"
             aria-expanded={isDrawerOpen}
+            aria-controls="mobile-drawer"
           >
-            <Menu className="w-5 h-5" aria-hidden="true" />
-            <span className="text-xs font-medium mt-1">Menu</span>
-          </motion.button>
+            <div className="flex flex-col items-center justify-center gap-1 w-full h-full rounded-lg text-muted-foreground active:bg-muted/50 transition-colors duration-200">
+              <Menu className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
+              <span className="text-[10px] font-medium leading-tight">Menu</span>
+            </div>
+          </button>
         </div>
-      </motion.nav>
+      </nav>
 
       {/* Drawer Overlay */}
       <AnimatePresence>
@@ -116,11 +116,12 @@ export function MobileNav() {
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className="md:hidden fixed top-8 right-0 bottom-0 z-[100] w-72 bg-background border-l border-border shadow-2xl safe-top safe-bottom safe-right overflow-hidden"
+              transition={{ type: 'spring', damping: 30, stiffness: 400 }}
+              id="mobile-drawer"
+              className="md:hidden fixed top-8 right-0 bottom-0 z-[70] w-72 bg-background border-l border-border shadow-2xl safe-top safe-bottom safe-right overflow-hidden"
               style={{
                 paddingTop: 'max(0px, env(safe-area-inset-top))',
-                paddingBottom: 'max(0px, env(safe-area-inset-bottom))',
+                paddingBottom: 'max(64px, calc(64px + env(safe-area-inset-bottom)))',
                 paddingRight: 'max(0px, env(safe-area-inset-right))',
               }}
               role="dialog"

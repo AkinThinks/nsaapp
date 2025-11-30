@@ -74,7 +74,7 @@ export default function RootLayout({
         <BrowserCompatProvider>
           <TopBanner />
           <Navigation />
-          <main className="pt-24 pb-20 md:pb-0 w-full overflow-x-hidden">
+          <main className="pt-24 pb-20 md:pb-0 w-full overflow-x-hidden mobile-main-padding">
             <PageTransition>
               {children}
             </PageTransition>
