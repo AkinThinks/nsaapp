@@ -192,6 +192,9 @@ export interface CombinedLocationData {
   visitor_advice?: string
   transit_advice?: string
   
+  // If you must go (combine location + state)
+  if_you_must_go?: string[]
+  
   // Welcome messages for context
   resident_welcome?: string
   visitor_welcome?: string
