@@ -109,9 +109,36 @@ export default function KidnappingGuidePage() {
   const [copied, setCopied] = useState(false)
 
   const handleCopyLink = () => {
-    navigator.clipboard.writeText(window.location.href)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(window.location.href).then(() => {
+          setCopied(true)
+          setTimeout(() => setCopied(false), 2000)
+        }).catch(() => {
+          // Fallback for older browsers
+          const textArea = document.createElement('textarea')
+          textArea.value = window.location.href
+          document.body.appendChild(textArea)
+          textArea.select()
+          document.execCommand('copy')
+          document.body.removeChild(textArea)
+          setCopied(true)
+          setTimeout(() => setCopied(false), 2000)
+        })
+      } else {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea')
+        textArea.value = window.location.href
+        document.body.appendChild(textArea)
+        textArea.select()
+        document.execCommand('copy')
+        document.body.removeChild(textArea)
+        setCopied(true)
+        setTimeout(() => setCopied(false), 2000)
+      }
+    } catch (error) {
+      console.error('Failed to copy link:', error)
+    }
   }
 
   return (
