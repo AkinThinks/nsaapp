@@ -63,7 +63,6 @@ const cityIcons: Record<string, any> = {
   // Benin City - Bronze heritage
   'benin-city': Landmark, // Benin Bronzes
   'benin': Landmark,
-  'ogba': Landmark,
   
   // Calabar - Coastal/Carnival
   'calabar': Waves, // Coastal city, Carnival
@@ -194,7 +193,6 @@ const cityIcons: Record<string, any> = {
   'kawo': Train,
   'rigasa': Train,
   'bukuru': Mountain,
-  'ogba': Landmark,
   'marina': Waves,
   'fagge': Wheat,
   'nassarawa': Wheat,
