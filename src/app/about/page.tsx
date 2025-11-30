@@ -11,6 +11,7 @@ import {
   Shield,
   Heart
 } from 'lucide-react'
+import { LinkedInIcon, InstagramIcon } from '@/components/ui/SocialIcons'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 
@@ -18,7 +19,7 @@ const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.1 },
+    transition: { staggerChildren: 0.05 },
   },
 }
 
@@ -27,7 +28,7 @@ const itemVariants = {
   visible: { 
     opacity: 1, 
     y: 0,
-    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] }
+    transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] }
   },
 }
 
@@ -38,8 +39,9 @@ export default function AboutPage() {
       <div className="bg-muted/50 border-b border-border">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
           >
             <div className="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-2xl mb-4">
               <Shield className="w-8 h-8 text-primary-foreground" />
@@ -154,7 +156,7 @@ export default function AboutPage() {
                 </div>
                 <div>
                   <h2 className="font-bold mb-2">Contact</h2>
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     <a 
                       href="mailto:akin@thinknodes.com"
                       className="flex items-center gap-2 text-accent hover:underline"
@@ -171,15 +173,26 @@ export default function AboutPage() {
                       <ExternalLink className="w-4 h-4" />
                       thinknodes.com
                     </a>
-                    <a 
-                      href="https://www.linkedin.com/in/akinthegreat/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-accent hover:underline"
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                      LinkedIn
-                    </a>
+                    <div className="flex items-center gap-3 pt-2">
+                      <a 
+                        href="https://www.linkedin.com/in/akinthegreat/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center w-10 h-10 rounded-lg bg-[#0077b5]/10 hover:bg-[#0077b5]/20 transition-colors group"
+                        aria-label="LinkedIn Profile"
+                      >
+                        <LinkedInIcon className="w-5 h-5 text-[#0077b5] group-hover:scale-110 transition-transform" />
+                      </a>
+                      <a 
+                        href="https://www.instagram.com/akin.builds?igsh=bzluOWs2cTE1bDVx&utm_source=qr"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-[#833AB4] via-[#FD1D1D] to-[#FCB045]/10 hover:from-[#833AB4]/20 hover:via-[#FD1D1D]/20 hover:to-[#FCB045]/20 transition-colors group"
+                        aria-label="Instagram Profile"
+                      >
+                        <InstagramIcon className="w-5 h-5 text-[#E4405F] group-hover:scale-110 transition-transform" />
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>

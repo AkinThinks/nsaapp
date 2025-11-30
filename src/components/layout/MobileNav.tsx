@@ -117,7 +117,7 @@ export function MobileNav() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className="md:hidden fixed top-8 right-0 bottom-0 z-[100] w-72 bg-background border-l border-border shadow-2xl safe-top safe-bottom safe-right"
+              className="md:hidden fixed top-8 right-0 bottom-0 z-[100] w-72 bg-background border-l border-border shadow-2xl safe-top safe-bottom safe-right overflow-hidden"
               style={{
                 paddingTop: 'max(0px, env(safe-area-inset-top))',
                 paddingBottom: 'max(0px, env(safe-area-inset-bottom))',
@@ -145,35 +145,41 @@ export function MobileNav() {
                 </div>
 
                 {/* Drawer Links */}
-                <div className="flex-1 p-4 space-y-2">
-                  {drawerLinks.map((link, index) => {
-                    const Icon = link.icon
-                    const isActive = pathname === link.href
-                    return (
-                      <motion.div
-                        key={link.href}
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.1 }}
-                      >
-                        <Link
-                          href={link.href}
-                          onClick={() => setIsDrawerOpen(false)}
-                          className={`
-                            flex items-center gap-3 px-4 py-3 rounded-xl transition-colors touch-target min-h-[44px]
-                            ${isActive 
-                              ? 'bg-muted text-foreground' 
-                              : 'text-muted-foreground hover:bg-muted hover:text-foreground'
-                            }
-                          `}
-                          aria-label={link.label}
+                <div className="flex-1 overflow-y-auto p-4 space-y-2">
+                  {drawerLinks && drawerLinks.length > 0 ? (
+                    drawerLinks.map((link, index) => {
+                      const Icon = link.icon
+                      const isActive = pathname === link.href
+                      return (
+                        <motion.div
+                          key={link.href}
+                          initial={{ opacity: 0, x: 20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: index * 0.05, duration: 0.2 }}
                         >
-                          <Icon className="w-5 h-5" aria-hidden="true" />
-                          <span className="font-medium">{link.label}</span>
-                        </Link>
-                      </motion.div>
-                    )
-                  })}
+                          <Link
+                            href={link.href}
+                            onClick={() => setIsDrawerOpen(false)}
+                            className={`
+                              flex items-center gap-3 px-4 py-3 rounded-xl transition-colors touch-target min-h-[44px]
+                              ${isActive 
+                                ? 'bg-muted text-foreground' 
+                                : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                              }
+                            `}
+                            aria-label={link.label}
+                          >
+                            <Icon className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
+                            <span className="font-medium">{link.label}</span>
+                          </Link>
+                        </motion.div>
+                      )
+                    })
+                  ) : (
+                    <div className="text-center text-muted-foreground py-8">
+                      <p>No menu items available</p>
+                    </div>
+                  )}
                 </div>
 
                 {/* Drawer Footer */}
