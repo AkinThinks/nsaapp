@@ -1385,7 +1385,7 @@ export default function AreaSafetyPage() {
                 <motion.div variants={itemVariants}>
                   <Card hover={false} className="p-6 bg-accent/10 border border-accent/20">
                     <p className="text-center font-medium text-foreground">
-                      Stay safe, stay connected. We're here to help you navigate daily life safely.
+                      Stay safe, stay connected. We&apos;re here to help you navigate daily life safely.
                     </p>
                   </Card>
                 </motion.div>

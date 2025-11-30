@@ -100,7 +100,7 @@ export function SearchBar({ large = false, onQueryChange }: { large?: boolean; o
     })
 
     setResults(searchResults.slice(0, 6))
-  }, [query])
+  }, [query, lgas, roads, states])
 
   const handleSelect = (result: SearchResult) => {
     router.push(result.href)

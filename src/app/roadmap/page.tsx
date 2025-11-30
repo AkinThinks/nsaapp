@@ -114,10 +114,10 @@ export default function RoadmapPage() {
               </div>
             </div>
             <h1 className="text-3xl md:text-5xl font-bold mb-6">
-              What We're Building
+              What We&apos;re Building
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground">
-              See what's available now and what's coming next to help keep you and your loved ones safe.
+              See what&apos;s available now and what&apos;s coming next to help keep you and your loved ones safe.
             </p>
           </motion.div>
         </div>
