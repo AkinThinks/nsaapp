@@ -171,6 +171,15 @@ export default function AboutPage() {
                       <ExternalLink className="w-4 h-4" />
                       thinknodes.com
                     </a>
+                    <a 
+                      href="https://www.linkedin.com/in/akinthegreat/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-accent hover:underline"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      LinkedIn
+                    </a>
                   </div>
                 </div>
               </div>

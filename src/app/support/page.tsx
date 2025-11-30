@@ -11,7 +11,8 @@ import {
   Shield,
   Code,
   PenTool,
-  Globe
+  Globe,
+  ExternalLink
 } from 'lucide-react'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
@@ -172,12 +173,24 @@ export default function SupportPage() {
               <p className="text-muted-foreground mb-4">
                 Reach out to us anytime. We would love to hear from you.
               </p>
-              <a 
-                href="mailto:akin@thinknodes.com"
-                className="text-accent font-medium hover:underline"
-              >
-                akin@thinknodes.com
-              </a>
+              <div className="space-y-2">
+                <a 
+                  href="mailto:akin@thinknodes.com"
+                  className="flex items-center justify-center gap-2 text-accent font-medium hover:underline"
+                >
+                  <Mail className="w-4 h-4" />
+                  akin@thinknodes.com
+                </a>
+                <a 
+                  href="https://www.linkedin.com/in/akinthegreat/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 text-accent font-medium hover:underline"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  LinkedIn
+                </a>
+              </div>
             </Card>
           </motion.div>
         </motion.div>
