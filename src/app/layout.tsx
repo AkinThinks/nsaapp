@@ -14,6 +14,11 @@ export const metadata: Metadata = {
   description: 'Verified security intelligence for Nigeria. Check road safety, emergency contacts, and stay informed about security situations across all 36 states.',
   keywords: 'Nigeria security, safety alerts, road safety Nigeria, emergency contacts Nigeria, kidnapping prevention, travel safety Nigeria',
   authors: [{ name: 'Thinknodes Innovation Lab' }],
+  icons: {
+    icon: '/images/logo.png',
+    shortcut: '/images/logo.png',
+    apple: '/images/logo.png',
+  },
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: '#ffffff' },
     { media: '(prefers-color-scheme: dark)', color: '#0a0a0a' },
@@ -26,15 +31,24 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Nigeria Security Alert',
     description: 'Verified intelligence. Community safety.',
-    url: 'https://alerts.thinknodes.com',
+    url: 'https://safe.thinknodes.com',
     siteName: 'Nigeria Security Alert',
     locale: 'en_NG',
     type: 'website',
+    images: [
+      {
+        url: 'https://safe.thinknodes.com/images/logo.png',
+        width: 1200,
+        height: 630,
+        alt: 'Nigeria Security Alert Logo',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Nigeria Security Alert',
     description: 'Verified intelligence. Community safety.',
+    images: ['https://safe.thinknodes.com/images/logo.png'],
   },
   other: {
     'mobile-web-app-capable': 'yes',
@@ -61,6 +75,22 @@ export default function RootLayout({
   return (
     <html lang="en" className="overflow-x-hidden">
       <head>
+        {/* Favicon */}
+        <link rel="icon" href="/images/logo.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/images/logo.png" />
+        <link rel="shortcut icon" href="/images/logo.png" type="image/png" />
+        
+        {/* Open Graph / Social Media Preview Images */}
+        <meta property="og:image" content="https://safe.thinknodes.com/images/logo.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content="Nigeria Security Alert Logo" />
+        <meta property="og:image:type" content="image/png" />
+        
+        {/* Twitter Card Image */}
+        <meta name="twitter:image" content="https://safe.thinknodes.com/images/logo.png" />
+        <meta name="twitter:image:alt" content="Nigeria Security Alert Logo" />
+        
         {/* Additional meta tags for mobile compatibility */}
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
