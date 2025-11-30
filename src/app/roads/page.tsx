@@ -27,6 +27,7 @@ import { RiskBadge } from '@/components/ui/RiskBadge'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { checkRouteSafety } from '@/lib/route-intelligence'
+import { analytics } from '@/lib/analytics'
 
 // Type for route result
 interface RouteSafetyResult {
@@ -117,9 +118,12 @@ export default function RoadsPage() {
     try {
       const result = await checkRouteSafety(fromState, toState)
       if (result && typeof result === 'object' && !('error' in result)) {
-        setRouteResult(result as RouteSafetyResult)
+        const routeResult = result as RouteSafetyResult
+        setRouteResult(routeResult)
         setShowResult(true)
         setRouteError(null)
+        // Track route check
+        analytics.trackRouteCheck(fromState, toState, routeResult.overallRisk)
       } else {
         // Show user-friendly error message
         const fromStateName = Array.isArray(states) 

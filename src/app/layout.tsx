@@ -5,6 +5,9 @@ import { MobileNav } from '@/components/layout/MobileNav'
 import { PageTransition } from '@/components/animations/PageTransition'
 import { TopBanner } from '@/components/layout/TopBanner'
 import { BrowserCompatProvider } from '@/components/providers/BrowserCompatProvider'
+import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/next'
+import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics'
 
 export const metadata: Metadata = {
   title: 'Nigeria Security Alert | Real-time Safety Intelligence',
@@ -65,6 +68,7 @@ export default function RootLayout({
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <meta name="HandheldFriendly" content="true" />
         <meta name="MobileOptimized" content="320" />
+        <GoogleAnalytics />
       </head>
       <body className="min-h-screen bg-background antialiased overflow-x-hidden w-full">
         <BrowserCompatProvider>
@@ -77,6 +81,8 @@ export default function RootLayout({
           </main>
           <MobileNav />
         </BrowserCompatProvider>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )

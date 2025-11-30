@@ -44,6 +44,7 @@ import {
   DetailedLocationIntelligence,
   TieredLocationIntelligence
 } from '@/lib/location-intelligence'
+import { analytics } from '@/lib/analytics'
 
 type UserContext = 'resident' | 'visitor' | 'transit'
 
@@ -286,6 +287,7 @@ export default function AreaSafetyPage() {
   const handleContextChange = (context: UserContext) => {
     setUserContext(context)
     localStorage.setItem(`context_${locationId}`, context)
+    analytics.trackContextChange(context, locationId)
   }
 
   useEffect(() => {
@@ -455,6 +457,18 @@ export default function AreaSafetyPage() {
     }
   }, [locationId])
 
+  // Track location view when location data is loaded
+  useEffect(() => {
+    if (location && locationData) {
+      analytics.trackLocationView(
+        location.id,
+        location.name,
+        location.risk_level,
+        userContext
+      )
+    }
+  }, [location, locationData, userContext])
+
   const handleShare = (platform: 'whatsapp' | 'twitter' | 'copy') => {
     if (!location || !locationData) return
 
@@ -472,6 +486,9 @@ export default function AreaSafetyPage() {
                    `Context: ${userContext === 'resident' ? 'Resident' : userContext === 'visitor' ? 'Traveler' : 'Transit'}\n\n` +
                    `Check full details on Nigeria Security Alert`
       const url = window.location.href
+      
+      // Track share event
+      analytics.trackShare(platform, location?.id)
       
       if (platform === 'whatsapp') {
         window.open(`https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`, '_blank')
@@ -1388,7 +1405,11 @@ export default function AreaSafetyPage() {
                   {/* National Emergency - Always show */}
                   <div>
                     <p className="text-xs text-muted-foreground mb-1">National Emergency</p>
-                    <a href="tel:112" className="text-lg font-semibold text-accent hover:underline">
+                    <a 
+                      href="tel:112" 
+                      onClick={() => analytics.trackEmergencyContact('national_emergency', location?.id)}
+                      className="text-lg font-semibold text-accent hover:underline"
+                    >
                       112
                     </a>
                   </div>
@@ -1396,7 +1417,8 @@ export default function AreaSafetyPage() {
                     <div>
                       <p className="text-xs text-muted-foreground mb-1">Police</p>
                       <a 
-                        href={`tel:${locationData.emergency_contacts.police.replace(/\s/g, '')}`} 
+                        href={`tel:${locationData.emergency_contacts.police.replace(/\s/g, '')}`}
+                        onClick={() => analytics.trackEmergencyContact('police', location?.id)}
                         className="text-lg font-semibold text-accent hover:underline"
                       >
                         {locationData.emergency_contacts.police}
@@ -1407,7 +1429,8 @@ export default function AreaSafetyPage() {
                     <div>
                       <p className="text-xs text-muted-foreground mb-1">Emergency</p>
                       <a 
-                        href={`tel:${locationData.emergency_contacts.emergency.replace(/\s/g, '')}`} 
+                        href={`tel:${locationData.emergency_contacts.emergency.replace(/\s/g, '')}`}
+                        onClick={() => analytics.trackEmergencyContact('emergency', location?.id)}
                         className="text-lg font-semibold text-accent hover:underline"
                       >
                         {locationData.emergency_contacts.emergency}
@@ -1421,7 +1444,8 @@ export default function AreaSafetyPage() {
                       <div key={key}>
                         <p className="text-xs text-muted-foreground mb-1 capitalize">{key.replace(/_/g, ' ')}</p>
                         <a 
-                          href={`tel:${value.replace(/\s/g, '')}`} 
+                          href={`tel:${value.replace(/\s/g, '')}`}
+                          onClick={() => analytics.trackEmergencyContact(key, location?.id)}
                           className="text-lg font-semibold text-accent hover:underline"
                         >
                           {value}

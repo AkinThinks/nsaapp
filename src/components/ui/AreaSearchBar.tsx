@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Search, MapPin, ChevronRight } from 'lucide-react'
 import { RiskBadge } from './RiskBadge'
+import { analytics } from '@/lib/analytics'
 
 interface Location {
   id: string
@@ -200,7 +201,13 @@ export function AreaSearchBar({
       return (riskOrder[aRisk] || 3) - (riskOrder[bRisk] || 3)
     })
 
-    setResults(searchResults.slice(0, 8))
+    const finalResults = searchResults.slice(0, 8)
+    setResults(finalResults)
+    
+    // Track search event
+    if (finalResults.length > 0 && query.length >= 2) {
+      analytics.trackLocationSearch(query, finalResults.length)
+    }
   }, [query, locations, loading, stateMap])
 
   const handleSelect = (result: SearchResult) => {
