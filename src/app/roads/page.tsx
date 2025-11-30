@@ -29,16 +29,19 @@ import { Button } from '@/components/ui/Button'
 import { checkRouteSafety } from '@/lib/route-intelligence'
 import { analytics } from '@/lib/analytics'
 
+// Risk level type
+type RiskLevel = 'EXTREME' | 'VERY HIGH' | 'HIGH' | 'MODERATE' | 'LOW'
+
 // Type for route result
 interface RouteSafetyResult {
   route: string[]
   routeDisplay: string
-  overallRisk: string
+  overallRisk: RiskLevel
   riskScore: number
   confidence: string
-  stateBreakdown: Array<{ id: string; name: string; stateId: string; riskLevel: string }>
-  highestRiskState: { id: string; name: string; riskLevel: string } | null
-  dangerousRoads: Array<{ name: string; riskLevel: string; dangerZones?: string[]; recommendation?: string }>
+  stateBreakdown: Array<{ id: string; name: string; stateId: string; riskLevel: RiskLevel }>
+  highestRiskState: { id: string; name: string; riskLevel: RiskLevel } | null
+  dangerousRoads: Array<{ name: string; riskLevel: RiskLevel; dangerZones?: string[]; recommendation?: string }>
   recommendations: {
     primary: string
     alternatives: string[]
@@ -444,7 +447,7 @@ export default function RoadsPage() {
                               <span className="text-muted-foreground">•</span>
                               <span className="font-medium">{state.name || state.id}</span>
                               {state.riskLevel && (
-                                <RiskBadge level={state.riskLevel} size="sm" />
+                                <RiskBadge level={state.riskLevel as RiskLevel} size="sm" />
                               )}
                               {isHighestRisk && (
                                 <span className="text-xs text-muted-foreground italic">← Highest risk</span>
@@ -473,7 +476,7 @@ export default function RoadsPage() {
                             <div className="flex items-center gap-3 mb-2">
                               <span className="font-medium">{road.name}</span>
                               {road.riskLevel && (
-                                <RiskBadge level={road.riskLevel} size="sm" />
+                                <RiskBadge level={road.riskLevel as RiskLevel} size="sm" />
                               )}
                             </div>
                             {Array.isArray(road.dangerZones) && road.dangerZones.length > 0 && (
@@ -611,7 +614,7 @@ export default function RoadsPage() {
                                 <div className="flex items-center gap-3 mb-1 flex-wrap">
                                   <span className="font-medium">{road.name || 'Unknown Road'}</span>
                                   {road.riskLevel && (
-                                    <RiskBadge level={road.riskLevel} size="sm" />
+                                    <RiskBadge level={road.riskLevel as RiskLevel} size="sm" />
                                   )}
                                 </div>
                                 {Array.isArray(road.states) && road.states.length > 0 && (
