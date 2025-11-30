@@ -79,8 +79,9 @@ export default function RootLayout({
               {children}
             </PageTransition>
           </main>
-          <MobileNav />
         </BrowserCompatProvider>
+        {/* MobileNav must be outside any transformed containers to maintain fixed positioning */}
+        <MobileNav />
         <Analytics />
         <SpeedInsights />
       </body>

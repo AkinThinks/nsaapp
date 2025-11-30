@@ -105,14 +105,10 @@ export function MobileNav() {
                   setIsDrawerOpen(false)
                 }
               }}
-              className="md:hidden fixed inset-0 z-[65] bg-black/60 backdrop-blur-sm"
+              className="md:hidden fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm"
               role="button"
               tabIndex={0}
               aria-label="Close drawer"
-              onClick={(e) => {
-                e.stopPropagation()
-                setIsDrawerOpen(false)
-              }}
             />
             
             {/* Drawer */}
@@ -122,69 +118,79 @@ export function MobileNav() {
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 30, stiffness: 400 }}
               id="mobile-drawer"
-              className="md:hidden fixed top-0 right-0 bottom-0 z-[70] w-80 max-w-[85vw] bg-background border-l border-border shadow-2xl"
+              className="md:hidden fixed top-8 right-0 bottom-0 z-[70] w-72 bg-background border-l border-border shadow-2xl safe-top safe-bottom safe-right overflow-hidden"
               style={{
-                paddingTop: 'max(2rem, calc(2rem + env(safe-area-inset-top)))',
+                paddingTop: 'max(0px, env(safe-area-inset-top))',
                 paddingBottom: 'max(64px, calc(64px + env(safe-area-inset-bottom)))',
-                paddingLeft: 'max(0px, env(safe-area-inset-left))',
                 paddingRight: 'max(0px, env(safe-area-inset-right))',
               }}
               role="dialog"
               aria-modal="true"
               aria-label="Navigation menu"
             >
-              <div className="flex flex-col h-full overflow-hidden">
+              <div className="flex flex-col h-full">
                 {/* Drawer Header */}
-                <div className="flex items-center justify-between p-4 border-b border-border flex-shrink-0">
-                  <div className="flex items-center gap-3">
+                <div className="flex items-center justify-between p-4 border-b border-border">
+                  <div className="flex items-center gap-2">
                     <Logo size="md" variant="default" />
-                    <span className="font-bold text-lg">Menu</span>
+                    <span className="font-bold">Menu</span>
                   </div>
-                  <button
+                  <motion.button
+                    whileTap={{ scale: 0.9 }}
                     onClick={() => setIsDrawerOpen(false)}
-                    className="p-2 rounded-lg hover:bg-muted active:bg-muted/80 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+                    className="p-2 rounded-lg hover:bg-muted transition-colors touch-target min-h-[44px] min-w-[44px]"
                     aria-label="Close menu"
                   >
-                    <X className="w-6 h-6" aria-hidden="true" />
-                  </button>
+                    <X className="w-5 h-5" aria-hidden="true" />
+                  </motion.button>
                 </div>
 
-                {/* Drawer Links - Scrollable Content */}
-                <div className="flex-1 overflow-y-auto overscroll-contain p-4 space-y-2">
+                {/* Drawer Links */}
+                <div className="flex-1 overflow-y-auto p-4 space-y-2" style={{ minHeight: 0 }}>
                   {Array.isArray(drawerLinks) && drawerLinks.length > 0 ? (
                     drawerLinks.map((link, index) => {
-                      if (!link || !link.href || !link.label) return null
+                      if (!link || typeof link !== 'object' || !link.href || !link.label) {
+                        return null
+                      }
                       const Icon = link.icon
                       const isActive = pathname === link.href
                       return (
-                        <Link
-                          key={link.href}
-                          href={link.href}
-                          onClick={() => setIsDrawerOpen(false)}
-                          className={`
-                            flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-200 min-h-[52px]
-                            ${isActive 
-                              ? 'bg-accent/10 text-accent font-semibold border border-accent/20' 
-                              : 'text-foreground hover:bg-muted/80 active:bg-muted'
-                            }
-                          `}
-                          aria-label={link.label}
-                          aria-current={isActive ? 'page' : undefined}
+                        <motion.div
+                          key={`drawer-link-${link.href}-${index}`}
+                          initial={{ opacity: 0, x: 20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: 20 }}
+                          transition={{ delay: index * 0.05, duration: 0.2 }}
+                          style={{ display: 'block', visibility: 'visible' }}
                         >
-                          {Icon && <Icon className="w-5 h-5 flex-shrink-0" aria-hidden="true" />}
-                          <span className="font-medium text-base">{link.label}</span>
-                        </Link>
+                          <Link
+                            href={link.href}
+                            onClick={() => setIsDrawerOpen(false)}
+                            className={`
+                              flex items-center gap-3 px-4 py-3 rounded-xl transition-colors touch-target min-h-[44px]
+                              ${isActive 
+                                ? 'bg-muted text-foreground' 
+                                : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                              }
+                            `}
+                            aria-label={link.label}
+                            style={{ display: 'flex', visibility: 'visible', opacity: 1 }}
+                          >
+                            {Icon && <Icon className="w-5 h-5 flex-shrink-0" aria-hidden="true" style={{ display: 'block', visibility: 'visible' }} />}
+                            <span className="font-medium" style={{ display: 'block', visibility: 'visible' }}>{link.label}</span>
+                          </Link>
+                        </motion.div>
                       )
                     })
                   ) : (
-                    <div className="text-center text-muted-foreground py-8">
-                      <p className="text-sm">No menu items available</p>
+                    <div className="text-center text-muted-foreground py-8" style={{ display: 'block', visibility: 'visible' }}>
+                      <p>No menu items available</p>
                     </div>
                   )}
                 </div>
 
                 {/* Drawer Footer */}
-                <div className="p-4 border-t border-border flex-shrink-0 bg-muted/30">
+                <div className="p-4 border-t border-border">
                   <p className="text-xs text-muted-foreground text-center">
                     A Thinknodes Innovation Lab Project
                   </p>
