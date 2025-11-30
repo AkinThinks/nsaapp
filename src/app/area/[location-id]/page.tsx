@@ -416,7 +416,7 @@ export default function AreaSafetyPage() {
               type: foundLocation.type,
               risk_level: foundLocation.risk_level,
               badge: `${badgeSystem[foundLocation.risk_level as keyof typeof badgeSystem]?.emoji || '⚠️'} ${badgeSystem[foundLocation.risk_level as keyof typeof badgeSystem]?.text || 'Unknown'}`,
-              summary: template.summary,
+              summary: template.summary || `This area has ${foundLocation.risk_level.toLowerCase()} security risks. Standard precautions advised.`,
               key_threats: template.key_threats || [],
               safer_zones: template.safer_zones || [],
               danger_zones: template.danger_zones || [],
