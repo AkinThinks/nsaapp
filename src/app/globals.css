@@ -480,6 +480,21 @@ pre, code {
   html {
     scroll-behavior: smooth;
   }
+  
+  /* Prevent layout shifts when drawer opens */
+  body.drawer-open {
+    position: fixed;
+    width: 100%;
+    overflow: hidden;
+  }
+  
+  /* Optimize drawer animations */
+  [role="dialog"] {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-perspective: 1000px;
+    perspective: 1000px;
+  }
 }
 
 /* ============================================

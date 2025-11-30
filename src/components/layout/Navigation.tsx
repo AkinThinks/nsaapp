@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -27,6 +27,36 @@ const mobileNavLinks = [
 export function Navigation() {
   const pathname = usePathname()
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+
+  // Lock body scroll when drawer is open for smooth UX
+  useEffect(() => {
+    if (isDrawerOpen) {
+      // Save current scroll position
+      const scrollY = window.scrollY
+      // Lock body scroll
+      const originalStyle = {
+        position: document.body.style.position,
+        top: document.body.style.top,
+        width: document.body.style.width,
+        overflow: document.body.style.overflow,
+      }
+      
+      document.body.style.position = 'fixed'
+      document.body.style.top = `-${scrollY}px`
+      document.body.style.width = '100%'
+      document.body.style.overflow = 'hidden'
+      
+      return () => {
+        // Restore original styles
+        document.body.style.position = originalStyle.position
+        document.body.style.top = originalStyle.top
+        document.body.style.width = originalStyle.width
+        document.body.style.overflow = originalStyle.overflow
+        // Restore scroll position
+        window.scrollTo(0, scrollY)
+      }
+    }
+  }, [isDrawerOpen])
 
   return (
     <>
@@ -209,37 +239,53 @@ export function Navigation() {
     </motion.header>
 
     {/* Mobile Drawer */}
-    <AnimatePresence>
+    <AnimatePresence mode="wait">
       {isDrawerOpen && (
         <>
+          {/* Backdrop - optimized for performance */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
             onClick={() => setIsDrawerOpen(false)}
             onKeyDown={(e) => {
               if (e.key === 'Escape') {
                 setIsDrawerOpen(false)
               }
             }}
-            className="md:hidden fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm"
+            className="md:hidden fixed inset-0 z-[100] bg-black/60"
+            style={{
+              WebkitBackfaceVisibility: 'hidden',
+              backfaceVisibility: 'hidden',
+              willChange: 'opacity',
+            }}
             role="button"
             tabIndex={0}
             aria-label="Close drawer"
           />
           
-          {/* Drawer */}
+          {/* Drawer - optimized animation with GPU acceleration */}
           <motion.div
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
-            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="md:hidden fixed top-8 right-0 bottom-0 z-[100] w-80 bg-background border-l border-border shadow-2xl safe-top safe-bottom safe-right"
+            transition={{ 
+              type: 'spring', 
+              damping: 30, 
+              stiffness: 400,
+              mass: 0.5
+            }}
+            className="md:hidden fixed top-0 right-0 bottom-0 z-[101] w-80 max-w-[85vw] bg-background border-l border-border shadow-2xl safe-top safe-bottom safe-right"
             style={{
               paddingTop: 'max(0px, env(safe-area-inset-top))',
               paddingBottom: 'max(0px, env(safe-area-inset-bottom))',
               paddingRight: 'max(0px, env(safe-area-inset-right))',
               top: 'calc(2rem + 4rem + max(0px, env(safe-area-inset-top)))',
+              WebkitBackfaceVisibility: 'hidden',
+              backfaceVisibility: 'hidden',
+              willChange: 'transform',
+              transform: 'translateZ(0)', // GPU acceleration
             }}
             role="dialog"
             aria-modal="true"
@@ -262,7 +308,7 @@ export function Navigation() {
                 </motion.button>
               </div>
 
-              {/* Drawer Links */}
+              {/* Drawer Links - optimized stagger animation */}
               <div className="flex-1 p-4 space-y-2 overflow-y-auto">
                 {mobileNavLinks.map((link, index) => {
                   const Icon = link.icon
@@ -272,7 +318,11 @@ export function Navigation() {
                       key={link.href}
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.05 }}
+                      transition={{ 
+                        delay: index * 0.03, // Faster stagger for snappier feel
+                        duration: 0.2,
+                        ease: [0.4, 0, 0.2, 1]
+                      }}
                     >
                       <Link
                         href={link.href}
@@ -281,12 +331,12 @@ export function Navigation() {
                           flex items-center gap-3 px-4 py-3 rounded-xl transition-colors touch-target min-h-[44px]
                           ${isActive 
                             ? 'bg-muted text-foreground' 
-                            : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                            : 'text-muted-foreground hover:bg-muted hover:text-foreground active:bg-muted/80'
                           }
                         `}
                         aria-label={link.label}
                       >
-                        <Icon className="w-5 h-5" aria-hidden="true" />
+                        <Icon className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
                         <span className="font-medium">{link.label}</span>
                       </Link>
                     </motion.div>
