@@ -146,6 +146,11 @@ export function SearchBar({ large = false, onQueryChange }: { large?: boolean; o
             setQuery(e.target.value)
             onQueryChange?.(e.target.value)
           }}
+          style={{ fontSize: '16px' }} // Prevents zoom on iOS Safari
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
+          spellCheck="false"
           onFocus={() => setIsFocused(true)}
           onBlur={() => setTimeout(() => setIsFocused(false), 200)}
           placeholder={placeholders[placeholderIndex]}
@@ -164,7 +169,7 @@ export function SearchBar({ large = false, onQueryChange }: { large?: boolean; o
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="absolute top-full left-0 right-0 mt-2 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border border-border/50 rounded-2xl shadow-2xl overflow-hidden z-40"
+            className="absolute top-full left-0 right-0 mt-2 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border border-border/50 rounded-2xl shadow-2xl overflow-hidden z-50 max-h-[60vh] overflow-y-auto"
           >
             {results.map((result, index) => (
               <motion.button
@@ -173,7 +178,14 @@ export function SearchBar({ large = false, onQueryChange }: { large?: boolean; o
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.03 }}
                 onClick={() => handleSelect(result)}
-                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-muted transition-colors text-left border-b border-border last:border-b-0"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    handleSelect(result)
+                  }
+                }}
+                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-muted transition-colors text-left border-b border-border last:border-b-0 touch-target min-h-[44px] focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+                aria-label={`Select ${result.name}${result.parent ? ` in ${result.parent}` : ''}`}
               >
                 {result.type === 'road' ? (
                   <Route className="w-4 h-4 text-muted-foreground flex-shrink-0" />

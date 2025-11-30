@@ -1,9 +1,9 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { AlertOctagon, AlertTriangle, AlertCircle, ShieldCheck } from 'lucide-react'
+import { AlertOctagon, AlertTriangle, AlertCircle, ShieldCheck, CheckCircle } from 'lucide-react'
 
-type RiskLevel = 'EXTREME' | 'VERY HIGH' | 'HIGH' | 'MODERATE'
+type RiskLevel = 'EXTREME' | 'VERY HIGH' | 'HIGH' | 'MODERATE' | 'LOW'
 
 interface RiskBadgeProps {
   level: RiskLevel
@@ -36,6 +36,12 @@ const riskConfig = {
     icon: ShieldCheck,
     pulse: false,
   },
+  'LOW': {
+    bg: 'bg-green-600',
+    text: 'text-white',
+    icon: CheckCircle,
+    pulse: false,
+  },
 }
 
 const sizes = {
@@ -51,7 +57,7 @@ const iconSizes = {
 }
 
 export function RiskBadge({ level, size = 'md', showIcon = true }: RiskBadgeProps) {
-  const config = riskConfig[level]
+  const config = riskConfig[level] || riskConfig['MODERATE'] // Fallback to MODERATE if level not found
   const Icon = config.icon
 
   return (

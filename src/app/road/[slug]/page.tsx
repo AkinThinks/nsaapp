@@ -91,7 +91,7 @@ export default function RoadDetailPage() {
   ]
 
   return (
-    <div className="min-h-screen pb-20">
+    <div className="min-h-screen pb-20 w-full overflow-x-hidden">
       {/* Header */}
       <div className={`border-b ${
         roadData.riskLevel === 'EXTREME' ? 'bg-risk-extreme-bg' :

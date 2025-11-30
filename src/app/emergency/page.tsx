@@ -43,7 +43,7 @@ export default function EmergencyPage() {
   }, [emergency])
 
   return (
-    <div className="min-h-screen pb-20">
+    <div className="min-h-screen pb-20 w-full overflow-x-hidden">
       {/* Hero - 112 */}
       <div className="bg-risk-extreme-bg border-b border-risk-extreme/20">
         <div className="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 py-10 text-center">

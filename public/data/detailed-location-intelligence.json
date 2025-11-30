@@ -1,0 +1,1392 @@
+{
+  "meta": {
+    "version": "8.0",
+    "last_updated": "2025-11-29",
+    "description": "Detailed safety intelligence for all risk tiers"
+  },
+  "extreme_states": {
+    "borno": {
+      "name": "Borno State",
+      "risk_level": "EXTREME",
+      "badge": "\u26d4 Do Not Travel",
+      "summary": "Active insurgency zone. ISWAP and Boko Haram operate in most areas.",
+      "key_threats": [
+        "ISWAP militants",
+        "Boko Haram (JAS faction)",
+        "IED attacks on roads",
+        "Suicide bombings in crowded areas",
+        "Military crossfire",
+        "Mass kidnapping"
+      ],
+      "safer_zones": [
+        "Maiduguri city center (relatively safer)",
+        "Areas near military bases",
+        "GRA Maiduguri"
+      ],
+      "danger_zones": [
+        "All areas north of Maiduguri",
+        "Sambisa Forest axis",
+        "Lake Chad basin",
+        "Gwoza, Bama, Dikwa LGAs",
+        "Any rural road"
+      ],
+      "travel_windows": {
+        "safest": "7:00 AM - 10:00 AM",
+        "avoid": "After 4:00 PM",
+        "note": "Military escorts sometimes available for convoys"
+      },
+      "if_you_must_go": [
+        "Register with state security services",
+        "Travel in military-escorted convoys only",
+        "Inform family of exact route and timing",
+        "Carry fully charged phone + power bank",
+        "Have emergency contacts saved offline",
+        "Carry cash (ATMs may not work)"
+      ],
+      "residents_tips": [
+        "Know your nearest military checkpoint",
+        "Join neighborhood security WhatsApp group",
+        "Store emergency water and food",
+        "Have evacuation bag ready",
+        "Know multiple escape routes from your area",
+        "Keep documents in waterproof bag"
+      ],
+      "documents_needed": [
+        "Valid ID (National ID, Passport, or Driver's License)",
+        "Travel permit (if available)",
+        "Vehicle papers",
+        "Be ready for multiple checkpoints"
+      ],
+      "checkpoints": {
+        "what_to_expect": "Multiple military checkpoints. Stop completely. Hands visible. Be patient.",
+        "documents": "Have ID ready. Don't reach into bags suddenly.",
+        "behavior": "Be calm, respectful. Answer questions directly."
+      },
+      "if_stranded": [
+        "Go to nearest military post",
+        "Call NEMA: 0800CALLNEMA",
+        "Call Red Cross: 09-4613281",
+        "Shelter in place if gunfire - lie flat, away from windows"
+      ],
+      "medical_facilities": [
+        {
+          "name": "University of Maiduguri Teaching Hospital",
+          "location": "Maiduguri",
+          "phone": "076-234-123"
+        },
+        {
+          "name": "State Specialist Hospital",
+          "location": "Maiduguri",
+          "phone": "076-232-456"
+        }
+      ],
+      "emergency_contacts": {
+        "police": "112 or 08068075581",
+        "military": "Contact nearest checkpoint",
+        "nema": "0800CALLNEMA",
+        "red_cross": "09-4613281"
+      },
+      "communication": {
+        "network_coverage": "MTN and Airtel work in Maiduguri. Spotty elsewhere.",
+        "internet": "Limited. Download offline maps before traveling.",
+        "tip": "Tell family your route. Check in every 2 hours."
+      },
+      "what_not_to_do": [
+        "Don't travel at night - ever",
+        "Don't take photos of military, checkpoints, or damaged buildings",
+        "Don't discuss politics or military operations",
+        "Don't carry large amounts of cash visibly",
+        "Don't argue at checkpoints",
+        "Don't use rural roads without military escort"
+      ],
+      "evacuation_routes": {
+        "primary": "Maiduguri \u2192 Damaturu \u2192 Gombe (if Yobe road clear)",
+        "secondary": "Maiduguri Airport (flights to Abuja when available)",
+        "note": "Check current route status before traveling"
+      }
+    },
+    "yobe": {
+      "name": "Yobe State",
+      "risk_level": "EXTREME",
+      "badge": "\u26d4 Do Not Travel",
+      "summary": "Active insurgency. ISWAP controls some rural areas.",
+      "key_threats": [
+        "ISWAP militants",
+        "Highway ambushes",
+        "IED attacks",
+        "Kidnapping",
+        "Attacks on schools and markets"
+      ],
+      "safer_zones": [
+        "Damaturu city center",
+        "Potiskum urban area (daytime only)"
+      ],
+      "danger_zones": [
+        "Gujba, Gulani, Geidam LGAs",
+        "All borders with Borno",
+        "Rural roads throughout state"
+      ],
+      "travel_windows": {
+        "safest": "7:00 AM - 11:00 AM",
+        "avoid": "After 3:00 PM"
+      },
+      "if_you_must_go": [
+        "Use only Damaturu-Potiskum road (main highway)",
+        "Travel in convoy if possible",
+        "Inform security agencies of movement",
+        "Have emergency contacts ready"
+      ],
+      "residents_tips": [
+        "Stay updated via local radio",
+        "Know nearest security post",
+        "Have emergency bag packed",
+        "Avoid crowded markets during peak hours"
+      ],
+      "emergency_contacts": {
+        "police": "112 or 08034534534",
+        "emergency": "112"
+      }
+    },
+    "adamawa": {
+      "name": "Adamawa State",
+      "risk_level": "EXTREME",
+      "badge": "\u26d4 Do Not Travel",
+      "summary": "Insurgent activity in border areas. Farmer-herder violence in central LGAs.",
+      "key_threats": [
+        "Boko Haram in eastern LGAs",
+        "Farmer-herder violence",
+        "Kidnapping",
+        "Highway robbery"
+      ],
+      "safer_zones": [
+        "Yola city (state capital)",
+        "Jimeta urban area"
+      ],
+      "danger_zones": [
+        "Madagali, Michika, Mubi LGAs (Borno border)",
+        "Hong, Gombi LGAs",
+        "Cameroon border areas"
+      ],
+      "travel_windows": {
+        "safest": "8:00 AM - 12:00 PM",
+        "avoid": "After 4:00 PM"
+      },
+      "if_you_must_go": [
+        "Fly to Yola if possible",
+        "Avoid road travel from Borno/Yobe",
+        "Stay in Yola city only"
+      ],
+      "residents_tips": [
+        "Monitor local news daily",
+        "Know multiple routes to safety",
+        "Keep emergency supplies"
+      ],
+      "emergency_contacts": {
+        "police": "112 or 08089671313",
+        "emergency": "112"
+      }
+    },
+    "gombe": {
+      "name": "Gombe State",
+      "risk_level": "EXTREME",
+      "badge": "\u26d4 Do Not Travel",
+      "summary": "Spillover from Borno/Yobe insurgency. Increasing attacks.",
+      "key_threats": [
+        "ISWAP incursions",
+        "Highway attacks",
+        "Kidnapping",
+        "Farmer-herder clashes"
+      ],
+      "safer_zones": [
+        "Gombe city center",
+        "Federal College area"
+      ],
+      "danger_zones": [
+        "LGAs bordering Borno and Yobe",
+        "Dukku, Nafada LGAs",
+        "Rural roads"
+      ],
+      "travel_windows": {
+        "safest": "7:00 AM - 11:00 AM",
+        "avoid": "Afternoon and night"
+      },
+      "if_you_must_go": [
+        "Fly if possible",
+        "Use main Gombe-Bauchi road only",
+        "Travel in groups"
+      ],
+      "emergency_contacts": {
+        "police": "112 or 08150567771",
+        "emergency": "112"
+      }
+    },
+    "zamfara": {
+      "name": "Zamfara State",
+      "risk_level": "EXTREME",
+      "badge": "\u26d4 Do Not Travel",
+      "summary": "Epicenter of banditry crisis. Armed groups control many rural areas.",
+      "key_threats": [
+        "Armed bandits",
+        "Mass kidnapping (schools, travelers, villagers)",
+        "Highway ambushes",
+        "Cattle rustling violence",
+        "Attacks on villages"
+      ],
+      "safer_zones": [
+        "Gusau city center (relatively safer)",
+        "Near military/police stations"
+      ],
+      "danger_zones": [
+        "Anka, Bukkuyum, Maru, Shinkafi LGAs - EXTREMELY DANGEROUS",
+        "Tsafe, Zurmi, Maradun LGAs",
+        "ALL rural roads",
+        "Forests and ungoverned spaces"
+      ],
+      "travel_windows": {
+        "safest": "9:00 AM - 12:00 PM only",
+        "avoid": "Early morning (ambush time), afternoon, night",
+        "note": "Travel on market days when roads are busier"
+      },
+      "if_you_must_go": [
+        "Only travel to Gusau city",
+        "Fly if possible (Gusau has an airstrip)",
+        "Use military-escorted convoys",
+        "Avoid ALL rural roads",
+        "Register movement with police"
+      ],
+      "residents_tips": [
+        "Join community vigilante network (Yan Sa Kai)",
+        "Know warning signs of incoming attack",
+        "Have safe room or hiding spot identified",
+        "Keep phone charged with emergency numbers",
+        "Know evacuation routes",
+        "Store water, food, first aid kit",
+        "Sleep away from windows"
+      ],
+      "if_kidnapped_family": [
+        "Report to police immediately",
+        "Do NOT negotiate alone - involve authorities",
+        "Document all communication",
+        "Do NOT publicize on social media initially"
+      ],
+      "emergency_contacts": {
+        "police": "112 or 08068586988",
+        "operation_hadarin_daji": "Contact state security",
+        "emergency": "112"
+      }
+    },
+    "katsina": {
+      "name": "Katsina State",
+      "risk_level": "EXTREME",
+      "badge": "\u26d4 Do Not Travel",
+      "summary": "Severe banditry. Multiple mass kidnappings including schools.",
+      "key_threats": [
+        "Armed bandits",
+        "Mass kidnapping",
+        "School attacks",
+        "Highway ambushes",
+        "Village raids"
+      ],
+      "safer_zones": [
+        "Katsina city (state capital)",
+        "Funtua (relatively safer)"
+      ],
+      "danger_zones": [
+        "Batsari, Safana, Jibia, Kankara LGAs - EXTREMELY DANGEROUS",
+        "All Niger Republic border areas",
+        "Dan Musa, Faskari, Sabuwa LGAs",
+        "Kaduna border areas"
+      ],
+      "travel_windows": {
+        "safest": "8:00 AM - 11:00 AM",
+        "avoid": "Afternoon and night"
+      },
+      "if_you_must_go": [
+        "Travel to Katsina city only",
+        "Use Kano-Katsina road (main highway)",
+        "Avoid ALL rural roads",
+        "Travel in convoy"
+      ],
+      "residents_tips": [
+        "Stay updated on local security situation",
+        "Join community watch groups",
+        "Report suspicious movements",
+        "Avoid farming in isolated areas",
+        "Have emergency escape plan"
+      ],
+      "emergency_contacts": {
+        "police": "112 or 08075391255",
+        "emergency": "112"
+      }
+    },
+    "sokoto": {
+      "name": "Sokoto State",
+      "risk_level": "EXTREME",
+      "badge": "\u26d4 Do Not Travel",
+      "summary": "Lakurawa jihadist group emerging. Banditry spillover from Zamfara.",
+      "key_threats": [
+        "Lakurawa militants (new jihadist group)",
+        "Armed bandits",
+        "Kidnapping",
+        "Highway attacks",
+        "Cross-border threats from Niger"
+      ],
+      "safer_zones": [
+        "Sokoto city (relatively safer)",
+        "Near Sultan's palace area"
+      ],
+      "danger_zones": [
+        "Eastern LGAs bordering Zamfara",
+        "Rabah, Sabon Birni, Isa LGAs",
+        "Niger Republic border areas",
+        "Tangaza, Gudu, Goronyo LGAs"
+      ],
+      "travel_windows": {
+        "safest": "8:00 AM - 11:00 AM",
+        "avoid": "After 2:00 PM"
+      },
+      "if_you_must_go": [
+        "Fly to Sokoto if possible",
+        "Stay in Sokoto city only",
+        "Avoid eastern LGAs completely"
+      ],
+      "residents_tips": [
+        "Monitor news about Lakurawa movements",
+        "Stay in urban areas",
+        "Report suspicious activity",
+        "Have emergency contacts ready"
+      ],
+      "emergency_contacts": {
+        "police": "112 or 08065347422",
+        "emergency": "112"
+      }
+    },
+    "kebbi": {
+      "name": "Kebbi State",
+      "risk_level": "EXTREME",
+      "badge": "\u26d4 Do Not Travel",
+      "summary": "Banditry spillover from Zamfara. Lakurawa threat spreading.",
+      "key_threats": [
+        "Armed bandits",
+        "Lakurawa incursions",
+        "Kidnapping",
+        "Highway attacks"
+      ],
+      "safer_zones": [
+        "Birnin Kebbi city",
+        "Argungu town"
+      ],
+      "danger_zones": [
+        "Zuru, Sakaba, Fakai LGAs",
+        "Wasagu/Danko LGA",
+        "Zamfara border areas"
+      ],
+      "travel_windows": {
+        "safest": "8:00 AM - 12:00 PM",
+        "avoid": "Afternoon and night"
+      },
+      "if_you_must_go": [
+        "Stay in Birnin Kebbi only",
+        "Avoid southern LGAs completely",
+        "Travel in convoy on main roads"
+      ],
+      "emergency_contacts": {
+        "police": "112 or 08034523456",
+        "emergency": "112"
+      }
+    }
+  },
+  "very_high_states": {
+    "kaduna": {
+      "name": "Kaduna State",
+      "risk_level": "VERY HIGH",
+      "badge": "\u26a0\ufe0f Reconsider Travel",
+      "summary": "Highway kidnappings frequent. Urban areas safer but still risky.",
+      "key_threats": [
+        "Highway kidnapping (especially Abuja-Kaduna road)",
+        "Banditry in rural LGAs",
+        "Religious/ethnic tensions",
+        "Farmer-herder clashes in southern Kaduna"
+      ],
+      "safer_zones": [
+        "Kaduna city center",
+        "Zaria city",
+        "GRA areas"
+      ],
+      "danger_zones": [
+        "Birnin Gwari LGA - EXTREMELY DANGEROUS",
+        "Giwa, Igabi, Chikun, Kajuru LGAs",
+        "Abuja-Kaduna Highway (by road)",
+        "Southern Kaduna rural areas"
+      ],
+      "travel_advice": {
+        "abuja_to_kaduna": {
+          "recommended": "Take the TRAIN (Abuja-Kaduna Railway)",
+          "avoid": "DO NOT drive Abuja-Kaduna Highway",
+          "flight": "Kaduna Airport available"
+        }
+      },
+      "travel_windows": {
+        "safest": "8:00 AM - 12:00 PM",
+        "avoid": "Early morning and night travel"
+      },
+      "if_you_must_go": [
+        "USE THE TRAIN - safest option",
+        "If driving, travel in convoy",
+        "Avoid rural roads completely",
+        "Stay in urban centers only"
+      ],
+      "residents_tips": [
+        "Vary your route and timing",
+        "Don't travel alone to outskirts",
+        "Stay updated on security alerts",
+        "Know nearest police station",
+        "Keep emergency numbers saved"
+      ],
+      "emergency_contacts": {
+        "police": "112 or 08123802830",
+        "kaduna_train_station": "0803XXXXXXX",
+        "emergency": "112"
+      }
+    },
+    "plateau": {
+      "name": "Plateau State",
+      "risk_level": "VERY HIGH",
+      "badge": "\u26a0\ufe0f Reconsider Travel",
+      "summary": "Ongoing farmer-herder violence. Jos city safer but surrounding areas volatile.",
+      "key_threats": [
+        "Farmer-herder attacks",
+        "Ethnic violence",
+        "Kidnapping",
+        "Night attacks on villages"
+      ],
+      "safer_zones": [
+        "Jos city center",
+        "Bukuru town",
+        "University of Jos area"
+      ],
+      "danger_zones": [
+        "Barkin Ladi, Riyom, Bokkos LGAs",
+        "Mangu, Bassa LGAs",
+        "Rural areas throughout state"
+      ],
+      "travel_windows": {
+        "safest": "8:00 AM - 2:00 PM",
+        "avoid": "Night travel - strictly avoid"
+      },
+      "if_you_must_go": [
+        "Stay in Jos city only",
+        "Avoid villages and rural roads",
+        "Travel in daylight only",
+        "Monitor local news daily"
+      ],
+      "residents_tips": [
+        "Know early warning signs of attacks",
+        "Have safe room identified",
+        "Know multiple escape routes",
+        "Stay connected with community groups"
+      ],
+      "emergency_contacts": {
+        "police": "112 or 08036070612",
+        "emergency": "112",
+        "operation_safe_haven": "Contact state command"
+      }
+    },
+    "benue": {
+      "name": "Benue State",
+      "risk_level": "VERY HIGH",
+      "badge": "\u26a0\ufe0f Reconsider Travel",
+      "summary": "Farmer-herder conflict. IDP camps from displaced persons.",
+      "key_threats": [
+        "Militia attacks",
+        "Farmer-herder violence",
+        "Kidnapping",
+        "Highway robbery"
+      ],
+      "safer_zones": [
+        "Makurdi city",
+        "Gboko town (urban area)"
+      ],
+      "danger_zones": [
+        "Guma, Logo, Gwer East/West LGAs",
+        "Agatu LGA",
+        "Katsina-Ala, Ukum LGAs",
+        "All rural areas"
+      ],
+      "travel_windows": {
+        "safest": "8:00 AM - 1:00 PM",
+        "avoid": "After 3:00 PM"
+      },
+      "if_you_must_go": [
+        "Stay in Makurdi",
+        "Avoid Benue North completely",
+        "Travel in convoy",
+        "Use main highways only"
+      ],
+      "emergency_contacts": {
+        "police": "112 or 08066006475",
+        "emergency": "112"
+      }
+    },
+    "niger": {
+      "name": "Niger State",
+      "risk_level": "VERY HIGH",
+      "badge": "\u26a0\ufe0f Reconsider Travel",
+      "summary": "Bandit attacks frequent. Highway kidnapping common.",
+      "key_threats": [
+        "Armed bandits",
+        "Highway kidnapping",
+        "Attacks on communities",
+        "School kidnappings"
+      ],
+      "safer_zones": [
+        "Minna city",
+        "Suleja (close to Abuja)"
+      ],
+      "danger_zones": [
+        "Shiroro, Rafi, Munya LGAs - VERY DANGEROUS",
+        "Mariga, Mashegu, Magama LGAs",
+        "Kontagora axis",
+        "Most rural roads"
+      ],
+      "travel_windows": {
+        "safest": "9:00 AM - 12:00 PM",
+        "avoid": "Early morning and afternoon"
+      },
+      "if_you_must_go": [
+        "Stay in Minna/Suleja only",
+        "Use Abuja-Minna road (main highway) only",
+        "Avoid Kontagora axis",
+        "Travel in convoy"
+      ],
+      "emergency_contacts": {
+        "police": "112 or 08039abornn",
+        "emergency": "112"
+      }
+    },
+    "kano": {
+      "name": "Kano State",
+      "risk_level": "VERY HIGH",
+      "badge": "\u26a0\ufe0f Reconsider Travel",
+      "summary": "Urban crime, religious tension risk. Spillover threats from northwest.",
+      "key_threats": [
+        "Religious tensions",
+        "Urban crime",
+        "Kidnapping (increasing)",
+        "Market/crowd attacks (historical)"
+      ],
+      "safer_zones": [
+        "Nassarawa GRA",
+        "Bompai area",
+        "Central Kano (daytime)"
+      ],
+      "danger_zones": [
+        "Outskirts bordering Katsina/Kaduna",
+        "Some rural LGAs",
+        "Crowded markets (be vigilant)"
+      ],
+      "travel_windows": {
+        "safest": "7:00 AM - 4:00 PM",
+        "avoid": "Night travel outside city"
+      },
+      "if_you_must_go": [
+        "Stay in Kano city",
+        "Fly in/out if possible",
+        "Avoid religious gatherings if tensions exist",
+        "Monitor news"
+      ],
+      "residents_tips": [
+        "Avoid political/religious discussions",
+        "Dress conservatively",
+        "Know exit routes from markets",
+        "Stay alert in crowded areas"
+      ],
+      "emergency_contacts": {
+        "police": "112 or 08032419754",
+        "emergency": "112"
+      }
+    },
+    "rivers": {
+      "name": "Rivers State",
+      "risk_level": "VERY HIGH",
+      "badge": "\u26a0\ufe0f Reconsider Travel",
+      "summary": "State of Emergency declared (March 2025). Cult violence, political unrest.",
+      "key_threats": [
+        "Cult gang violence",
+        "Political violence",
+        "Kidnapping",
+        "Armed robbery",
+        "Oil-related conflict"
+      ],
+      "safer_zones": [
+        "GRA Port Harcourt (relatively safer)",
+        "Trans Amadi (industrial, daytime)"
+      ],
+      "danger_zones": [
+        "Oyigbo LGA",
+        "Ogba/Egbema/Ndoni LGA",
+        "Waterfront areas",
+        "Most areas outside GRA at night"
+      ],
+      "travel_windows": {
+        "safest": "8:00 AM - 4:00 PM",
+        "avoid": "Night movement - highly dangerous"
+      },
+      "if_you_must_go": [
+        "Stay in GRA only",
+        "Use well-known hotels",
+        "Avoid political discussions",
+        "Don't travel at night",
+        "Have trusted local contact"
+      ],
+      "residents_tips": [
+        "Avoid cult-prone areas",
+        "Don't display wealth",
+        "Know safe routes home",
+        "Avoid late nights out",
+        "Report suspicious activity"
+      ],
+      "emergency_contacts": {
+        "police": "112 or 08032003514",
+        "emergency": "112"
+      }
+    },
+    "bauchi": {
+      "name": "Bauchi State",
+      "risk_level": "VERY HIGH",
+      "badge": "\u26a0\ufe0f Reconsider Travel",
+      "summary": "Insurgent spillover risk. Some rural areas volatile.",
+      "key_threats": [
+        "Kidnapping",
+        "Highway robbery",
+        "Insurgent incursions (from Borno/Yobe axis)",
+        "Farmer-herder tension"
+      ],
+      "safer_zones": [
+        "Bauchi city center",
+        "Yankari Game Reserve (tourist area, relatively safer)"
+      ],
+      "danger_zones": [
+        "Alkaleri, Toro LGAs (southern areas)",
+        "LGAs bordering Yobe/Gombe",
+        "Rural roads"
+      ],
+      "travel_windows": {
+        "safest": "8:00 AM - 2:00 PM",
+        "avoid": "After 4:00 PM on rural roads"
+      },
+      "if_you_must_go": [
+        "Stay in Bauchi city",
+        "Yankari possible but confirm current status",
+        "Use main roads only",
+        "Travel in groups"
+      ],
+      "emergency_contacts": {
+        "police": "112 or 08151849417",
+        "emergency": "112"
+      }
+    },
+    "jigawa": {
+      "name": "Jigawa State",
+      "risk_level": "VERY HIGH",
+      "badge": "\u26a0\ufe0f Reconsider Travel",
+      "summary": "Increasing banditry. Border areas with Katsina/Kano volatile.",
+      "key_threats": [
+        "Armed bandits",
+        "Kidnapping",
+        "Highway attacks",
+        "Cross-border crime"
+      ],
+      "safer_zones": [
+        "Dutse city",
+        "Hadejia town"
+      ],
+      "danger_zones": [
+        "LGAs bordering Katsina",
+        "Maigatari border area",
+        "Rural roads"
+      ],
+      "travel_windows": {
+        "safest": "8:00 AM - 1:00 PM",
+        "avoid": "Afternoon and night"
+      },
+      "if_you_must_go": [
+        "Stay in Dutse only",
+        "Use Kano-Dutse highway",
+        "Avoid border areas"
+      ],
+      "emergency_contacts": {
+        "police": "112 or 08065338899",
+        "emergency": "112"
+      }
+    },
+    "kogi": {
+      "name": "Kogi State",
+      "risk_level": "VERY HIGH",
+      "badge": "\u26a0\ufe0f Reconsider Travel",
+      "summary": "Highway kidnapping hotspot. Ansaru terror cells reported.",
+      "key_threats": [
+        "Highway kidnapping (Abuja-Lokoja very dangerous)",
+        "Armed robbery",
+        "Ansaru militant presence",
+        "Cult violence"
+      ],
+      "safer_zones": [
+        "Lokoja city (state capital)",
+        "Okene town (but approach road risky)"
+      ],
+      "danger_zones": [
+        "Abuja-Lokoja Highway - HIGH RISK",
+        "Kabba-Lokoja road",
+        "Ajaokuta area",
+        "Rural areas"
+      ],
+      "travel_windows": {
+        "safest": "9:00 AM - 12:00 PM",
+        "avoid": "Early morning and afternoon"
+      },
+      "if_you_must_go": [
+        "Travel in convoy on Abuja-Lokoja",
+        "Avoid night travel completely",
+        "Use well-maintained vehicles only",
+        "Inform family of route/timing"
+      ],
+      "emergency_contacts": {
+        "police": "112 or 08038347325",
+        "emergency": "112"
+      }
+    },
+    "taraba": {
+      "name": "Taraba State",
+      "risk_level": "VERY HIGH",
+      "badge": "\u26a0\ufe0f Reconsider Travel",
+      "summary": "Ethnic conflicts, farmer-herder violence, kidnapping.",
+      "key_threats": [
+        "Ethnic militia violence",
+        "Farmer-herder clashes",
+        "Kidnapping",
+        "Cattle rustling"
+      ],
+      "safer_zones": [
+        "Jalingo city",
+        "Wukari town (urban area)"
+      ],
+      "danger_zones": [
+        "Takum, Ussa, Donga LGAs",
+        "Gashaka, Sardauna LGAs",
+        "Cameroon border areas"
+      ],
+      "travel_windows": {
+        "safest": "8:00 AM - 1:00 PM",
+        "avoid": "After 2:00 PM"
+      },
+      "if_you_must_go": [
+        "Stay in Jalingo only",
+        "Avoid southern LGAs",
+        "Fly if possible"
+      ],
+      "emergency_contacts": {
+        "police": "112 or 08039648218",
+        "emergency": "112"
+      }
+    },
+    "nasarawa": {
+      "name": "Nasarawa State",
+      "risk_level": "VERY HIGH",
+      "badge": "\u26a0\ufe0f Reconsider Travel",
+      "summary": "Farmer-herder violence. Close to Abuja but rural areas dangerous.",
+      "key_threats": [
+        "Farmer-herder violence",
+        "Kidnapping",
+        "Armed robbery",
+        "Communal clashes"
+      ],
+      "safer_zones": [
+        "Lafia city",
+        "Keffi town",
+        "Karu (close to Abuja)"
+      ],
+      "danger_zones": [
+        "Keana, Obi, Doma LGAs",
+        "Toto, Awe LGAs",
+        "Rural roads"
+      ],
+      "travel_windows": {
+        "safest": "8:00 AM - 2:00 PM",
+        "avoid": "After 3:00 PM on rural roads"
+      },
+      "if_you_must_go": [
+        "Use main Abuja-Lafia road",
+        "Stay in urban centers only",
+        "Avoid rural areas"
+      ],
+      "emergency_contacts": {
+        "police": "112 or 08038508776",
+        "emergency": "112"
+      }
+    },
+    "kwara": {
+      "name": "Kwara State",
+      "risk_level": "VERY HIGH",
+      "badge": "\u26a0\ufe0f Reconsider Travel",
+      "summary": "Mahmuda jihadist group emerging. Highway robbery increasing.",
+      "key_threats": [
+        "Mahmuda militant group (emerging)",
+        "Highway kidnapping",
+        "Armed robbery",
+        "Herder-related violence"
+      ],
+      "safer_zones": [
+        "Ilorin city",
+        "Offa town"
+      ],
+      "danger_zones": [
+        "Baruten, Kaiama LGAs (Niger border)",
+        "Edu, Pategi LGAs",
+        "Rural roads especially Jebba axis"
+      ],
+      "travel_windows": {
+        "safest": "8:00 AM - 2:00 PM",
+        "avoid": "Night travel"
+      },
+      "if_you_must_go": [
+        "Stay in Ilorin",
+        "Use main Lagos-Ilorin highway",
+        "Avoid northern LGAs"
+      ],
+      "emergency_contacts": {
+        "police": "112 or 08062abornn",
+        "emergency": "112"
+      }
+    }
+  },
+  "high_states": {
+    "fct": {
+      "name": "FCT Abuja",
+      "risk_level": "HIGH",
+      "badge": "\ud83d\udd14 Stay Alert",
+      "summary": "Capital city - urban areas safe. Outskirts and satellite towns have kidnapping risk.",
+      "key_threats": [
+        "Kidnapping in outskirts (Karu, Nyanya, Kubwa outskirts)",
+        "Armed robbery at night",
+        "Occasional IED concerns",
+        "Political tension periods"
+      ],
+      "safer_zones": [
+        "Maitama",
+        "Asokoro",
+        "Wuse 2",
+        "Garki",
+        "Central Area",
+        "Gwarinpa (mostly)",
+        "Jahi",
+        "Utako",
+        "Life Camp"
+      ],
+      "danger_zones": [
+        "Abuja-Kaduna Highway (DO NOT DRIVE)",
+        "Nyanya/Karu outskirts at night",
+        "Kubwa outskirts",
+        "Gwagwalada at night",
+        "Abuja-Lokoja road"
+      ],
+      "travel_windows": {
+        "city_center": "Generally safe 6AM - 10PM",
+        "outskirts": "8:00 AM - 4:00 PM only",
+        "avoid": "Night travel to satellite towns"
+      },
+      "tips": [
+        "Stay in central districts at night",
+        "Use Abuja-Kaduna TRAIN, not road",
+        "Uber/Bolt safe in city center",
+        "Be cautious around Nyanya/Karu at night",
+        "Avoid displaying expensive items"
+      ],
+      "transport": {
+        "to_kaduna": "TRAIN (safest) or FLY",
+        "to_lagos": "FLY recommended",
+        "to_lokoja": "Travel in convoy, daylight only"
+      },
+      "emergency_contacts": {
+        "police": "112 or 08032003913",
+        "fcta_security": "112",
+        "emergency": "112"
+      }
+    },
+    "anambra": {
+      "name": "Anambra State",
+      "risk_level": "HIGH",
+      "badge": "\ud83d\udd14 Stay Alert",
+      "summary": "IPOB/ESN activity. Sit-at-home on Mondays (sometimes enforced violently).",
+      "key_threats": [
+        "IPOB/ESN armed group activity",
+        "Monday sit-at-home (avoid travel on Mondays)",
+        "Checkpoint attacks",
+        "Kidnapping",
+        "Unknown gunmen attacks"
+      ],
+      "safer_zones": [
+        "Awka city (state capital)",
+        "Onitsha (business hours)",
+        "Nnewi (urban area, business hours)"
+      ],
+      "danger_zones": [
+        "Rural areas",
+        "Traveling on Mondays - AVOID",
+        "Night travel anywhere in state"
+      ],
+      "travel_windows": {
+        "safest_days": "Tuesday - Saturday",
+        "avoid": "MONDAY - do not travel",
+        "time": "7:00 AM - 4:00 PM"
+      },
+      "monday_warning": {
+        "status": "\ud83d\udeab DO NOT TRAVEL ON MONDAYS",
+        "reason": "Sit-at-home enforced. Vehicles attacked.",
+        "advice": "Stay indoors. Don't open shops. Don't travel."
+      },
+      "tips": [
+        "Check if sit-at-home is active before traveling",
+        "Travel Tuesday-Saturday only",
+        "Don't travel at night",
+        "Stay in urban areas",
+        "Avoid political discussions"
+      ],
+      "emergency_contacts": {
+        "police": "112 or 07039194332",
+        "emergency": "112"
+      }
+    },
+    "imo": {
+      "name": "Imo State",
+      "risk_level": "HIGH",
+      "badge": "\ud83d\udd14 Stay Alert",
+      "summary": "IPOB/ESN activity. Sit-at-home sometimes enforced.",
+      "key_threats": [
+        "IPOB/ESN armed group",
+        "Monday sit-at-home (sometimes)",
+        "Attacks on security forces",
+        "Kidnapping",
+        "Night attacks"
+      ],
+      "safer_zones": [
+        "Owerri city (mostly)",
+        "New Owerri"
+      ],
+      "danger_zones": [
+        "Orlu, Orsu LGAs - VERY DANGEROUS",
+        "Rural areas",
+        "Night travel"
+      ],
+      "travel_windows": {
+        "safest": "8:00 AM - 3:00 PM",
+        "avoid": "Night travel, Mondays (sometimes)"
+      },
+      "tips": [
+        "Stay in Owerri city",
+        "Avoid Orlu completely",
+        "Check Monday status before travel",
+        "Don't travel at night"
+      ],
+      "emergency_contacts": {
+        "police": "112 or 08034773600",
+        "emergency": "112"
+      }
+    },
+    "abia": {
+      "name": "Abia State",
+      "risk_level": "HIGH",
+      "badge": "\ud83d\udd14 Stay Alert",
+      "summary": "IPOB/ESN activity. Aba has crime concerns.",
+      "key_threats": [
+        "IPOB/ESN activity",
+        "Monday sit-at-home",
+        "Crime in Aba",
+        "Kidnapping"
+      ],
+      "safer_zones": [
+        "Umuahia city",
+        "Aba (daytime, urban areas)"
+      ],
+      "danger_zones": [
+        "Rural LGAs",
+        "Night travel",
+        "Some parts of Aba at night"
+      ],
+      "travel_windows": {
+        "safest": "8:00 AM - 4:00 PM",
+        "avoid": "Night, Mondays"
+      },
+      "tips": [
+        "Avoid Monday travel",
+        "Stay in urban areas",
+        "Be cautious in Aba markets (petty crime)"
+      ],
+      "emergency_contacts": {
+        "police": "112 or 08035044443",
+        "emergency": "112"
+      }
+    },
+    "enugu": {
+      "name": "Enugu State",
+      "risk_level": "HIGH",
+      "badge": "\ud83d\udd14 Stay Alert",
+      "summary": "IPOB/ESN activity. Monday sit-at-home sometimes enforced.",
+      "key_threats": [
+        "IPOB/ESN activity",
+        "Monday sit-at-home",
+        "Kidnapping (increasing)",
+        "Unknown gunmen"
+      ],
+      "safer_zones": [
+        "Enugu city (Independence Layout, GRA, Trans Ekulu)",
+        "Nsukka (university town, relatively calm)"
+      ],
+      "danger_zones": [
+        "Rural LGAs",
+        "Traveling on Mondays",
+        "Night travel"
+      ],
+      "travel_windows": {
+        "safest": "8:00 AM - 4:00 PM",
+        "avoid": "Mondays, night travel"
+      },
+      "tips": [
+        "Avoid Monday travel",
+        "Nsukka relatively safer (university presence)",
+        "Don't travel at night",
+        "Stay in Enugu city"
+      ],
+      "emergency_contacts": {
+        "police": "112 or 08032003702",
+        "emergency": "112"
+      }
+    },
+    "delta": {
+      "name": "Delta State",
+      "risk_level": "HIGH",
+      "badge": "\ud83d\udd14 Stay Alert",
+      "summary": "Cult violence, oil-related crime. Warri volatile.",
+      "key_threats": [
+        "Cult gang violence",
+        "Kidnapping",
+        "Oil bunkering related crime",
+        "Armed robbery"
+      ],
+      "safer_zones": [
+        "Asaba city (state capital)",
+        "Warri GRA (daytime)"
+      ],
+      "danger_zones": [
+        "Warri waterfront areas",
+        "Riverine LGAs",
+        "Night travel anywhere"
+      ],
+      "travel_windows": {
+        "safest": "8:00 AM - 4:00 PM",
+        "avoid": "Night, waterfront areas"
+      },
+      "tips": [
+        "Stay in Asaba (safest)",
+        "Warri - stay in GRA only",
+        "Avoid riverine areas",
+        "Don't travel at night"
+      ],
+      "emergency_contacts": {
+        "police": "112 or 08036684974",
+        "emergency": "112"
+      }
+    },
+    "bayelsa": {
+      "name": "Bayelsa State",
+      "risk_level": "HIGH",
+      "badge": "\ud83d\udd14 Stay Alert",
+      "summary": "Cult violence, oil-related crime, piracy in waterways.",
+      "key_threats": [
+        "Cult violence",
+        "Piracy on waterways",
+        "Kidnapping",
+        "Oil-related crime"
+      ],
+      "safer_zones": [
+        "Yenagoa city center"
+      ],
+      "danger_zones": [
+        "All riverine/waterway areas",
+        "Southern Ijaw, Brass LGAs",
+        "Night travel"
+      ],
+      "travel_windows": {
+        "safest": "8:00 AM - 4:00 PM",
+        "avoid": "Water travel unless essential, night"
+      },
+      "tips": [
+        "Stay in Yenagoa",
+        "Avoid water travel if possible",
+        "Don't travel at night"
+      ],
+      "emergency_contacts": {
+        "police": "112 or 08039310573",
+        "emergency": "112"
+      }
+    },
+    "edo": {
+      "name": "Edo State",
+      "risk_level": "HIGH",
+      "badge": "\ud83d\udd14 Stay Alert",
+      "summary": "Highway robbery on Benin-Ore road. Urban crime in Benin City.",
+      "key_threats": [
+        "Highway robbery (Benin-Ore, Benin-Auchi roads)",
+        "Kidnapping",
+        "Cult violence",
+        "Armed robbery"
+      ],
+      "safer_zones": [
+        "Benin City GRA",
+        "Ring Road area (daytime)"
+      ],
+      "danger_zones": [
+        "Benin-Ore road (robbery hotspot)",
+        "Benin-Auchi road",
+        "Auchi/Etsako area (kidnapping)",
+        "Night travel"
+      ],
+      "travel_windows": {
+        "benin_ore_road": "8:00 AM - 12:00 PM only",
+        "city": "Safe until 7:00 PM",
+        "avoid": "Night travel on highways"
+      },
+      "tips": [
+        "Benin-Ore: travel early morning only",
+        "Travel in convoy on highways",
+        "Stay in GRA in Benin City",
+        "Don't stop for strangers on highways"
+      ],
+      "emergency_contacts": {
+        "police": "112 or 08037646272",
+        "emergency": "112"
+      }
+    },
+    "ondo": {
+      "name": "Ondo State",
+      "risk_level": "HIGH",
+      "badge": "\ud83d\udd14 Stay Alert",
+      "summary": "Kidnapping in northern LGAs. Ore road concerns.",
+      "key_threats": [
+        "Kidnapping (especially northern LGAs)",
+        "Highway robbery",
+        "Farmer-herder tension"
+      ],
+      "safer_zones": [
+        "Akure city",
+        "Ondo city"
+      ],
+      "danger_zones": [
+        "Ose, Owo LGAs (kidnapping)",
+        "Akoko area",
+        "Ore road"
+      ],
+      "travel_windows": {
+        "safest": "8:00 AM - 3:00 PM",
+        "avoid": "Night travel"
+      },
+      "tips": [
+        "Stay in Akure/Ondo city",
+        "Avoid northern LGAs",
+        "Travel Ore road in daytime only"
+      ],
+      "emergency_contacts": {
+        "police": "112 or 08033770485",
+        "emergency": "112"
+      }
+    }
+  },
+  "moderate_states": {
+    "lagos": {
+      "name": "Lagos State",
+      "risk_level": "MODERATE",
+      "badge": "\u2705 Generally Safe",
+      "summary": "Nigeria's safest major city. Normal urban precautions apply.",
+      "key_threats": [
+        "Petty theft/pickpocketing",
+        "Traffic robbery (Area Boys)",
+        "Scams",
+        "Traffic accidents"
+      ],
+      "safer_zones": [
+        "Victoria Island",
+        "Ikoyi",
+        "Lekki Phase 1",
+        "Ikeja GRA",
+        "Magodo",
+        "VGC"
+      ],
+      "caution_zones": [
+        "Oshodi (pickpockets)",
+        "Mile 2/Mile 12 (crowded, petty crime)",
+        "Mushin, Ajegunle (at night)"
+      ],
+      "tips": [
+        "Use Uber/Bolt - safe and reliable",
+        "Avoid flashy displays of wealth",
+        "Keep car doors locked in traffic",
+        "Be alert at ATMs",
+        "Avoid 'Area Boys' confrontation",
+        "Traffic is bad - plan travel time"
+      ],
+      "travel_windows": {
+        "generally": "Safe throughout the day",
+        "late_night": "Use rideshare apps, avoid walking"
+      },
+      "emergency_contacts": {
+        "police": "112 or 08063021854",
+        "lirs": "07001234567",
+        "emergency": "112"
+      }
+    },
+    "oyo": {
+      "name": "Oyo State",
+      "risk_level": "MODERATE",
+      "badge": "\u2705 Generally Safe",
+      "summary": "Ibadan is safe. Some rural concerns.",
+      "tips": [
+        "Ibadan city is safe for daily activities",
+        "Avoid Ibarapa area (herder issues)",
+        "Use main roads",
+        "Normal precautions at night"
+      ],
+      "safer_zones": [
+        "Ibadan city",
+        "UI area",
+        "Bodija",
+        "Ring Road"
+      ],
+      "emergency_contacts": {
+        "police": "112 or 08035652715",
+        "emergency": "112"
+      }
+    },
+    "ogun": {
+      "name": "Ogun State",
+      "risk_level": "MODERATE",
+      "badge": "\u2705 Generally Safe",
+      "summary": "Generally safe. Gateway to Lagos.",
+      "tips": [
+        "Abeokuta city is safe",
+        "Lagos-Ibadan Expressway generally safe",
+        "Some kidnapping in rural/border areas",
+        "Normal precautions"
+      ],
+      "safer_zones": [
+        "Abeokuta",
+        "Sagamu",
+        "Ijebu-Ode"
+      ],
+      "emergency_contacts": {
+        "police": "112 or 08033467890",
+        "emergency": "112"
+      }
+    },
+    "osun": {
+      "name": "Osun State",
+      "risk_level": "MODERATE",
+      "badge": "\u2705 Generally Safe",
+      "summary": "Peaceful state. Osogbo and Ile-Ife safe.",
+      "tips": [
+        "Osogbo, Ile-Ife, Ede all safe",
+        "Normal urban precautions",
+        "Respectful at Osun-Osogbo Sacred Grove"
+      ],
+      "safer_zones": [
+        "Osogbo",
+        "Ile-Ife",
+        "Ilesa"
+      ],
+      "emergency_contacts": {
+        "police": "112 or 08039537995",
+        "emergency": "112"
+      }
+    },
+    "ekiti": {
+      "name": "Ekiti State",
+      "risk_level": "MODERATE",
+      "badge": "\u2705 Generally Safe",
+      "summary": "Peaceful state. Kidnapping reduced.",
+      "tips": [
+        "Ado-Ekiti safe",
+        "Some kidnapping in border areas (reduced)",
+        "Normal precautions"
+      ],
+      "safer_zones": [
+        "Ado-Ekiti",
+        "Ikere",
+        "Ijero"
+      ],
+      "emergency_contacts": {
+        "police": "112 or 08062335577",
+        "emergency": "112"
+      }
+    },
+    "cross-river": {
+      "name": "Cross River State",
+      "risk_level": "MODERATE",
+      "badge": "\u2705 Generally Safe",
+      "summary": "Tourist-friendly! Calabar cleanest city in Nigeria.",
+      "tips": [
+        "Calabar is SAFE - enjoy it!",
+        "Obudu Mountain Resort safe for tourists",
+        "Tinapa Resort available",
+        "Carnival season (December) - extra crowds",
+        "Some caution near Cameroon border"
+      ],
+      "safer_zones": [
+        "Calabar city",
+        "Obudu",
+        "Tinapa"
+      ],
+      "tourist_friendly": true,
+      "emergency_contacts": {
+        "police": "112 or 08033436464",
+        "emergency": "112"
+      }
+    },
+    "akwa-ibom": {
+      "name": "Akwa Ibom State",
+      "risk_level": "MODERATE",
+      "badge": "\u2705 Generally Safe",
+      "summary": "Oil-rich but peaceful. Uyo safe.",
+      "tips": [
+        "Uyo city safe",
+        "Normal precautions",
+        "Some cult activity in Eket area (oil installations)"
+      ],
+      "safer_zones": [
+        "Uyo",
+        "Eket"
+      ],
+      "emergency_contacts": {
+        "police": "112 or 08039231475",
+        "emergency": "112"
+      }
+    },
+    "ebonyi": {
+      "name": "Ebonyi State",
+      "risk_level": "MODERATE",
+      "badge": "\u2705 Generally Safe",
+      "summary": "Relatively peaceful. Some IPOB activity.",
+      "tips": [
+        "Abakaliki city safe",
+        "Check Monday sit-at-home status",
+        "Less affected than other SE states"
+      ],
+      "safer_zones": [
+        "Abakaliki",
+        "Afikpo"
+      ],
+      "emergency_contacts": {
+        "police": "112 or 08036666860",
+        "emergency": "112"
+      }
+    }
+  }
+}

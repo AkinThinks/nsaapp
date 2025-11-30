@@ -13,9 +13,9 @@ import {
   Info, 
   Map, 
   Heart,
-  Shield,
   BookOpen
 } from 'lucide-react'
+import { Logo } from '@/components/ui/Logo'
 
 const mainNavItems = [
   { href: '/', label: 'Home', icon: Home },
@@ -41,25 +41,36 @@ export function MobileNav() {
         initial={{ y: 100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-lg border-t border-border"
+        className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-lg border-t border-border mobile-nav safe-bottom safe-left safe-right"
+        style={{
+          paddingBottom: 'max(1rem, env(safe-area-inset-bottom))',
+          paddingLeft: 'max(0.5rem, env(safe-area-inset-left))',
+          paddingRight: 'max(0.5rem, env(safe-area-inset-right))',
+        }}
       >
         <div className="flex items-center justify-around h-16 px-2">
           {mainNavItems.map((item) => {
             const isActive = pathname === item.href
             const Icon = item.icon
             return (
-              <Link key={item.href} href={item.href} className="flex-1">
+              <Link 
+                key={item.href} 
+                href={item.href} 
+                className="flex-1 touch-target"
+                aria-label={item.label}
+              >
                 <motion.div
                   whileTap={{ scale: 0.9 }}
                   className={`
                     flex flex-col items-center justify-center py-2 rounded-xl transition-colors
+                    min-h-[44px] min-w-[44px]
                     ${isActive 
                       ? 'text-accent' 
                       : 'text-muted-foreground'
                     }
                   `}
                 >
-                  <Icon className="w-5 h-5" />
+                  <Icon className="w-5 h-5" aria-hidden="true" />
                   <span className="text-xs font-medium mt-1">{item.label}</span>
                 </motion.div>
               </Link>
@@ -70,9 +81,11 @@ export function MobileNav() {
           <motion.button
             whileTap={{ scale: 0.9 }}
             onClick={() => setIsDrawerOpen(true)}
-            className="flex-1 flex flex-col items-center justify-center py-2 text-muted-foreground"
+            className="flex-1 flex flex-col items-center justify-center py-2 text-muted-foreground touch-target min-h-[44px] min-w-[44px]"
+            aria-label="Open menu"
+            aria-expanded={isDrawerOpen}
           >
-            <Menu className="w-5 h-5" />
+            <Menu className="w-5 h-5" aria-hidden="true" />
             <span className="text-xs font-medium mt-1">Menu</span>
           </motion.button>
         </div>
@@ -87,7 +100,15 @@ export function MobileNav() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsDrawerOpen(false)}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') {
+                  setIsDrawerOpen(false)
+                }
+              }}
               className="md:hidden fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm"
+              role="button"
+              tabIndex={0}
+              aria-label="Close drawer"
             />
             
             {/* Drawer */}
@@ -96,23 +117,30 @@ export function MobileNav() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className="md:hidden fixed top-8 right-0 bottom-0 z-[100] w-72 bg-background border-l border-border shadow-2xl"
+              className="md:hidden fixed top-8 right-0 bottom-0 z-[100] w-72 bg-background border-l border-border shadow-2xl safe-top safe-bottom safe-right"
+              style={{
+                paddingTop: 'max(0px, env(safe-area-inset-top))',
+                paddingBottom: 'max(0px, env(safe-area-inset-bottom))',
+                paddingRight: 'max(0px, env(safe-area-inset-right))',
+              }}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Navigation menu"
             >
               <div className="flex flex-col h-full">
                 {/* Drawer Header */}
                 <div className="flex items-center justify-between p-4 border-b border-border">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                      <Shield className="w-5 h-5 text-primary-foreground" />
-                    </div>
+                    <Logo size="md" variant="default" />
                     <span className="font-bold">Menu</span>
                   </div>
                   <motion.button
                     whileTap={{ scale: 0.9 }}
                     onClick={() => setIsDrawerOpen(false)}
-                    className="p-2 rounded-lg hover:bg-muted transition-colors"
+                    className="p-2 rounded-lg hover:bg-muted transition-colors touch-target min-h-[44px] min-w-[44px]"
+                    aria-label="Close menu"
                   >
-                    <X className="w-5 h-5" />
+                    <X className="w-5 h-5" aria-hidden="true" />
                   </motion.button>
                 </div>
 
@@ -132,14 +160,15 @@ export function MobileNav() {
                           href={link.href}
                           onClick={() => setIsDrawerOpen(false)}
                           className={`
-                            flex items-center gap-3 px-4 py-3 rounded-xl transition-colors
+                            flex items-center gap-3 px-4 py-3 rounded-xl transition-colors touch-target min-h-[44px]
                             ${isActive 
                               ? 'bg-muted text-foreground' 
                               : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                             }
                           `}
+                          aria-label={link.label}
                         >
-                          <Icon className="w-5 h-5" />
+                          <Icon className="w-5 h-5" aria-hidden="true" />
                           <span className="font-medium">{link.label}</span>
                         </Link>
                       </motion.div>

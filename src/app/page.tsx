@@ -55,6 +55,7 @@ export default function HomePage() {
   const [fromSearchQuery, setFromSearchQuery] = useState('')
   const [toSearchQuery, setToSearchQuery] = useState('')
   const [areaSearchQuery, setAreaSearchQuery] = useState('')
+  const [selectedAreaLocationId, setSelectedAreaLocationId] = useState<string | null>(null)
   const fromDropdownRef = useRef<HTMLDivElement>(null)
   const toDropdownRef = useRef<HTMLDivElement>(null)
 
@@ -99,9 +100,9 @@ export default function HomePage() {
       setToState('')
       setShowFromDropdown(false)
       setShowToDropdown(false)
-      setAreaSearchQuery('')
     } else {
       setAreaSearchQuery('')
+      setSelectedAreaLocationId(null)
     }
   }, [mode])
   
@@ -155,7 +156,7 @@ export default function HomePage() {
   ]
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen w-full overflow-x-hidden">
 
       {/* Hero Section with Aurora Background */}
       <AuroraBackground className="min-h-[90vh] flex items-center py-16 md:py-24 pt-32 md:pt-28">
@@ -244,7 +245,29 @@ export default function HomePage() {
                     transition={{ duration: 0.2 }}
                     className="w-full space-y-4"
                   >
-                    <AreaSearchBar large onQueryChange={setAreaSearchQuery} />
+                    <AreaSearchBar 
+                      large 
+                      onQueryChange={setAreaSearchQuery}
+                      onLocationSelect={setSelectedAreaLocationId}
+                    />
+                    {selectedAreaLocationId && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -5 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <Button
+                          onClick={() => router.push(`/area/${selectedAreaLocationId}`)}
+                          size="lg"
+                          className="w-full h-14 text-base gap-3 shadow-lg hover:shadow-xl transition-all bg-accent text-white hover:bg-accent/90"
+                        >
+                          <Shield className="w-5 h-5" />
+                          Show Updated Area Safety
+                          <ArrowRight className="w-4 h-4" />
+                        </Button>
+                      </motion.div>
+                    )}
                   </motion.div>
                 ) : (
                   <motion.div
@@ -281,7 +304,7 @@ export default function HomePage() {
                               animate={{ opacity: 1, y: 0 }}
                               exit={{ opacity: 0, y: -10 }}
                               transition={{ duration: 0.2 }}
-                              className="absolute top-full left-0 right-0 mt-2 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border border-border/50 rounded-xl shadow-xl overflow-hidden z-40"
+                              className="absolute top-full left-0 right-0 mt-2 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border border-border/50 rounded-xl shadow-xl overflow-hidden z-50 max-h-[60vh] overflow-y-auto"
                             >
                               <div className="p-2 border-b border-border/50">
                                 <input
@@ -289,8 +312,12 @@ export default function HomePage() {
                                   placeholder="Search state..."
                                   value={fromSearchQuery}
                                   onChange={(e) => setFromSearchQuery(e.target.value)}
-                                  className="w-full px-3 py-2 bg-muted/50 rounded-lg text-sm outline-none focus:ring-2 focus:ring-accent"
+                                  style={{ fontSize: '16px' }}
+                                  className="w-full px-3 py-2 bg-muted/50 rounded-lg text-sm outline-none focus:ring-2 focus:ring-accent min-h-[44px]"
                                   autoFocus
+                                  autoComplete="off"
+                                  autoCapitalize="off"
+                                  spellCheck="false"
                                 />
                               </div>
                               <div className="max-h-60 overflow-y-auto">
@@ -303,9 +330,18 @@ export default function HomePage() {
                                         setShowFromDropdown(false)
                                         setFromSearchQuery('')
                                       }}
-                                      className="w-full px-4 py-3 text-left hover:bg-muted transition-colors flex items-center gap-3"
+                                      onKeyDown={(e) => {
+                                        if (e.key === 'Enter' || e.key === ' ') {
+                                          e.preventDefault()
+                                          setFromState(state.id)
+                                          setShowFromDropdown(false)
+                                          setFromSearchQuery('')
+                                        }
+                                      }}
+                                      className="w-full px-4 py-3 text-left hover:bg-muted transition-colors flex items-center gap-3 touch-target min-h-[44px] focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+                                      aria-label={`Select ${state.name} as origin`}
                                     >
-                                      <MapPin className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                                      <MapPin className="w-4 h-4 text-muted-foreground flex-shrink-0" aria-hidden="true" />
                                       <span className="font-medium">{state.name}</span>
                                     </button>
                                   ))
@@ -345,7 +381,7 @@ export default function HomePage() {
                               animate={{ opacity: 1, y: 0 }}
                               exit={{ opacity: 0, y: -10 }}
                               transition={{ duration: 0.2 }}
-                              className="absolute top-full left-0 right-0 mt-2 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border border-border/50 rounded-xl shadow-xl overflow-hidden z-40"
+                              className="absolute top-full left-0 right-0 mt-2 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border border-border/50 rounded-xl shadow-xl overflow-hidden z-50 max-h-[60vh] overflow-y-auto"
                             >
                               <div className="p-2 border-b border-border/50">
                                 <input
@@ -353,8 +389,12 @@ export default function HomePage() {
                                   placeholder="Search state..."
                                   value={toSearchQuery}
                                   onChange={(e) => setToSearchQuery(e.target.value)}
-                                  className="w-full px-3 py-2 bg-muted/50 rounded-lg text-sm outline-none focus:ring-2 focus:ring-accent"
+                                  style={{ fontSize: '16px' }}
+                                  className="w-full px-3 py-2 bg-muted/50 rounded-lg text-sm outline-none focus:ring-2 focus:ring-accent min-h-[44px]"
                                   autoFocus
+                                  autoComplete="off"
+                                  autoCapitalize="off"
+                                  spellCheck="false"
                                 />
                               </div>
                               <div className="max-h-60 overflow-y-auto">
@@ -367,9 +407,18 @@ export default function HomePage() {
                                         setShowToDropdown(false)
                                         setToSearchQuery('')
                                       }}
-                                      className="w-full px-4 py-3 text-left hover:bg-muted transition-colors flex items-center gap-3"
+                                      onKeyDown={(e) => {
+                                        if (e.key === 'Enter' || e.key === ' ') {
+                                          e.preventDefault()
+                                          setToState(state.id)
+                                          setShowToDropdown(false)
+                                          setToSearchQuery('')
+                                        }
+                                      }}
+                                      className="w-full px-4 py-3 text-left hover:bg-muted transition-colors flex items-center gap-3 touch-target min-h-[44px] focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+                                      aria-label={`Select ${state.name} as destination`}
                                     >
-                                      <MapPin className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                                      <MapPin className="w-4 h-4 text-muted-foreground flex-shrink-0" aria-hidden="true" />
                                       <span className="font-medium">{state.name}</span>
                                     </button>
                                   ))

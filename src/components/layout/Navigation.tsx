@@ -3,7 +3,8 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { Shield, Route, Phone, Info, Heart, Home, Map, Users, Sparkles } from 'lucide-react'
+import { Route, Phone, Info, Heart, Home, Map, Users, Radio } from 'lucide-react'
+import { Logo } from '@/components/ui/Logo'
 
 const navLinks = [
   { href: '/', label: 'Home', icon: Home },
@@ -20,7 +21,12 @@ export function Navigation() {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      className="fixed top-8 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border shadow-sm"
+      className="fixed top-8 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border shadow-sm w-full overflow-x-hidden safe-left safe-right"
+      style={{
+        paddingLeft: 'max(0px, env(safe-area-inset-left))',
+        paddingRight: 'max(0px, env(safe-area-inset-right))',
+        top: 'calc(2rem + max(0px, env(safe-area-inset-top)))',
+      }}
     >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
@@ -31,15 +37,7 @@ export function Navigation() {
               whileTap={{ scale: 0.95 }}
               className="flex items-center gap-2"
             >
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <Shield className="w-5 h-5 text-primary-foreground" />
-              </div>
-              <span className="font-bold text-lg tracking-tight hidden sm:block">
-                Nigeria Security Alert
-              </span>
-              <span className="font-bold text-lg tracking-tight sm:hidden">
-                NSA
-              </span>
+              <Logo size="lg" variant="default" />
             </motion.div>
           </Link>
 
@@ -93,11 +91,14 @@ export function Navigation() {
                     <div className="relative">
                       <Users className="w-3.5 h-3.5 text-green-600 dark:text-emerald-400" />
                       <motion.div
-                        animate={{ opacity: [0.5, 1, 0.5] }}
-                        transition={{ duration: 2, repeat: Infinity }}
+                        animate={{ 
+                          scale: [1, 1.2, 1],
+                          opacity: [0.6, 1, 0.6]
+                        }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                         className="absolute -top-0.5 -right-0.5"
                       >
-                        <Sparkles className="w-2 h-2 text-emerald-500 dark:text-emerald-300" />
+                        <div className="w-2 h-2 rounded-full bg-emerald-500 dark:bg-emerald-400 shadow-lg shadow-emerald-500/50" />
                       </motion.div>
                     </div>
                     <div className="flex flex-col leading-tight">
@@ -140,16 +141,19 @@ export function Navigation() {
                   
                   {/* Content */}
                   <div className="relative flex items-center gap-2.5">
-                    <div className="relative">
-                      <Users className="w-4 h-4 text-green-600 dark:text-emerald-400" />
-                      <motion.div
-                        animate={{ opacity: [0.5, 1, 0.5] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                        className="absolute -top-0.5 -right-0.5"
-                      >
-                        <Sparkles className="w-2.5 h-2.5 text-emerald-500 dark:text-emerald-300" />
-                      </motion.div>
-                    </div>
+                          <div className="relative">
+                            <Users className="w-4 h-4 text-green-600 dark:text-emerald-400" />
+                            <motion.div
+                              animate={{ 
+                                scale: [1, 1.3, 1],
+                                opacity: [0.6, 1, 0.6]
+                              }}
+                              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                              className="absolute -top-0.5 -right-0.5"
+                            >
+                              <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 dark:bg-emerald-400 shadow-lg shadow-emerald-500/50" />
+                            </motion.div>
+                          </div>
                     <div className="flex flex-col leading-tight">
                       <span className="text-xs font-semibold text-foreground whitespace-nowrap">
                         Real time alerts
