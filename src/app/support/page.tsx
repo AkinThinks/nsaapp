@@ -11,10 +11,8 @@ import {
   Shield,
   Code,
   PenTool,
-  Globe,
-  ExternalLink
+  Globe
 } from 'lucide-react'
-import { LinkedInIcon, InstagramIcon } from '@/components/ui/SocialIcons'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 
@@ -174,35 +172,12 @@ export default function SupportPage() {
               <p className="text-muted-foreground mb-4">
                 Reach out to us anytime. We would love to hear from you.
               </p>
-              <div className="space-y-3">
-                <a 
-                  href="mailto:akin@thinknodes.com"
-                  className="flex items-center justify-center gap-2 text-accent font-medium hover:underline"
-                >
-                  <Mail className="w-4 h-4" />
-                  akin@thinknodes.com
-                </a>
-                <div className="flex items-center justify-center gap-3 pt-2">
-                  <a 
-                    href="https://www.linkedin.com/in/akinthegreat/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center w-10 h-10 rounded-lg bg-[#0077b5]/10 hover:bg-[#0077b5]/20 transition-colors group"
-                    aria-label="LinkedIn Profile"
-                  >
-                    <LinkedInIcon className="w-5 h-5 text-[#0077b5] group-hover:scale-110 transition-transform" />
-                  </a>
-                  <a 
-                    href="https://www.instagram.com/akin.builds?igsh=bzluOWs2cTE1bDVx&utm_source=qr"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-[#833AB4] via-[#FD1D1D] to-[#FCB045]/10 hover:from-[#833AB4]/20 hover:via-[#FD1D1D]/20 hover:to-[#FCB045]/20 transition-colors group"
-                    aria-label="Instagram Profile"
-                  >
-                    <InstagramIcon className="w-5 h-5 text-[#E4405F] group-hover:scale-110 transition-transform" />
-                  </a>
-                </div>
-              </div>
+              <a 
+                href="mailto:akin@thinknodes.com"
+                className="text-accent font-medium hover:underline"
+              >
+                akin@thinknodes.com
+              </a>
             </Card>
           </motion.div>
         </motion.div>

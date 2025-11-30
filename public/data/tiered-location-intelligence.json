@@ -18,7 +18,7 @@
       "transit_advice": "Route not recommended. Use Abuja-Kaduna Railway or alternative routes.",
       "safer_hours": "7:00 - 10:00",
       "emergency_contacts": ["08123822284"],
-      "alternatives": [
+        "alternatives": [
         "Use Abuja-Kaduna Railway (train service)",
         "Fly to Kaduna airport"
       ]
@@ -41,7 +41,7 @@
       "transit_advice": "Route not recommended. Avoid completely or use military escort.",
       "safer_hours": "7:00 - 16:00",
       "emergency_contacts": ["08106580123"],
-      "alternatives": [
+        "alternatives": [
         "Avoid all road travel through this area",
         "Use alternative routes if available"
       ]

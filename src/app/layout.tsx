@@ -74,14 +74,13 @@ export default function RootLayout({
         <BrowserCompatProvider>
           <TopBanner />
           <Navigation />
-          <main className="pt-24 pb-20 md:pb-0 w-full overflow-x-hidden mobile-main-padding">
+          <main className="pt-24 pb-8 md:pb-0 w-full overflow-x-hidden">
             <PageTransition>
               {children}
             </PageTransition>
           </main>
+          <MobileNav />
         </BrowserCompatProvider>
-        {/* MobileNav must be outside any transformed containers to maintain fixed positioning */}
-        <MobileNav />
         <Analytics />
         <SpeedInsights />
       </body>
