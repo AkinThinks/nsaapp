@@ -479,7 +479,7 @@ export default function AreaSafetyPage() {
         visitor_messages: {},
         transit_messages: {}
       }
-      const advisoryLevel = contextDataForShare.advisory_levels[location.risk_level]?.[userContext] || location.risk_level
+      const advisoryLevel = (contextDataForShare.advisory_levels as Record<string, Record<string, string>>)[location.risk_level]?.[userContext] || location.risk_level
       const text = `Safety Report: ${location.name}\n` +
                    `Advisory: ${advisoryLevel}\n` +
                    `Summary: ${locationData.summary || 'No summary available'}\n` +
@@ -584,16 +584,17 @@ export default function AreaSafetyPage() {
   const badge = locationData.badge || '⚠️ Unknown Risk'
   const isSafeArea = location.risk_level === 'MODERATE' || location.risk_level === 'LOW'
   const isDangerousArea = location.risk_level === 'EXTREME' || location.risk_level === 'VERY HIGH' || location.risk_level === 'HIGH'
-  const advisoryLevel = contextDataToUse.advisory_levels[location.risk_level]?.[userContext] || location.risk_level
+  const advisoryLevel = (contextDataToUse.advisory_levels as Record<string, Record<string, string>>)[location.risk_level]?.[userContext] || location.risk_level
 
   // Get context-specific message
   const getContextMessage = () => {
+    const riskLevel = location.risk_level
     if (userContext === 'resident') {
-      return contextDataToUse.resident_messages[location.risk_level] || "Stay safe, stay connected."
+      return (contextDataToUse.resident_messages as Record<string, string>)[riskLevel] || "Stay safe, stay connected."
     } else if (userContext === 'visitor') {
-      return contextDataToUse.visitor_messages[location.risk_level] || "Please review travel advisory."
+      return (contextDataToUse.visitor_messages as Record<string, string>)[riskLevel] || "Please review travel advisory."
     } else {
-      return contextDataToUse.transit_messages[location.risk_level] || "Review route safety information."
+      return (contextDataToUse.transit_messages as Record<string, string>)[riskLevel] || "Review route safety information."
     }
   }
 
