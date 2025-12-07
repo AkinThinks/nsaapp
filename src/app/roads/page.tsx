@@ -28,6 +28,7 @@ import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { checkRouteSafety } from '@/lib/route-intelligence'
 import { analytics } from '@/lib/analytics'
+import { RouteLiveReports } from '@/components/RouteLiveReports'
 
 // Risk level type
 type RiskLevel = 'EXTREME' | 'VERY HIGH' | 'HIGH' | 'MODERATE' | 'LOW'
@@ -459,6 +460,21 @@ function RoadsPageContent() {
                       })}
                     </div>
                   </Card>
+                )}
+
+                {/* Live Incident Reports with Intelligence */}
+                {routeResult?.stateBreakdown && (
+                  <RouteLiveReports 
+                    stateIds={routeResult.stateBreakdown.map(s => s.stateId || s.id)}
+                    routeDisplay={routeResult.routeDisplay}
+                    enableIntelligence={true}
+                    routeProfile={{
+                      routeDisplay: routeResult.routeDisplay,
+                      overallRisk: routeResult.overallRisk,
+                      dangerousRoads: routeResult.dangerousRoads,
+                      recommendations: routeResult.recommendations,
+                    }}
+                  />
                 )}
 
                 {/* Dangerous Roads */}

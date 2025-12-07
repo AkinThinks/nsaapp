@@ -45,6 +45,7 @@ import {
   TieredLocationIntelligence
 } from '@/lib/location-intelligence'
 import { analytics } from '@/lib/analytics'
+import { LiveReportsSection } from '@/components/LiveReportsSection'
 
 type UserContext = 'resident' | 'visitor' | 'transit'
 
@@ -627,19 +628,117 @@ export default function AreaSafetyPage() {
 
   return (
     <div className="min-h-screen pb-20 w-full overflow-x-hidden">
-      {/* Header */}
+      {/* Sticky Context Selector - Mobile-First, Always Visible */}
+      <div className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border shadow-sm">
+        <div className="max-w-4xl mx-auto px-3 sm:px-4 lg:px-8 py-3 sm:py-4">
+          {/* Helper text - subtle but clear */}
+          <p className="text-xs sm:text-sm font-medium text-muted-foreground mb-2.5 sm:mb-3 text-center">
+            Choose your perspective:
+          </p>
+          
+          {/* iOS-Style Segmented Control - 3 Options */}
+          <div className="relative bg-gray-100 dark:bg-gray-800 rounded-xl p-1 sm:p-1.5 flex gap-1 shadow-inner border border-gray-200 dark:border-gray-700">
+            {/* Animated background slider */}
+            <motion.div 
+              className="absolute top-1 sm:top-1.5 bottom-1 sm:bottom-1.5 rounded-lg bg-white dark:bg-gray-900 shadow-sm"
+              initial={false}
+              animate={{
+                left: userContext === 'resident' 
+                  ? '4px' 
+                  : userContext === 'visitor'
+                  ? 'calc(33.333% + 4px)'
+                  : 'calc(66.666% + 4px)',
+                right: userContext === 'resident'
+                  ? 'calc(66.666% + 4px)'
+                  : userContext === 'visitor'
+                  ? 'calc(33.333% + 4px)'
+                  : '4px',
+              }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+              style={{ 
+                left: userContext === 'resident' 
+                  ? '4px' 
+                  : userContext === 'visitor'
+                  ? 'calc(33.333% + 4px)'
+                  : 'calc(66.666% + 4px)',
+                right: userContext === 'resident'
+                  ? 'calc(66.666% + 4px)'
+                  : userContext === 'visitor'
+                  ? 'calc(33.333% + 4px)'
+                  : '4px',
+              }}
+            />
+            
+            {/* Resident Button */}
+            <button
+              onClick={() => handleContextChange('resident')}
+              className={`relative z-10 flex-1 flex flex-col items-center justify-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-2.5 sm:py-3 rounded-lg transition-all duration-200 min-h-[56px] sm:min-h-[64px] touch-target ${
+                userContext === 'resident'
+                  ? 'text-blue-700 dark:text-blue-400 font-semibold'
+                  : 'text-gray-600 dark:text-gray-400 font-medium'
+              }`}
+              aria-label="I live here"
+              aria-pressed={userContext === 'resident'}
+            >
+              <Home className={`w-5 h-5 sm:w-6 sm:h-6 transition-transform duration-200 ${
+                userContext === 'resident' ? 'scale-110' : 'scale-100'
+              }`} />
+              <span className="text-xs sm:text-sm font-medium">I live here</span>
+              <span className="text-[10px] sm:text-xs opacity-70 hidden sm:block">Local resident</span>
+            </button>
+            
+            {/* Visitor Button */}
+            <button
+              onClick={() => handleContextChange('visitor')}
+              className={`relative z-10 flex-1 flex flex-col items-center justify-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-2.5 sm:py-3 rounded-lg transition-all duration-200 min-h-[56px] sm:min-h-[64px] touch-target ${
+                userContext === 'visitor'
+                  ? 'text-blue-700 dark:text-blue-400 font-semibold'
+                  : 'text-gray-600 dark:text-gray-400 font-medium'
+              }`}
+              aria-label="Traveling there"
+              aria-pressed={userContext === 'visitor'}
+            >
+              <Plane className={`w-5 h-5 sm:w-6 sm:h-6 transition-transform duration-200 ${
+                userContext === 'visitor' ? 'scale-110' : 'scale-100'
+              }`} />
+              <span className="text-xs sm:text-sm font-medium">Traveling there</span>
+              <span className="text-[10px] sm:text-xs opacity-70 hidden sm:block">Planning a trip</span>
+            </button>
+            
+            {/* Transit Button */}
+            <button
+              onClick={() => handleContextChange('transit')}
+              className={`relative z-10 flex-1 flex flex-col items-center justify-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-2.5 sm:py-3 rounded-lg transition-all duration-200 min-h-[56px] sm:min-h-[64px] touch-target ${
+                userContext === 'transit'
+                  ? 'text-blue-700 dark:text-blue-400 font-semibold'
+                  : 'text-gray-600 dark:text-gray-400 font-medium'
+              }`}
+              aria-label="Passing through"
+              aria-pressed={userContext === 'transit'}
+            >
+              <Car className={`w-5 h-5 sm:w-6 sm:h-6 transition-transform duration-200 ${
+                userContext === 'transit' ? 'scale-110' : 'scale-100'
+              }`} />
+              <span className="text-xs sm:text-sm font-medium">Passing through</span>
+              <span className="text-[10px] sm:text-xs opacity-70 hidden sm:block">Just transiting</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Header - Below Sticky Selector */}
       <div className="bg-muted/50 border-b border-border">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <Link href="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-4 transition-colors">
+            <Link href="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-3 sm:mb-4 transition-colors touch-target min-h-[44px]">
               <ArrowLeft className="w-4 h-4" />
               <span className="text-sm">Back to Home</span>
             </Link>
             
-            <div className="flex items-center gap-3 mb-4">
+            <div className="flex items-center gap-3">
               <Logo 
                 size="md" 
                 variant="location" 
@@ -647,111 +746,11 @@ export default function AreaSafetyPage() {
                 userContext={userContext}
                 riskLevel={location.risk_level}
               />
-              <h1 className="text-2xl md:text-3xl font-bold">{getPageTitle()}</h1>
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold">{getPageTitle()}</h1>
             </div>
-
-            {/* Context Selector */}
-            <div className="mb-4">
-              <p className="text-sm font-medium text-muted-foreground mb-2">I am:</p>
-              <div className="flex flex-wrap gap-2">
-                <motion.button
-                  onClick={() => handleContextChange('resident')}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className={`relative flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium text-sm transition-all overflow-hidden touch-target min-h-[44px] ${
-                    userContext === 'resident'
-                      ? 'text-white shadow-lg'
-                      : 'bg-muted text-muted-foreground hover:bg-muted/80'
-                  }`}
-                  style={userContext === 'resident' ? {
-                    background: 'linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%)',
-                  } : {}}
-                  aria-label="I live here"
-                  aria-pressed={userContext === 'resident'}
-                >
-                  {userContext === 'resident' && (
-                    <motion.div
-                      className="absolute inset-0 bg-white/20"
-                      animate={{
-                        x: ['-100%', '100%'],
-                      }}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: "linear"
-                      }}
-                    />
-                  )}
-                  <Home className="w-4 h-4 relative z-10" />
-                  <span className="relative z-10">I live here</span>
-                </motion.button>
-                <motion.button
-                  onClick={() => handleContextChange('visitor')}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className={`relative flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium text-sm transition-all overflow-hidden touch-target min-h-[44px] ${
-                    userContext === 'visitor'
-                      ? 'text-white shadow-lg'
-                      : 'bg-muted text-muted-foreground hover:bg-muted/80'
-                  }`}
-                  style={userContext === 'visitor' ? {
-                    background: 'linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%)',
-                  } : {}}
-                  aria-label="Traveling there"
-                  aria-pressed={userContext === 'visitor'}
-                >
-                  {userContext === 'visitor' && (
-                    <motion.div
-                      className="absolute inset-0 bg-white/20"
-                      animate={{
-                        x: ['-100%', '100%'],
-                      }}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: "linear"
-                      }}
-                    />
-                  )}
-                  <Plane className="w-4 h-4 relative z-10" />
-                  <span className="relative z-10">Traveling there</span>
-                </motion.button>
-                <motion.button
-                  onClick={() => handleContextChange('transit')}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className={`relative flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium text-sm transition-all overflow-hidden touch-target min-h-[44px] ${
-                    userContext === 'transit'
-                      ? 'text-white shadow-lg'
-                      : 'bg-muted text-muted-foreground hover:bg-muted/80'
-                  }`}
-                  style={userContext === 'transit' ? {
-                    background: 'linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%)',
-                  } : {}}
-                  aria-label="Passing through"
-                  aria-pressed={userContext === 'transit'}
-                >
-                  {userContext === 'transit' && (
-                    <motion.div
-                      className="absolute inset-0 bg-white/20"
-                      animate={{
-                        x: ['-100%', '100%'],
-                      }}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: "linear"
-                      }}
-                    />
-                  )}
-                  <Car className="w-4 h-4 relative z-10" />
-                  <span className="relative z-10">Passing through</span>
-                </motion.button>
-              </div>
-            </div>
-
+            
             {/* Badge - Prominently displayed */}
-            <div className="flex items-center gap-3 flex-wrap">
+            <div className="flex items-center gap-3 flex-wrap mt-4">
               {badge && (
                 <motion.div 
                   initial={{ scale: 0.9, opacity: 0 }}
@@ -1393,6 +1392,22 @@ export default function AreaSafetyPage() {
               )}
             </>
           )}
+
+          {/* Live Reports Section with Intelligence - Synced with Top Selection */}
+          <LiveReportsSection 
+            locationId={locationId}
+            locationName={locationData?.location_name || location?.name}
+            state={locationData?.state || location?.state}
+            enableIntelligence={true}
+            userContext={userContext} // Pass context to sync intelligence
+            areaProfile={{
+              riskLevel: locationData?.risk_level,
+              keyThreats: locationData?.key_threats,
+              saferZones: locationData?.safer_zones,
+              dangerZones: locationData?.danger_zones,
+              travelWindow: locationData?.travel_windows?.safest,
+            }}
+          />
 
           {/* Emergency Contacts - Always shown */}
           {locationData?.emergency_contacts && typeof locationData.emergency_contacts === 'object' && (
