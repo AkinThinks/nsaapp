@@ -90,7 +90,7 @@ function getRouteRoadNames(stateIds: string[]): string[] {
     roadNames.push(...nameTerms)
   })
   
-  return [...new Set(roadNames)] // Deduplicate
+  return Array.from(new Set(roadNames)) // Deduplicate
 }
 
 /**
