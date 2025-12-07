@@ -87,8 +87,8 @@ const itemVariants = {
 
 // Badge system with emojis and colors
 const badgeSystem = {
-  EXTREME: { emoji: '⛔', text: 'Avoid Travel', color: '#DC2626' },
-  "VERY HIGH": { emoji: '⚠️', text: 'High Caution', color: '#EA580C' },
+  EXTREME: { emoji: '⛔', text: 'Extreme Risk', color: '#DC2626' },
+  "VERY HIGH": { emoji: '⚠️', text: 'Heightened Alert', color: '#EA580C' },
   HIGH: { emoji: '🔔', text: 'Stay Alert', color: '#CA8A04' },
   MODERATE: { emoji: '✅', text: 'Generally Safe', color: '#10b981' },
   LOW: { emoji: '🟢', text: 'Safe', color: '#22c55e' },
@@ -153,10 +153,10 @@ function getTemplate(riskLevel: string, locationName?: string): Partial<TieredLo
   }
 
   if (riskLevel === 'EXTREME') {
-    baseTemplate.summary = 'This area is experiencing extreme security challenges. Avoid all non-essential travel.'
+    baseTemplate.summary = 'This area is experiencing extreme security challenges. Exercise extreme caution.'
     baseTemplate.travel_advice = {
-      primary: 'DO NOT TRAVEL',
-      details: 'Avoid all non-essential travel. Active conflict zone. If travel is essential, arrange security escort.'
+      primary: 'EXTREME CAUTION REQUIRED',
+      details: 'This area has significant security challenges. If travel is essential, arrange security escort and travel only during safest hours.'
     }
     baseTemplate.recommendations = [
       'Strongly consider alternative routes or transportation.',
@@ -167,17 +167,17 @@ function getTemplate(riskLevel: string, locationName?: string): Partial<TieredLo
     ]
     baseTemplate.welcome_message = locationName ? `${locationName} is currently under extreme alert.` : 'This area is currently under extreme alert.'
     baseTemplate.resident_welcome = locationName ? `Heightened Alert: ${locationName}` : 'Heightened Alert'
-    baseTemplate.visitor_welcome = locationName ? `Do Not Travel: ${locationName}` : 'Do Not Travel'
+    baseTemplate.visitor_welcome = locationName ? `Extreme Risk: ${locationName}` : 'Extreme Risk'
     baseTemplate.transit_welcome = locationName ? `Route Safety: Through ${locationName}` : 'Route Safety'
-    baseTemplate.visitor_tips = ['Avoid completely', 'Seek military escort if essential']
+    baseTemplate.visitor_tips = ['Exercise extreme caution', 'Seek security escort if essential']
     baseTemplate.resident_tips = ['Stay indoors during high-risk hours', 'Maintain communication with community leaders']
-    baseTemplate.transit_tips = ['Avoid passing through', 'Seek alternative routes']
+    baseTemplate.transit_tips = ['Consider alternative routes', 'Travel with security if possible']
     baseTemplate.if_break_down = ['Stay in your vehicle', 'Call emergency services immediately', 'Do not exit vehicle until help arrives']
   } else if (riskLevel === 'VERY HIGH') {
-    baseTemplate.summary = 'This area has very high security risks. Essential travel only.'
+    baseTemplate.summary = 'This area has very high security risks. Exercise heightened caution.'
     baseTemplate.travel_advice = {
-      primary: 'RECONSIDER TRAVEL',
-      details: 'Essential travel only. High kidnapping/attack risk. Exercise extreme caution if travel is unavoidable.'
+      primary: 'HEIGHTENED ALERT',
+      details: 'High security risks present. Exercise extreme caution if travel is necessary. Travel during safest hours only.'
     }
     baseTemplate.recommendations = [
       'Travel only if absolutely necessary.',
@@ -275,6 +275,7 @@ export default function AreaSafetyPage() {
   const [researchModeConfirmed, setResearchModeConfirmed] = useState(false)
   const [loading, setLoading] = useState(true)
   const [copied, setCopied] = useState(false)
+  const [adjustedRiskLevel, setAdjustedRiskLevel] = useState<string | null>(null) // For live intelligence adjusted risk
 
   // Load user context preference from localStorage
   useEffect(() => {
@@ -578,18 +579,23 @@ export default function AreaSafetyPage() {
     transit_messages: {}
   }
 
-  const riskColor = riskColors[location.risk_level] || riskColors.MODERATE
+  // Use adjusted risk from live intelligence if available, otherwise use static risk
+  const effectiveRiskLevel = adjustedRiskLevel || location.risk_level
+  const riskColor = riskColors[effectiveRiskLevel as keyof typeof riskColors] || riskColors.MODERATE
   const stateName = location.state ? states.find(s => s.id === location.state)?.name : undefined
   
-  // Badge from locationData
-  const badge = locationData.badge || '⚠️ Unknown Risk'
-  const isSafeArea = location.risk_level === 'MODERATE' || location.risk_level === 'LOW'
-  const isDangerousArea = location.risk_level === 'EXTREME' || location.risk_level === 'VERY HIGH' || location.risk_level === 'HIGH'
-  const advisoryLevel = (contextDataToUse.advisory_levels as Record<string, Record<string, string>>)[location.risk_level]?.[userContext] || location.risk_level
+  // Badge from locationData, but use adjusted risk if available
+  const badgeBadgeSystem = badgeSystem[effectiveRiskLevel as keyof typeof badgeSystem] || badgeSystem.MODERATE
+  const badge = adjustedRiskLevel 
+    ? `${badgeBadgeSystem.emoji} ${badgeBadgeSystem.text}${adjustedRiskLevel !== location.risk_level ? ` (Historical: ${location.risk_level})` : ''}`
+    : (locationData.badge || '⚠️ Unknown Risk')
+  const isSafeArea = effectiveRiskLevel === 'MODERATE' || effectiveRiskLevel === 'LOW'
+  const isDangerousArea = effectiveRiskLevel === 'EXTREME' || effectiveRiskLevel === 'VERY HIGH' || effectiveRiskLevel === 'HIGH'
+  const advisoryLevel = (contextDataToUse.advisory_levels as Record<string, Record<string, string>>)[effectiveRiskLevel]?.[userContext] || effectiveRiskLevel
 
   // Get context-specific message
   const getContextMessage = () => {
-    const riskLevel = location.risk_level
+    const riskLevel = effectiveRiskLevel
     if (userContext === 'resident') {
       return (contextDataToUse.resident_messages as Record<string, string>)[riskLevel] || "Stay safe, stay connected."
     } else if (userContext === 'visitor') {
@@ -597,6 +603,11 @@ export default function AreaSafetyPage() {
     } else {
       return (contextDataToUse.transit_messages as Record<string, string>)[riskLevel] || "Review route safety information."
     }
+  }
+  
+  // Callback to receive adjusted risk from live intelligence
+  const handleDynamicRiskChange = (adjustedRisk: string | null) => {
+    setAdjustedRiskLevel(adjustedRisk)
   }
 
   // Get page title based on context
@@ -758,13 +769,13 @@ export default function AreaSafetyPage() {
                   transition={{ delay: 0.2 }}
                   className={`px-5 py-3 rounded-xl font-bold text-base md:text-lg ${riskColor.text} shadow-lg border-2 flex items-center gap-2.5 justify-center relative overflow-hidden max-w-full`}
                   style={isSafeArea ? {
-                    background: location.risk_level === 'MODERATE'
+                    background: effectiveRiskLevel === 'MODERATE'
                       ? 'linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%)'
                       : 'linear-gradient(135deg, #22c55e 0%, #16a34a 50%, #15803d 100%)',
-                    borderColor: location.risk_level === 'MODERATE' ? '#059669' : '#16a34a',
+                    borderColor: effectiveRiskLevel === 'MODERATE' ? '#059669' : '#16a34a',
                   } : {
-                    background: riskColors[location.risk_level as keyof typeof riskColors]?.gradient || riskColor.bg,
-                    borderColor: riskColors[location.risk_level as keyof typeof riskColors]?.borderColor || '#DC2626',
+                    background: riskColors[effectiveRiskLevel as keyof typeof riskColors]?.gradient || riskColor.bg,
+                    borderColor: riskColors[effectiveRiskLevel as keyof typeof riskColors]?.borderColor || '#DC2626',
                   }}
                 >
                   {isSafeArea && (
@@ -823,13 +834,13 @@ export default function AreaSafetyPage() {
                 variants={itemVariants}
                 className="p-6 md:p-8 border-2 rounded-xl shadow-lg relative overflow-hidden"
                 style={{
-                  background: location.risk_level === 'MODERATE' 
+                  background: effectiveRiskLevel === 'MODERATE' 
                     ? 'linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%)'
-                    : location.risk_level === 'LOW'
+                    : effectiveRiskLevel === 'LOW'
                     ? 'linear-gradient(135deg, #22c55e 0%, #16a34a 50%, #15803d 100%)'
                     : 'linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%)',
-                  borderColor: location.risk_level === 'MODERATE' ? '#059669' :
-                               location.risk_level === 'LOW' ? '#16a34a' : '#059669',
+                  borderColor: effectiveRiskLevel === 'MODERATE' ? '#059669' :
+                               effectiveRiskLevel === 'LOW' ? '#16a34a' : '#059669',
                 }}
               >
                 {/* Subtle shine effect */}
@@ -951,12 +962,12 @@ export default function AreaSafetyPage() {
                 variants={itemVariants}
                 className="p-6 md:p-8 border-2 rounded-xl shadow-lg"
                 style={{
-                  backgroundColor: location.risk_level === 'EXTREME' ? '#DC2626' :
-                                   location.risk_level === 'VERY HIGH' ? '#EA580C' :
-                                   location.risk_level === 'HIGH' ? '#CA8A04' : '#DC2626',
-                  borderColor: location.risk_level === 'EXTREME' ? '#DC2626' :
-                               location.risk_level === 'VERY HIGH' ? '#EA580C' :
-                               location.risk_level === 'HIGH' ? '#CA8A04' : '#DC2626',
+                  backgroundColor: effectiveRiskLevel === 'EXTREME' ? '#DC2626' :
+                                   effectiveRiskLevel === 'VERY HIGH' ? '#EA580C' :
+                                   effectiveRiskLevel === 'HIGH' ? '#CA8A04' : '#DC2626',
+                  borderColor: effectiveRiskLevel === 'EXTREME' ? '#DC2626' :
+                               effectiveRiskLevel === 'VERY HIGH' ? '#EA580C' :
+                               effectiveRiskLevel === 'HIGH' ? '#CA8A04' : '#DC2626',
                 }}
               >
                 <div className="text-center relative z-10 px-4 sm:px-0">
@@ -988,13 +999,17 @@ export default function AreaSafetyPage() {
                     />
                   </motion.div>
                   <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-2 px-2 sm:px-0 leading-tight" style={{ color: 'white' }}>
-                    {location.risk_level === 'HIGH' 
+                    {effectiveRiskLevel === 'HIGH' 
                       ? (userContext === 'resident' ? '🔔 Stay Alert' : 
                          userContext === 'visitor' ? '⚠️ Exercise Caution' : 
                          '⚠️ Route Requires Caution')
+                      : effectiveRiskLevel === 'EXTREME'
+                      ? (userContext === 'resident' ? '⚠️ Heightened Alert' : 
+                         userContext === 'visitor' ? '⛔ Extreme Risk' : 
+                         '⚠️ Route High Risk')
                       : (userContext === 'resident' ? '⚠️ Heightened Alert' : 
-                         userContext === 'visitor' ? '🔴 Do Not Travel' : 
-                         '⚠️ Route Not Recommended')}
+                         userContext === 'visitor' ? '⚠️ Heightened Alert' : 
+                         '⚠️ Route Requires Caution')}
                   </h2>
                   <p className="text-sm sm:text-base md:text-lg opacity-95 px-2 sm:px-0 leading-relaxed" style={{ color: 'white' }}>
                     {getContextMessage()}
@@ -1177,7 +1192,7 @@ export default function AreaSafetyPage() {
               )}
 
               {/* EXTREME Areas - Extra Info */}
-              {location.risk_level === 'EXTREME' && (
+              {effectiveRiskLevel === 'EXTREME' && (
                 <>
                   {/* What Not To Do */}
                   {locationData?.what_not_to_do && Array.isArray(locationData.what_not_to_do) && locationData.what_not_to_do.length > 0 && (
@@ -1407,6 +1422,7 @@ export default function AreaSafetyPage() {
               dangerZones: locationData?.danger_zones,
               travelWindow: locationData?.travel_windows?.safest,
             }}
+            onDynamicRiskChange={handleDynamicRiskChange}
           />
 
           {/* Emergency Contacts - Always shown */}

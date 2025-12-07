@@ -205,8 +205,8 @@ export interface CombinedLocationData {
  * Badge mapping based on risk level
  */
 const badgeMapping: Record<string, { emoji: string; text: string }> = {
-  EXTREME: { emoji: '⛔', text: 'Do Not Travel' },
-  'VERY HIGH': { emoji: '⚠️', text: 'Reconsider Travel' },
+  EXTREME: { emoji: '⛔', text: 'Extreme Risk' },
+  'VERY HIGH': { emoji: '⚠️', text: 'Heightened Alert' },
   HIGH: { emoji: '🔔', text: 'Stay Alert' },
   MODERATE: { emoji: '✅', text: 'Generally Safe' },
   LOW: { emoji: '🟢', text: 'Safe' },

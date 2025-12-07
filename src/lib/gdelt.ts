@@ -19,11 +19,10 @@ export interface GDELTArticle {
 // ============================================================================
 
 // Incident-specific keywords for GDELT query (replaces generic "security")
+// Simplified to avoid GDELT query length limits - most critical terms only
 const GDELT_INCIDENT_KEYWORDS = [
   'killed', 'kidnapped', 'attacked', 'robbery', 'gunmen', 'bandits',
-  'explosion', 'kidnapping', 'abducted', 'shot', 'shooting', 'bombing',
-  'cultists', 'terrorists', 'insurgents', 'Boko Haram', 'ISWAP',
-  'murdered', 'hostage', 'ransom', 'ambush', 'clash', 'violence'
+  'explosion', 'bombing', 'terrorists', 'Boko Haram', 'ISWAP'
 ].join(' OR ')
 
 /**
@@ -318,11 +317,31 @@ async function fetchGDELTArticles(
   try {
     const response = await fetch(`${GDELT_API_BASE}?${params.toString()}`)
     
+    // Check if response is OK
     if (!response.ok) {
-      throw new Error(`GDELT API error: ${response.status}`)
+      const errorText = await response.text().catch(() => 'Unknown error')
+      console.warn(`GDELT API error ${response.status}:`, errorText.substring(0, 200))
+      return []
     }
     
-    const data = await response.json()
+    // Check content type before parsing JSON
+    const contentType = response.headers.get('content-type') || ''
+    if (!contentType.includes('json')) {
+      const text = await response.text()
+      console.warn('GDELT returned non-JSON response:', text.substring(0, 200))
+      return []
+    }
+    
+    // Parse JSON with error handling
+    let data: any
+    try {
+      data = await response.json()
+    } catch (parseError) {
+      // If JSON parsing fails, try to get the text to see what we got
+      const text = await response.text().catch(() => 'Could not read response')
+      console.warn('GDELT JSON parse error. Response:', text.substring(0, 300))
+      return []
+    }
     
     if (!data.articles || !Array.isArray(data.articles)) {
       return []
@@ -338,7 +357,9 @@ async function fetchGDELTArticles(
       }))
       .slice(0, maxArticles)
   } catch (err) {
-    console.error('GDELT fetch error:', err)
+    // Handle network errors and other exceptions
+    const errorMessage = err instanceof Error ? err.message : String(err)
+    console.error('GDELT fetch error:', errorMessage)
     return []
   }
 }

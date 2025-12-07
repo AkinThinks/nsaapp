@@ -50,6 +50,7 @@ interface LiveReportsSectionProps {
     dangerZones?: string[]
     travelWindow?: string
   }
+  onDynamicRiskChange?: (adjustedRisk: string | null) => void // NEW: Callback to pass adjusted risk to parent
 }
 
 export function LiveReportsSection({ 
@@ -60,6 +61,7 @@ export function LiveReportsSection({
   enableIntelligence = true, // Default to enabled
   userContext = 'visitor', // Default to visitor if not provided
   areaProfile,
+  onDynamicRiskChange,
 }: LiveReportsSectionProps) {
   const [data, setData] = useState<LiveReportsData | null>(null)
   const [loading, setLoading] = useState(true)
@@ -330,17 +332,32 @@ export function LiveReportsSection({
     </a>
   )
   
+  // Notify parent of adjusted risk when it changes
+  useEffect(() => {
+    if (intelligence?.dynamicRisk && onDynamicRiskChange) {
+      onDynamicRiskChange(intelligence.dynamicRisk.adjustedRisk)
+    } else if (!intelligence?.loading && !intelligence?.dynamicRisk && onDynamicRiskChange) {
+      // Reset to null when intelligence is loaded but no dynamic risk adjustment
+      onDynamicRiskChange(null)
+    }
+  }, [intelligence?.dynamicRisk?.adjustedRisk, intelligence?.loading, onDynamicRiskChange])
+  
   // Determine if we should show intelligence or raw reports
   // Show intelligence if:
   // 1. Feature is enabled
   // 2. Intelligence exists and is not loading
   // 3. No error (or error is non-critical)
-  // 4. Has briefing (even with 0 incidents) OR has incidents
-  // This ensures consistent display for all locations, even with 0 incidents
+  // 4. Has briefing OR has incidents (show intelligence even if briefing failed but incidents exist)
+  const hasIncidents = intelligence && (
+    intelligence.groupedIncidents.immediate.length > 0 ||
+    intelligence.groupedIncidents.nearby.length > 0 ||
+    intelligence.groupedIncidents.regional.length > 0 ||
+    intelligence.groupedIncidents.stateWide.length > 0
+  )
   const showIntelligence = enableIntelligence && intelligence && 
     !intelligence.loading && 
     !intelligence.error && 
-    intelligence.briefing !== null // Show if briefing exists (even if empty incidents)
+    (intelligence.briefing !== null || hasIncidents) // Show if briefing exists OR incidents exist
   
   const relevantCount = intelligence 
     ? intelligence.groupedIncidents.immediate.length + 

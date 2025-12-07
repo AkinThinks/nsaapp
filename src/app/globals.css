@@ -710,4 +710,556 @@ input[type="number"] {
   }
 }
 
+/* ============================================
+   ROCKET LOADER - NIGERIAN THEME
+   Fully responsive, mobile-optimized, cross-browser compatible
+   ============================================ */
+
+.loader-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #fafafa 0%, #ffffff 50%, #f0fdf4 100%);
+  overflow: hidden;
+  border-radius: 0.75rem;
+}
+
+.dark .loader-container {
+  background: linear-gradient(135deg, #0a0a0a 0%, #171717 50%, #064e3b 100%);
+}
+
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  .loader-container {
+    min-height: 250px;
+  }
+}
+
+/* Clouds - Nigerian white theme, subtle and elegant */
+.clouds {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.cloud {
+  position: absolute;
+  background: rgba(250, 250, 250, 0.7);
+  border-radius: 50px;
+  opacity: 0.5;
+  will-change: transform;
+}
+
+.dark .cloud {
+  background: rgba(255, 255, 255, 0.08);
+  opacity: 0.3;
+}
+
+.cloud:before,
+.cloud:after {
+  content: '';
+  position: absolute;
+  background: inherit;
+  border-radius: 50px;
+}
+
+/* Responsive cloud sizes */
+.cloud1 {
+  width: clamp(120px, 20vw, 200px);
+  height: clamp(35px, 6vw, 60px);
+  top: 15%;
+  left: 5%;
+  animation: moveClouds 20s linear infinite;
+}
+
+.cloud1:before {
+  width: clamp(30px, 5vw, 50px);
+  height: clamp(30px, 5vw, 50px);
+  top: -25px;
+  left: 10px;
+}
+
+.cloud1:after {
+  width: clamp(35px, 6vw, 60px);
+  height: clamp(35px, 6vw, 60px);
+  top: -30px;
+  right: 10px;
+}
+
+.cloud2 {
+  width: clamp(90px, 15vw, 150px);
+  height: clamp(27px, 4.5vw, 45px);
+  top: 35%;
+  left: 45%;
+  animation: moveClouds 25s linear infinite;
+  animation-delay: -5s;
+}
+
+.cloud2:before {
+  width: clamp(24px, 4vw, 40px);
+  height: clamp(24px, 4vw, 40px);
+  top: -20px;
+  left: 10px;
+}
+
+.cloud2:after {
+  width: clamp(30px, 5vw, 50px);
+  height: clamp(30px, 5vw, 50px);
+  top: -25px;
+  right: 10px;
+}
+
+.cloud3 {
+  width: clamp(108px, 18vw, 180px);
+  height: clamp(33px, 5.5vw, 55px);
+  top: 55%;
+  left: 15%;
+  animation: moveClouds 30s linear infinite;
+  animation-delay: -10s;
+}
+
+.cloud3:before {
+  width: clamp(27px, 4.5vw, 45px);
+  height: clamp(27px, 4.5vw, 45px);
+  top: -22px;
+  left: 10px;
+}
+
+.cloud3:after {
+  width: clamp(33px, 5.5vw, 55px);
+  height: clamp(33px, 5.5vw, 55px);
+  top: -27px;
+  right: 10px;
+}
+
+.cloud4 {
+  width: clamp(72px, 12vw, 120px);
+  height: clamp(24px, 4vw, 40px);
+  top: 75%;
+  left: 65%;
+  animation: moveClouds 22s linear infinite;
+  animation-delay: -7s;
+}
+
+.cloud4:before {
+  width: clamp(21px, 3.5vw, 35px);
+  height: clamp(21px, 3.5vw, 35px);
+  top: -17px;
+  left: 10px;
+}
+
+.cloud4:after {
+  width: clamp(27px, 4.5vw, 45px);
+  height: clamp(27px, 4.5vw, 45px);
+  top: -22px;
+  right: 10px;
+}
+
+.cloud5 {
+  width: clamp(96px, 16vw, 160px);
+  height: clamp(30px, 5vw, 50px);
+  top: 25%;
+  left: 75%;
+  animation: moveClouds 28s linear infinite;
+  animation-delay: -12s;
+}
+
+.cloud5:before {
+  width: clamp(25px, 4.2vw, 42px);
+  height: clamp(25px, 4.2vw, 42px);
+  top: -21px;
+  left: 10px;
+}
+
+.cloud5:after {
+  width: clamp(31px, 5.2vw, 52px);
+  height: clamp(31px, 5.2vw, 52px);
+  top: -26px;
+  right: 10px;
+}
+
+/* Rocket Loader - Nigerian Green Theme, Responsive */
+.loader {
+  position: relative;
+  width: clamp(60px, 12vw, 80px);
+  height: clamp(60px, 12vw, 80px);
+  animation: speeder 0.5s linear infinite;
+  will-change: transform;
+}
+
+.loader > span {
+  height: clamp(15px, 3vw, 20px);
+  width: clamp(15px, 3vw, 20px);
+  background: linear-gradient(135deg, #10b981 0%, #059669 50%, #22c55e 100%);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  box-shadow: 
+    0 0 clamp(10px, 2vw, 20px) rgba(16, 185, 129, 0.5),
+    0 0 clamp(20px, 4vw, 40px) rgba(5, 150, 105, 0.3);
+}
+
+.dark .loader > span {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 50%, #10b981 100%);
+  box-shadow: 
+    0 0 clamp(10px, 2vw, 20px) rgba(34, 197, 94, 0.6),
+    0 0 clamp(20px, 4vw, 40px) rgba(22, 163, 74, 0.4);
+}
+
+.loader > span > span {
+  height: clamp(45px, 9vw, 60px);
+  width: clamp(45px, 9vw, 60px);
+  background: transparent;
+  border: clamp(2px, 0.4vw, 3px) solid rgba(16, 185, 129, 0.3);
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: fazer1 0.8s linear infinite;
+  will-change: transform, opacity;
+}
+
+.loader > span > span:nth-child(2) {
+  height: clamp(60px, 12vw, 80px);
+  width: clamp(60px, 12vw, 80px);
+  border-color: rgba(5, 150, 105, 0.4);
+  animation: fazer2 1s linear infinite;
+}
+
+.loader > span > span:nth-child(3) {
+  height: clamp(75px, 15vw, 100px);
+  width: clamp(75px, 15vw, 100px);
+  border-color: rgba(34, 197, 94, 0.3);
+  animation: fazer3 1.2s linear infinite;
+}
+
+.loader > span > span:nth-child(4) {
+  height: clamp(90px, 18vw, 120px);
+  width: clamp(90px, 18vw, 120px);
+  border-color: rgba(16, 185, 129, 0.2);
+  animation: fazer4 1.4s linear infinite;
+}
+
+.loader > .base {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.loader > .base > span {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
+  animation: speeder 0.5s linear infinite reverse;
+  will-change: transform;
+}
+
+.loader > .base > .face {
+  position: absolute;
+  width: clamp(9px, 1.8vw, 12px);
+  height: clamp(9px, 1.8vw, 12px);
+  background: #ffffff;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 
+    0 0 clamp(5px, 1vw, 10px) rgba(255, 255, 255, 0.8),
+    clamp(-6px, -1.2vw, -8px) clamp(-6px, -1.2vw, -8px) 0 0 rgba(16, 185, 129, 0.8),
+    clamp(6px, 1.2vw, 8px) clamp(-6px, -1.2vw, -8px) 0 0 rgba(16, 185, 129, 0.8);
+}
+
+.dark .loader > .base > .face {
+  background: #fafafa;
+  box-shadow: 
+    0 0 clamp(5px, 1vw, 10px) rgba(250, 250, 250, 0.9),
+    clamp(-6px, -1.2vw, -8px) clamp(-6px, -1.2vw, -8px) 0 0 rgba(34, 197, 94, 0.9),
+    clamp(6px, 1.2vw, 8px) clamp(-6px, -1.2vw, -8px) 0 0 rgba(34, 197, 94, 0.9);
+}
+
+/* Long Fazers - Nigerian Green Trails, Responsive */
+.longfazers {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.longfazers span {
+  position: absolute;
+  height: clamp(1px, 0.2vw, 2px);
+  width: clamp(15%, 20vw, 25%);
+  background: linear-gradient(90deg, transparent, #10b981, transparent);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: lf 0.6s linear infinite;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.dark .longfazers span {
+  background: linear-gradient(90deg, transparent, #22c55e, transparent);
+}
+
+.longfazers span:nth-child(1) {
+  animation: lf 0.6s linear infinite;
+  animation-delay: -0.1s;
+}
+
+.longfazers span:nth-child(2) {
+  animation: lf2 0.8s linear infinite;
+  animation-delay: -0.2s;
+}
+
+.longfazers span:nth-child(3) {
+  animation: lf3 0.6s linear infinite;
+  animation-delay: -0.3s;
+}
+
+.longfazers span:nth-child(4) {
+  animation: lf4 0.8s linear infinite;
+  animation-delay: -0.4s;
+}
+
+/* Animations - Optimized for performance */
+@keyframes fazer1 {
+  0% {
+    left: 0;
+    opacity: 1;
+  }
+  100% {
+    left: -80px;
+    opacity: 0;
+  }
+}
+
+@keyframes fazer2 {
+  0% {
+    left: 0;
+    opacity: 1;
+  }
+  100% {
+    left: -100px;
+    opacity: 0;
+  }
+}
+
+@keyframes fazer3 {
+  0% {
+    left: 0;
+    opacity: 1;
+  }
+  100% {
+    left: -50px;
+    opacity: 0;
+  }
+}
+
+@keyframes fazer4 {
+  0% {
+    left: 0;
+    opacity: 1;
+  }
+  100% {
+    left: -150px;
+    opacity: 0;
+  }
+}
+
+@keyframes speeder {
+  0% {
+    transform: translate(2px, 1px) rotate(0deg);
+  }
+  10% {
+    transform: translate(-1px, -3px) rotate(-1deg);
+  }
+  20% {
+    transform: translate(-2px, 0px) rotate(1deg);
+  }
+  30% {
+    transform: translate(1px, 2px) rotate(0deg);
+  }
+  40% {
+    transform: translate(1px, -1px) rotate(1deg);
+  }
+  50% {
+    transform: translate(-1px, 3px) rotate(-1deg);
+  }
+  60% {
+    transform: translate(-1px, 1px) rotate(0deg);
+  }
+  70% {
+    transform: translate(3px, 1px) rotate(-1deg);
+  }
+  80% {
+    transform: translate(-2px, -1px) rotate(1deg);
+  }
+  90% {
+    transform: translate(2px, 1px) rotate(0deg);
+  }
+  100% {
+    transform: translate(1px, -2px) rotate(-1deg);
+  }
+}
+
+@keyframes lf {
+  0% {
+    left: 200%;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    left: -200%;
+    opacity: 0;
+  }
+}
+
+@keyframes lf2 {
+  0% {
+    left: 200%;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    left: -200%;
+    opacity: 0;
+  }
+}
+
+@keyframes lf3 {
+  0% {
+    left: 200%;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    left: -100%;
+    opacity: 0;
+  }
+}
+
+@keyframes lf4 {
+  0% {
+    left: 200%;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    left: -100%;
+    opacity: 0;
+  }
+}
+
+@keyframes moveClouds {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-200vw);
+  }
+}
+
+/* Reduced motion support for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .loader,
+  .loader > span > span,
+  .loader > .base > span,
+  .longfazers span,
+  .cloud {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+  
+  .loader {
+    animation: none !important;
+  }
+  
+  .cloud {
+    animation: none !important;
+  }
+}
+
+/* Performance optimizations for mobile */
+@media (max-width: 768px) {
+  .loader-container {
+    /* Use GPU acceleration on mobile */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    will-change: contents;
+  }
+  
+  .loader,
+  .loader > span > span {
+    /* Reduce animation complexity on mobile for better performance */
+    will-change: transform;
+  }
+  
+  /* Slightly reduce cloud opacity on mobile for better performance */
+  .cloud {
+    opacity: 0.4;
+  }
+  
+  .dark .cloud {
+    opacity: 0.2;
+  }
+}
+
+/* High DPI display optimizations */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .loader > span {
+    /* Sharper rendering on retina displays */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Landscape mobile optimization */
+@media (max-width: 768px) and (orientation: landscape) {
+  .loader-container {
+    min-height: 200px;
+  }
+  
+  .loader {
+    width: clamp(50px, 10vw, 70px);
+    height: clamp(50px, 10vw, 70px);
+  }
+}
+
+/* Tablet optimizations */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .loader-container {
+    min-height: 350px;
+  }
+}
+
+/* Large screen optimizations */
+@media (min-width: 1025px) {
+  .loader-container {
+    min-height: 400px;
+  }
+}
+
 
