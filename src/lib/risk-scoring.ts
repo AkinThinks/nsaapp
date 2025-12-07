@@ -3,6 +3,7 @@
 // Enhanced with dynamic risk adjustment based on live data trends
 
 import { RelevanceZone, getRelevanceScore } from './location-relevance'
+import { RouteRelevanceZone } from './route-relevance'
 import { type RiskLevel } from './risk-time-windows'
 
 export interface ClassifiedIncident {
@@ -15,7 +16,7 @@ export interface ClassifiedIncident {
   date: string
   url: string
   relevance?: {
-    zone: RelevanceZone
+    zone: RelevanceZone | RouteRelevanceZone
     score: number
     label: string
   }
