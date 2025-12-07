@@ -398,7 +398,7 @@ export function useRouteIntelligence(
     if (stateIds.length > 0) {
       fetchIntelligence()
     }
-  }, [stateIdsKey, routeDisplay, fetchIntelligence])
+  }, [stateIdsKey, stateIds.length, routeDisplay, fetchIntelligence])
 
   return {
     ...data,

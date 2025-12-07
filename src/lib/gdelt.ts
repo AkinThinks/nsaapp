@@ -17,6 +17,7 @@ export interface LiveReportsData {
   cached: boolean
   lastUpdated: string
   level?: 'area' | 'zone' | 'state'
+  query?: string
 }
 
 export interface RoadReportsData {
@@ -136,6 +137,7 @@ export async function fetchAreaReports(
   
   let articles: GDELTArticle[] = []
   let level: 'area' | 'zone' | 'state' = 'area'
+  let query: string = locationId
   let error: string | null = null
   
   try {
@@ -150,6 +152,7 @@ export async function fetchAreaReports(
       if (zoneArticles.length >= 2) {
         articles = zoneArticles
         level = 'zone'
+        query = zone
       }
     }
     
@@ -160,6 +163,7 @@ export async function fetchAreaReports(
       if (stateArticles.length >= 2) {
         articles = stateArticles
         level = 'state'
+        query = state
       }
     }
     
@@ -182,6 +186,7 @@ export async function fetchAreaReports(
     cached: false,
     lastUpdated: new Date().toISOString(),
     level,
+    query,
   }
   
   setCachedData(cacheKey, result)
