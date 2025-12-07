@@ -193,6 +193,17 @@ export function LiveReportsSection({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [locationId, stateInfo?.state])
   
+  // Notify parent of adjusted risk when it changes
+  // Must be before any early returns to satisfy React Hooks rules
+  useEffect(() => {
+    if (intelligence?.dynamicRisk && onDynamicRiskChange) {
+      onDynamicRiskChange(intelligence.dynamicRisk.adjustedRisk)
+    } else if (!intelligence?.loading && !intelligence?.dynamicRisk && onDynamicRiskChange) {
+      // Reset to null when intelligence is loaded but no dynamic risk adjustment
+      onDynamicRiskChange(null)
+    }
+  }, [intelligence?.dynamicRisk?.adjustedRisk, intelligence?.loading, onDynamicRiskChange])
+  
   const getActivityBadge = (count: number) => {
     if (count >= 10) return { variant: 'danger' as const, label: 'High Activity' }
     if (count >= 5) return { variant: 'warning' as const, label: 'Moderate Activity' }
@@ -331,16 +342,6 @@ export function LiveReportsSection({
       <ExternalLink className="w-4 h-4 sm:w-5 sm:h-5 text-gray-300 dark:text-gray-600 group-hover:text-blue-500 flex-shrink-0 mt-1" />
     </a>
   )
-  
-  // Notify parent of adjusted risk when it changes
-  useEffect(() => {
-    if (intelligence?.dynamicRisk && onDynamicRiskChange) {
-      onDynamicRiskChange(intelligence.dynamicRisk.adjustedRisk)
-    } else if (!intelligence?.loading && !intelligence?.dynamicRisk && onDynamicRiskChange) {
-      // Reset to null when intelligence is loaded but no dynamic risk adjustment
-      onDynamicRiskChange(null)
-    }
-  }, [intelligence?.dynamicRisk?.adjustedRisk, intelligence?.loading, onDynamicRiskChange])
   
   // Determine if we should show intelligence or raw reports
   // Show intelligence if:
