@@ -51,6 +51,7 @@ interface LiveIntelligenceData {
   dynamicRisk?: DynamicRiskResult  // NEW: Dynamic risk adjustment
   briefing: Briefing | null
   loading: boolean
+  loadingStage?: LoadingStage  // NEW: Loading stage for progress bar
   error: string | null
   lastUpdated: string | null
   fallbackToRaw: boolean // If LLM failed, show raw articles
