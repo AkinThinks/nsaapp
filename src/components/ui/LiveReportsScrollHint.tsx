@@ -28,6 +28,15 @@ export function LiveReportsScrollHint({
     }
   }, [dismissedKey])
 
+  const handleDismiss = useCallback(() => {
+    setIsVisible(false)
+    setIsDismissed(true)
+    localStorage.setItem(dismissedKey, 'true')
+    if (onDismiss) {
+      onDismiss()
+    }
+  }, [dismissedKey, onDismiss])
+
   // Intersection Observer to detect when target section is visible
   useEffect(() => {
     if (isDismissed) return
@@ -115,16 +124,7 @@ export function LiveReportsScrollHint({
       window.removeEventListener('scroll', handleScroll)
       clearTimeout(scrollTimeout)
     }
-  }, [targetId, isDismissed, hasScrolled])
-
-  const handleDismiss = useCallback(() => {
-    setIsVisible(false)
-    setIsDismissed(true)
-    localStorage.setItem(dismissedKey, 'true')
-    if (onDismiss) {
-      onDismiss()
-    }
-  }, [dismissedKey, onDismiss])
+  }, [targetId, isDismissed, hasScrolled, handleDismiss])
 
   const handleScrollToTarget = useCallback(() => {
     const targetElement = document.getElementById(targetId)
@@ -305,3 +305,4 @@ export function LiveReportsScrollHint({
     </AnimatePresence>
   )
 }
+

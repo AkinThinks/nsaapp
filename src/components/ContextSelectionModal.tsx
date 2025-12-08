@@ -79,7 +79,7 @@ export function ContextSelectionModal({ isOpen, onSelect, locationName }: Contex
 
               <div className="p-4 sm:p-6 space-y-2.5 sm:space-y-3">
                 <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 text-center mb-1 sm:mb-2 leading-relaxed">
-                  Select how you'll be using this location to get personalized safety information
+                  Select how you&apos;ll be using this location to get personalized safety information
                 </p>
 
                 <div className="space-y-2 sm:space-y-2.5">

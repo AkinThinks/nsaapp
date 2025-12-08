@@ -203,7 +203,7 @@ export function LiveReportsSection({
       // Reset to null when intelligence is loaded but no dynamic risk adjustment
       onDynamicRiskChange(null)
     }
-  }, [intelligence?.dynamicRisk?.adjustedRisk, intelligence?.loading, onDynamicRiskChange])
+  }, [intelligence?.dynamicRisk, intelligence?.loading, onDynamicRiskChange])
   
   const getActivityBadge = (count: number) => {
     if (count >= 10) return { variant: 'danger' as const, label: 'High Activity' }
