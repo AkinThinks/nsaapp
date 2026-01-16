@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -13,42 +13,121 @@
 }
 
 :root {
-  /* Base */
-  --background: #ffffff;
-  --foreground: #0a0a0a;
-  --muted: #f5f5f5;
+  /* ============================================
+     SAFETYALERTS DESIGN SYSTEM - WARM & TRUSTWORTHY
+     ============================================ */
+
+  /* Base - Warm off-white instead of pure white */
+  --background: #FAFAF9;
+  --background-elevated: #FFFFFF;
+  --foreground: #1a1a1a;
+  --foreground-muted: #525252;
+  --muted: #f5f5f4;
   --muted-foreground: #737373;
-  --border: #e5e5e5;
-  
-  /* Risk Levels */
-  --risk-extreme: #dc2626;
-  --risk-extreme-bg: #fef2f2;
-  --risk-very-high: #ea580c;
-  --risk-very-high-bg: #fff7ed;
-  --risk-high: #ca8a04;
-  --risk-high-bg: #fefce8;
-  --risk-moderate: #10b981;
-  --risk-moderate-bg: #f0fdf4;
-  
-  /* Accent */
-  --primary: #0a0a0a;
+  --border: #e7e5e4;
+  --border-light: #f5f5f4;
+
+  /* Primary - Trust Blue (builds confidence) */
+  --primary: #2563EB;
+  --primary-hover: #1d4ed8;
+  --primary-light: #dbeafe;
   --primary-foreground: #ffffff;
+
+  /* Safety Colors - Emotional Design */
+  --safety-red: #DC2626;
+  --safety-red-light: #fef2f2;
+  --safety-red-hover: #b91c1c;
+
+  --safety-green: #16A34A;
+  --safety-green-light: #f0fdf4;
+  --safety-green-hover: #15803d;
+
+  --safety-amber: #F59E0B;
+  --safety-amber-light: #fffbeb;
+  --safety-amber-hover: #d97706;
+
+  --safety-orange: #EA580C;
+  --safety-orange-light: #fff7ed;
+
+  /* Nigerian Green Accent */
+  --nigerian-green: #008751;
+  --nigerian-green-light: #ecfdf5;
+
+  /* Risk Levels - Clear Visual Hierarchy */
+  --risk-extreme: #DC2626;
+  --risk-extreme-bg: #fef2f2;
+  --risk-extreme-border: #fecaca;
+
+  --risk-very-high: #EA580C;
+  --risk-very-high-bg: #fff7ed;
+  --risk-very-high-border: #fed7aa;
+
+  --risk-high: #F59E0B;
+  --risk-high-bg: #fffbeb;
+  --risk-high-border: #fde68a;
+
+  --risk-moderate: #16A34A;
+  --risk-moderate-bg: #f0fdf4;
+  --risk-moderate-border: #bbf7d0;
+
+  --risk-low: #22c55e;
+  --risk-low-bg: #f0fdf4;
+  --risk-low-border: #86efac;
+
+  /* Accent - Interactive Elements */
   --accent: #2563eb;
+  --accent-hover: #1d4ed8;
   --accent-foreground: #ffffff;
-  
-  /* Fonts */
+
+  /* Fonts - Warm & Readable */
+  --font-sans: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
   --font-inter: 'Inter', system-ui, sans-serif;
   --font-jetbrains: 'JetBrains Mono', monospace;
+
+  /* Shadows - Subtle depth */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.08);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.08);
+
+  /* Border Radius */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 200ms ease;
+  --transition-slow: 300ms ease;
 }
 
 .dark {
   --background: #0a0a0a;
+  --background-elevated: #171717;
   --foreground: #fafafa;
+  --foreground-muted: #a3a3a3;
   --muted: #171717;
   --muted-foreground: #a3a3a3;
   --border: #262626;
-  --primary: #fafafa;
-  --primary-foreground: #0a0a0a;
+  --border-light: #1f1f1f;
+
+  --primary: #3b82f6;
+  --primary-hover: #60a5fa;
+  --primary-light: #1e3a5f;
+  --primary-foreground: #ffffff;
+
+  --safety-red-light: #2d1515;
+  --safety-green-light: #14261a;
+  --safety-amber-light: #2d2513;
+
+  --risk-extreme-bg: #2d1515;
+  --risk-very-high-bg: #2d2013;
+  --risk-high-bg: #2d2513;
+  --risk-moderate-bg: #14261a;
+  --risk-low-bg: #14261a;
 }
 
 * {
@@ -74,10 +153,12 @@ body::-webkit-scrollbar {
 }
 
 body {
-  font-family: var(--font-inter);
+  font-family: var(--font-sans);
   background: var(--background);
   color: var(--foreground);
+  font-size: 16px;
   line-height: 1.6;
+  letter-spacing: -0.011em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /* Ensure body doesn't cause horizontal scroll */
@@ -184,6 +265,430 @@ input, select, textarea {
 
 .pulse-ring {
   animation: pulseRing 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* ============================================
+   SAFETYALERTS CUSTOM ANIMATIONS
+   ============================================ */
+
+/* Subtle fade in from bottom */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Gentle scale in */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Success checkmark animation */
+@keyframes successBounce {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Gentle pulse for status indicators */
+@keyframes gentlePulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Safe status breathing animation */
+@keyframes safeBreathing {
+  0%, 100% {
+    background-color: var(--safety-green-light);
+  }
+  50% {
+    background-color: #dcfce7;
+  }
+}
+
+/* Alert status animation */
+@keyframes alertPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(220, 38, 38, 0);
+  }
+}
+
+/* Slide in from right */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Slide out to right */
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+/* Shimmer loading effect */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Slide up from bottom (for PWA install prompt) */
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Slide down (dismiss) */
+@keyframes slide-down {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+/* Animation utility classes */
+.animate-fade-in-up {
+  animation: fadeInUp 0.3s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.2s ease-out forwards;
+}
+
+.animate-success {
+  animation: successBounce 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+
+.animate-gentle-pulse {
+  animation: gentlePulse 2s ease-in-out infinite;
+}
+
+.animate-safe-status {
+  animation: safeBreathing 3s ease-in-out infinite;
+}
+
+.animate-alert-pulse {
+  animation: alertPulse 2s ease-in-out infinite;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out forwards;
+}
+
+.animate-slide-down {
+  animation: slide-down 0.3s ease-out forwards;
+}
+
+.animate-slide-in {
+  animation: slideInRight 0.3s ease-out forwards;
+}
+
+.animate-slide-out {
+  animation: slideOutRight 0.3s ease-out forwards;
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--muted) 0%,
+    var(--background-elevated) 50%,
+    var(--muted) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* Staggered animations for lists */
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.1s; }
+.stagger-3 { animation-delay: 0.15s; }
+.stagger-4 { animation-delay: 0.2s; }
+.stagger-5 { animation-delay: 0.25s; }
+
+/* ============================================
+   SAFETYALERTS COMPONENT UTILITIES
+   ============================================ */
+
+/* Glass effect for overlays */
+.glass {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.dark .glass {
+  background: rgba(23, 23, 23, 0.8);
+}
+
+/* Elevated card style */
+.card-elevated {
+  background: var(--background-elevated);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-light);
+  transition: all var(--transition-normal);
+}
+
+.card-elevated:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+/* Status banner styles */
+.status-safe {
+  background: linear-gradient(135deg, var(--safety-green-light) 0%, #dcfce7 100%);
+  border: 1px solid var(--risk-moderate-border);
+}
+
+.status-alert {
+  background: linear-gradient(135deg, var(--safety-red-light) 0%, #fee2e2 100%);
+  border: 1px solid var(--risk-extreme-border);
+}
+
+/* Trust indicator bar */
+.trust-bar {
+  background: linear-gradient(90deg, var(--primary-light) 0%, var(--background) 100%);
+  border-bottom: 1px solid var(--border-light);
+}
+
+/* Button variants */
+.btn-primary {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border-radius: var(--radius-lg);
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  transition: all var(--transition-fast);
+}
+
+.btn-primary:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background: var(--background-elevated);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  transition: all var(--transition-fast);
+}
+
+.btn-secondary:hover {
+  background: var(--muted);
+  border-color: var(--border);
+}
+
+.btn-danger {
+  background: var(--safety-red);
+  color: white;
+  border-radius: var(--radius-lg);
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  transition: all var(--transition-fast);
+}
+
+.btn-danger:hover {
+  background: var(--safety-red-hover);
+}
+
+.btn-success {
+  background: var(--safety-green);
+  color: white;
+  border-radius: var(--radius-lg);
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  transition: all var(--transition-fast);
+}
+
+.btn-success:hover {
+  background: var(--safety-green-hover);
+}
+
+/* Input styles */
+.input-field {
+  background: var(--background-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 0.875rem 1rem;
+  font-size: 16px;
+  width: 100%;
+  transition: all var(--transition-fast);
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.input-field::placeholder {
+  color: var(--muted-foreground);
+}
+
+/* Badge styles */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.badge-critical {
+  background: var(--risk-extreme-bg);
+  color: var(--risk-extreme);
+  border: 1px solid var(--risk-extreme-border);
+}
+
+.badge-high {
+  background: var(--risk-high-bg);
+  color: var(--safety-amber);
+  border: 1px solid var(--risk-high-border);
+}
+
+.badge-moderate {
+  background: var(--risk-moderate-bg);
+  color: var(--safety-green);
+  border: 1px solid var(--risk-moderate-border);
+}
+
+.badge-info {
+  background: var(--primary-light);
+  color: var(--primary);
+  border: 1px solid #bfdbfe;
+}
+
+/* Progress steps indicator */
+.progress-step {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: all var(--transition-normal);
+}
+
+.progress-step-active {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.progress-step-completed {
+  background: var(--safety-green);
+  color: white;
+}
+
+.progress-step-pending {
+  background: var(--muted);
+  color: var(--muted-foreground);
+}
+
+/* Confirmation meter */
+.confirmation-meter {
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+  overflow: hidden;
+}
+
+.confirmation-meter-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width var(--transition-slow);
+}
+
+.confirmation-positive {
+  background: linear-gradient(90deg, var(--safety-green) 0%, #22c55e 100%);
+}
+
+.confirmation-negative {
+  background: linear-gradient(90deg, var(--safety-red) 0%, #ef4444 100%);
+}
+
+/* WhatsApp share button */
+.btn-whatsapp {
+  background: #25D366;
+  color: white;
+  border-radius: var(--radius-lg);
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all var(--transition-fast);
+}
+
+.btn-whatsapp:hover {
+  background: #128C7E;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
 }
 
 /* Hide scrollbar for horizontal scroll areas */
@@ -1260,6 +1765,94 @@ input[type="number"] {
   .loader-container {
     min-height: 400px;
   }
+}
+
+/* ============================================
+   FLOATING ANIMATION FOR LANDING PAGE
+   ============================================ */
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* ============================================
+   NIGERIAN APP THEME - ADDITIONAL UTILITIES
+   ============================================ */
+
+/* Nigerian green primary accent */
+.bg-nigerian-green { background-color: #008751; }
+.text-nigerian-green { color: #008751; }
+.border-nigerian-green { border-color: #008751; }
+
+/* Scrollbar hide utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Safe area bottom for fixed navs */
+.safe-bottom {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}
+
+/* Touch target - minimum 44x44px */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Nigerian themed gradient header */
+.header-gradient {
+  background: linear-gradient(to bottom, rgba(255,255,255,0.98), rgba(255,255,255,0.95));
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Pull to refresh indicator */
+.ptr-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+/* Card hover animation */
+.card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.card-hover:active {
+  transform: scale(0.98);
+}
+
+/* Nigerian flag accent line */
+.nigerian-accent {
+  background: linear-gradient(90deg, #008751 0%, #008751 33.33%, #ffffff 33.33%, #ffffff 66.66%, #008751 66.66%, #008751 100%);
+  height: 3px;
+}
+
+/* Empty state illustration */
+.empty-illustration {
+  opacity: 0.7;
+  max-width: 180px;
+  margin: 0 auto;
 }
 
 
