@@ -41,6 +41,7 @@ import { Button } from '@/components/ui/Button'
 import { Toggle } from '@/components/ui/Toggle'
 import { Input } from '@/components/ui/Input'
 import { Modal, ConfirmModal } from '@/components/ui/Modal'
+import { PhoneAuthModal } from '@/components/auth/PhoneAuthModal'
 import type { NigerianLocation, UserLocation } from '@/types'
 
 export default function SettingsPage() {
@@ -49,17 +50,33 @@ export default function SettingsPage() {
   const [searchResults, setSearchResults] = useState<NigerianLocation[]>([])
   const [showAddArea, setShowAddArea] = useState(false)
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
+  const [showPhoneAuth, setShowPhoneAuth] = useState(false)
   const [quietHours, setQuietHours] = useState(false)
   const [criticalOnly, setCriticalOnly] = useState(false)
   const [alertRadius, setAlertRadius] = useState<'1km' | '3km' | '5km' | '10km'>('5km')
 
   const {
+    user,
+    setUser,
     savedLocations,
     addLocation,
     removeLocation,
     reset,
     setHasCompletedOnboarding,
   } = useAppStore()
+
+  // Handle phone verification success
+  const handlePhoneAuthSuccess = (authUser: { id: string; phone: string }) => {
+    setUser({
+      id: authUser.id,
+      phone: authUser.phone,
+      phone_verified: true,
+      trust_score: 0,
+      created_at: new Date().toISOString(),
+      last_active: new Date().toISOString(),
+    })
+    setShowPhoneAuth(false)
+  }
 
   const {
     isSupported: pushSupported,
@@ -150,7 +167,40 @@ export default function SettingsPage() {
                 <h3 className="font-semibold text-foreground">SafetyAlerts User</h3>
                 <p className="text-sm text-muted-foreground">Member since 2024</p>
               </div>
-              <button className="text-sm text-primary hover:underline">Edit</button>
+            </div>
+
+            {/* Phone Verification Status */}
+            <div className="mt-4 pt-4 border-t border-border">
+              {user?.phone_verified ? (
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-safety-green/10 rounded-xl flex items-center justify-center">
+                    <CheckCircle2 className="w-5 h-5 text-safety-green" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-medium text-foreground">Phone Verified</p>
+                    <p className="text-sm text-muted-foreground">{user.phone}</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-safety-amber/10 rounded-xl flex items-center justify-center">
+                      <Phone className="w-5 h-5 text-safety-amber" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-foreground">Phone Not Verified</p>
+                      <p className="text-sm text-muted-foreground">Verify to build trust</p>
+                    </div>
+                  </div>
+                  <Button
+                    onClick={() => setShowPhoneAuth(true)}
+                    variant="secondary"
+                    size="sm"
+                  >
+                    Verify
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         </section>
@@ -577,6 +627,13 @@ export default function SettingsPage() {
         description="This will remove all your saved areas, settings, and preferences. This action cannot be undone."
         confirmText="Clear Data"
         variant="danger"
+      />
+
+      {/* Phone Auth Modal */}
+      <PhoneAuthModal
+        isOpen={showPhoneAuth}
+        onClose={() => setShowPhoneAuth(false)}
+        onSuccess={handlePhoneAuthSuccess}
       />
     </div>
   )

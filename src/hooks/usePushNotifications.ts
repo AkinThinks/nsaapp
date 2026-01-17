@@ -41,7 +41,8 @@ export function usePushNotifications(): UsePushNotificationsReturn {
   }, [])
 
   const enable = useCallback(async (): Promise<boolean> => {
-    if (!user || !isSupported) return false
+    // Allow enabling push even without user authentication
+    if (!isSupported) return false
 
     setIsLoading(true)
     try {
@@ -61,8 +62,8 @@ export function usePushNotifications(): UsePushNotificationsReturn {
         return false
       }
 
-      // Save subscription to database (if Supabase is configured)
-      if (isSupabaseConfigured()) {
+      // Save subscription to database only if user is authenticated and Supabase is configured
+      if (user && isSupabaseConfigured()) {
         const supabase = getSupabase()
         const subscriptionData = subscriptionToJSON(subscription)
         const { error } = await supabase.from('push_subscriptions').upsert(
@@ -74,7 +75,10 @@ export function usePushNotifications(): UsePushNotificationsReturn {
           { onConflict: 'endpoint' }
         )
 
-        if (error) throw error
+        if (error) {
+          console.warn('Failed to save push subscription to database:', error)
+          // Continue anyway - local push will still work
+        }
       }
 
       setIsPushEnabled(true)
