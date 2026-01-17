@@ -3,8 +3,20 @@
  * Executes SQL schema directly via Supabase REST API
  */
 
-const SUPABASE_URL = 'https://llzqyfkxlwirjbkaopbh.supabase.co';
-const SERVICE_ROLE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxsenF5Zmt4bHdpcmpia2FvcGJoIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2ODQ1MTIyMiwiZXhwIjoyMDg0MDI3MjIyfQ.GuZufoUIXavQcoDRXsj0dnyPf5ayPBUiUkw8xeGyfCE';
+import * as dotenv from 'dotenv'
+import * as path from 'path'
+
+// Load .env.local
+dotenv.config({ path: path.resolve(process.cwd(), '.env.local') })
+
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
+const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
+  console.error('Error: Missing Supabase environment variables.')
+  console.error('Make sure NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are set in .env.local')
+  process.exit(1)
+}
 
 // SQL statements to execute (split for better error handling)
 const migrations = [

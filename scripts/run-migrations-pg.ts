@@ -3,13 +3,23 @@
  * Connects directly to PostgreSQL to execute schema
  */
 
+import * as dotenv from 'dotenv'
+import * as path from 'path'
+
+// Load .env.local
+dotenv.config({ path: path.resolve(process.cwd(), '.env.local') })
+
 import { Client } from 'pg';
 
-const PROJECT_REF = 'llzqyfkxlwirjbkaopbh';
+// Extract project ref from Supabase URL
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+const PROJECT_REF = SUPABASE_URL.match(/https:\/\/([^.]+)\.supabase\.co/)?.[1]
 const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD;
 
-if (!DATABASE_PASSWORD) {
-  console.log('Usage: DATABASE_PASSWORD=your_password npx tsx scripts/run-migrations-pg.ts');
+if (!PROJECT_REF || !DATABASE_PASSWORD) {
+  console.error('Error: Missing environment variables.')
+  console.error('Make sure NEXT_PUBLIC_SUPABASE_URL and DATABASE_PASSWORD are set in .env.local')
+  console.error('\nUsage: npx tsx scripts/run-migrations-pg.ts')
   process.exit(1);
 }
 

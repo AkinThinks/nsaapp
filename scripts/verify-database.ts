@@ -1,9 +1,21 @@
+import * as dotenv from 'dotenv'
+import * as path from 'path'
+
+// Load .env.local
+dotenv.config({ path: path.resolve(process.cwd(), '.env.local') })
+
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  'https://llzqyfkxlwirjbkaopbh.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxsenF5Zmt4bHdpcmpia2FvcGJoIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2ODQ1MTIyMiwiZXhwIjoyMDg0MDI3MjIyfQ.GuZufoUIXavQcoDRXsj0dnyPf5ayPBUiUkw8xeGyfCE'
-);
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+if (!supabaseUrl || !supabaseServiceKey) {
+  console.error('Error: Missing Supabase environment variables.')
+  console.error('Make sure NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are set in .env.local')
+  process.exit(1)
+}
+
+const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 async function verifyDatabase() {
   console.log('Checking SafetyAlerts database tables...\n');
@@ -51,7 +63,7 @@ async function verifyDatabase() {
     console.log('\nMissing tables:');
     missing.forEach(t => console.log(`  - ${t}`));
     console.log('\n--- NEXT STEPS ---');
-    console.log('1. Go to: https://supabase.com/dashboard/project/llzqyfkxlwirjbkaopbh/sql');
+    console.log('1. Go to your Supabase project SQL Editor');
     console.log('2. Click "New Query"');
     console.log('3. Paste the contents of scripts/database-schema.sql');
     console.log('4. Click "Run"');

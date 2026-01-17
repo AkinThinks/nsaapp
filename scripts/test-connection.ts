@@ -1,7 +1,22 @@
+import * as dotenv from 'dotenv'
+import * as path from 'path'
+
+// Load .env.local
+dotenv.config({ path: path.resolve(process.cwd(), '.env.local') })
+
 import { Client } from 'pg';
 
-const PROJECT_REF = 'llzqyfkxlwirjbkaopbh';
-const PASSWORD = process.env.DATABASE_PASSWORD || '09w2jwn7v2Nt9kL2';
+// Extract project ref from Supabase URL
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+const PROJECT_REF = SUPABASE_URL.match(/https:\/\/([^.]+)\.supabase\.co/)?.[1]
+const PASSWORD = process.env.DATABASE_PASSWORD
+
+if (!PROJECT_REF || !PASSWORD) {
+  console.error('Error: Missing environment variables.')
+  console.error('Make sure NEXT_PUBLIC_SUPABASE_URL and DATABASE_PASSWORD are set in .env.local')
+  console.error('\nUsage: npx tsx scripts/test-connection.ts')
+  process.exit(1)
+}
 
 // All possible Supabase regions
 const regions = [

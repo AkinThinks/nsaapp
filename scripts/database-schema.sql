@@ -1,8 +1,7 @@
 -- ============================================
 -- SafetyAlerts Database Schema
 -- ============================================
--- Run this in Supabase SQL Editor:
--- https://supabase.com/dashboard/project/llzqyfkxlwirjbkaopbh/sql
+-- Run this in your Supabase SQL Editor
 -- ============================================
 
 -- ============================================
