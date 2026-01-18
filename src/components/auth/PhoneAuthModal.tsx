@@ -25,6 +25,7 @@ export function PhoneAuthModal({ isOpen, onClose, onSuccess }: PhoneAuthModalPro
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [countdown, setCountdown] = useState(0)
+  const [sandboxCode, setSandboxCode] = useState<string | null>(null)
 
   const otpRefs = useRef<(HTMLInputElement | null)[]>([])
 
@@ -37,6 +38,7 @@ export function PhoneAuthModal({ isOpen, onClose, onSuccess }: PhoneAuthModalPro
       setError('')
       setLoading(false)
       setCountdown(0)
+      setSandboxCode(null)
     }
   }, [isOpen])
 
@@ -93,6 +95,11 @@ export function PhoneAuthModal({ isOpen, onClose, onSuccess }: PhoneAuthModalPro
 
       if (!response.ok) {
         throw new Error(data.error || 'Failed to send OTP')
+      }
+
+      // In sandbox mode, the code is returned for testing
+      if (data.code) {
+        setSandboxCode(data.code)
       }
 
       setStep('otp')
@@ -255,10 +262,14 @@ export function PhoneAuthModal({ isOpen, onClose, onSuccess }: PhoneAuthModalPro
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Phone Number
                     </label>
-                    <div className="relative">
-                      <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center gap-2 text-gray-500">
+                    <div className={cn(
+                      'flex items-center rounded-xl border overflow-hidden',
+                      'focus-within:ring-2 focus-within:ring-emerald-500/20 focus-within:border-emerald-500',
+                      error ? 'border-red-500' : 'border-gray-200'
+                    )}>
+                      <div className="flex items-center gap-2 px-4 py-3.5 bg-gray-50 border-r border-gray-200">
                         <span className="text-lg">🇳🇬</span>
-                        <span className="text-sm font-medium">+234</span>
+                        <span className="text-sm font-semibold text-gray-600">+234</span>
                       </div>
                       <input
                         type="tel"
@@ -268,11 +279,7 @@ export function PhoneAuthModal({ isOpen, onClose, onSuccess }: PhoneAuthModalPro
                           setError('')
                         }}
                         placeholder="812 345 6789"
-                        className={cn(
-                          'w-full pl-24 pr-4 py-3.5 rounded-xl border text-lg',
-                          'focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500',
-                          error ? 'border-red-500' : 'border-gray-200'
-                        )}
+                        className="flex-1 px-4 py-3.5 text-lg bg-transparent focus:outline-none"
                         autoFocus
                       />
                     </div>
@@ -322,6 +329,12 @@ export function PhoneAuthModal({ isOpen, onClose, onSuccess }: PhoneAuthModalPro
                       We sent a 6-digit code to<br />
                       <span className="font-medium text-gray-700">{formatPhone(phone)}</span>
                     </p>
+                    {sandboxCode && (
+                      <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-xl">
+                        <p className="text-xs text-amber-600 font-medium">SANDBOX MODE - Your code is:</p>
+                        <p className="text-2xl font-bold text-amber-700 tracking-widest">{sandboxCode}</p>
+                      </div>
+                    )}
                   </div>
 
                   {/* OTP Input */}

@@ -459,6 +459,15 @@ export default function OnboardingPage() {
                         <p className="text-xs text-muted-foreground">Never shared with other users</p>
                       </div>
                     </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-6 h-6 bg-safety-red/10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <MessageCircle className="w-3.5 h-3.5 text-safety-red" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-foreground">SMS backup for emergencies</p>
+                        <p className="text-xs text-muted-foreground">Get critical alerts via SMS when notifications fail</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
