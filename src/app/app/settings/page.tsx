@@ -31,8 +31,12 @@ import {
   Settings,
   Activity,
   CheckCircle2,
+  Share,
+  Smartphone,
+  MoreVertical,
 } from 'lucide-react'
 import { NigerianShield } from '@/components/landing/NigerianShield'
+import { useDeviceDetect, getInstallInstructions } from '@/hooks/useDeviceDetect'
 import { useAppStore } from '@/lib/store'
 import { usePushNotifications } from '@/hooks/usePushNotifications'
 import { searchLocations } from '@/lib/locations'
@@ -44,8 +48,14 @@ import { Modal, ConfirmModal } from '@/components/ui/Modal'
 import { PhoneAuthModal } from '@/components/auth/PhoneAuthModal'
 import type { NigerianLocation, UserLocation } from '@/types'
 
+interface BeforeInstallPromptEvent extends Event {
+  prompt: () => Promise<void>
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>
+}
+
 export default function SettingsPage() {
   const router = useRouter()
+  const device = useDeviceDetect()
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState<NigerianLocation[]>([])
   const [showAddArea, setShowAddArea] = useState(false)
@@ -54,6 +64,33 @@ export default function SettingsPage() {
   const [quietHours, setQuietHours] = useState(false)
   const [criticalOnly, setCriticalOnly] = useState(false)
   const [alertRadius, setAlertRadius] = useState<'1km' | '3km' | '5km' | '10km'>('5km')
+  const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null)
+  const [showInstallInstructions, setShowInstallInstructions] = useState(false)
+
+  // Listen for install prompt event (Android/Desktop)
+  useEffect(() => {
+    const handleBeforeInstall = (e: Event) => {
+      e.preventDefault()
+      setInstallPrompt(e as BeforeInstallPromptEvent)
+    }
+    window.addEventListener('beforeinstallprompt', handleBeforeInstall)
+    return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstall)
+  }, [])
+
+  // Handle native install
+  const handleInstall = async () => {
+    if (installPrompt) {
+      await installPrompt.prompt()
+      const { outcome } = await installPrompt.userChoice
+      if (outcome === 'accepted') {
+        setInstallPrompt(null)
+      }
+    } else if (device.isIOS) {
+      setShowInstallInstructions(true)
+    }
+  }
+
+  const installInstructions = getInstallInstructions(device)
 
   const {
     user,
@@ -204,6 +241,67 @@ export default function SettingsPage() {
             </div>
           </div>
         </section>
+
+        {/* Install App - Only show if not installed */}
+        {!device.isStandalone && (
+          <section>
+            <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-2xl p-4 text-white">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <Smartphone className="w-6 h-6" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-semibold">Install SafetyAlerts</h3>
+                  <p className="text-sm text-emerald-100">
+                    Add to home screen for quick access
+                  </p>
+                </div>
+                <Button
+                  onClick={handleInstall}
+                  variant="secondary"
+                  size="sm"
+                  className="bg-white text-emerald-700 hover:bg-emerald-50"
+                >
+                  <Download className="w-4 h-4 mr-1" />
+                  Install
+                </Button>
+              </div>
+
+              {/* Show instructions inline for iOS or when expanded */}
+              {showInstallInstructions && device.isIOS && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  className="mt-4 pt-4 border-t border-white/20"
+                >
+                  <p className="font-medium mb-3">{installInstructions.title}</p>
+                  <ol className="space-y-2">
+                    {installInstructions.steps.map((step, index) => (
+                      <li key={index} className="flex items-start gap-3 text-sm">
+                        <span className="w-5 h-5 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0 text-xs">
+                          {index + 1}
+                        </span>
+                        <span className="text-emerald-50">{step}</span>
+                      </li>
+                    ))}
+                  </ol>
+                  <div className="mt-3 p-2 bg-white/10 rounded-lg flex items-center justify-center gap-2">
+                    <Share className="w-5 h-5" />
+                    <span className="text-sm">Look for this Share icon below</span>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Android hint */}
+              {device.isAndroid && !installPrompt && (
+                <p className="mt-3 text-xs text-emerald-100 flex items-center gap-2">
+                  <MoreVertical className="w-4 h-4" />
+                  Tap browser menu (⋮) → &quot;Add to Home screen&quot;
+                </p>
+              )}
+            </div>
+          </section>
+        )}
 
         {/* My Areas */}
         <section>

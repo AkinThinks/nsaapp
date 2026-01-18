@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
+import { SmartInstallPrompt } from '@/components/pwa/SmartInstallPrompt'
 
 export const metadata: Metadata = {
   title: 'SafetyAlerts | Real-time Community Safety Alerts for Nigeria',
@@ -65,6 +66,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen bg-white antialiased overflow-x-hidden w-full">
         {children}
+        <SmartInstallPrompt />
         <Analytics />
         <SpeedInsights />
       </body>

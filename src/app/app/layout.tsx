@@ -3,7 +3,6 @@
 import { useEffect } from 'react'
 import { useAppStore } from '@/lib/store'
 import { useNetworkStatus } from '@/hooks/useNetworkStatus'
-import { InstallPrompt } from '@/components/pwa/InstallPrompt'
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { setIsOnline } = useAppStore()
@@ -22,9 +21,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
       )}
       {children}
-
-      {/* PWA Install Prompt */}
-      <InstallPrompt />
     </div>
   )
 }

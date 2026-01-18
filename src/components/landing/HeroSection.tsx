@@ -79,8 +79,8 @@ export function HeroSection() {
               </a>
             </div>
 
-            <p className="mt-4 text-sm text-gray-400">
-              Free forever. No app store download needed.
+            <p className="mt-4 text-sm text-gray-500">
+              Free forever. Install directly from your browser — no app store needed.
             </p>
           </div>
 

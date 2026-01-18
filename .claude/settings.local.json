@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nImprove phone verification UX and add SMS backup messaging\n\n- Add SMS backup benefit to phone verification step explaining critical alerts via SMS\n- Clean up phone input styling with distinct prefix box for +234 country code\n- Use flexbox layout instead of absolute positioning for cleaner input appearance\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git restore:*)",
+      "Bash(git push)",
+      "Bash(git remote add:*)",
+      "Bash(git push:*)",
+      "Bash(git commit:*)"
+    ]
+  }
+}

@@ -42,12 +42,12 @@ export function SmartInstallPrompt() {
       }
     }
 
-    // Show teaser after user has been on site for a bit
+    // Show teaser after user has been on site briefly
     const timer = setTimeout(() => {
       if (!dismissed && !device.isStandalone) {
         setStage('teaser')
       }
-    }, 5000)
+    }, 2000)
 
     return () => clearTimeout(timer)
   }, [device.isStandalone, dismissed])
