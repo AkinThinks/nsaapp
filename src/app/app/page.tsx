@@ -228,18 +228,19 @@ export default function AppFeedPage() {
               <button
                 key={option.value}
                 onClick={() => setFilter(option.value)}
-                className={`px-3 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all flex items-center gap-1.5 ${
+                className={`flex items-center justify-center gap-2 rounded-full text-sm font-medium transition-all ${
                   isActive
-                    ? 'bg-primary text-primary-foreground shadow-sm'
-                    : 'bg-muted text-muted-foreground hover:bg-muted/80'
+                    ? 'bg-primary text-primary-foreground shadow-sm px-4 py-2'
+                    : 'bg-muted text-muted-foreground hover:bg-muted/80 p-2.5 min-w-[40px]'
                 }`}
+                title={option.label}
               >
-                {option.icon && <span className="text-sm">{option.icon}</span>}
-                {option.label}
-                {count > 0 && option.value !== 'all' && (
-                  <span className={`ml-1 px-1.5 py-0.5 text-xs rounded-full ${
-                    isActive ? 'bg-white/20' : 'bg-gray-200'
-                  }`}>
+                {option.icon && <span className="text-base">{option.icon}</span>}
+                {(!option.icon || isActive) && (
+                  <span className="whitespace-nowrap">{option.label}</span>
+                )}
+                {isActive && count > 0 && option.value !== 'all' && (
+                  <span className="px-1.5 py-0.5 text-xs rounded-full bg-white/20">
                     {count}
                   </span>
                 )}
