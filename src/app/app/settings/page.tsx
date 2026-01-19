@@ -66,6 +66,7 @@ export default function SettingsPage() {
   const [alertRadius, setAlertRadius] = useState<'1km' | '3km' | '5km' | '10km'>('5km')
   const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null)
   const [showInstallInstructions, setShowInstallInstructions] = useState(false)
+  const [testNotifSent, setTestNotifSent] = useState(false)
 
   // Listen for install prompt event (Android/Desktop)
   useEffect(() => {
@@ -165,6 +166,45 @@ export default function SettingsPage() {
     } else {
       await enablePush()
     }
+  }
+
+  // Send test notification
+  const sendTestNotification = async () => {
+    if (!('Notification' in window)) {
+      alert('Notifications not supported on this device')
+      return
+    }
+
+    // Request permission if not granted
+    if (Notification.permission === 'default') {
+      const permission = await Notification.requestPermission()
+      if (permission !== 'granted') {
+        alert('Please enable notifications to test')
+        return
+      }
+    }
+
+    if (Notification.permission === 'denied') {
+      alert('Notifications are blocked. Please enable in browser settings.')
+      return
+    }
+
+    // Send test notification
+    const notification = new Notification('🔔 Test Alert - SafetyAlerts', {
+      body: 'If you see this, notifications are working! You\'ll receive alerts for incidents in your areas.',
+      icon: '/icons/icon-192.png',
+      badge: '/icons/icon-72.png',
+      tag: 'test-notification',
+      requireInteraction: false,
+    })
+
+    notification.onclick = () => {
+      window.focus()
+      notification.close()
+    }
+
+    setTestNotifSent(true)
+    setTimeout(() => setTestNotifSent(false), 3000)
   }
 
   // Logout / Reset
@@ -491,6 +531,34 @@ export default function SettingsPage() {
                 </p>
               </div>
             )}
+
+            {/* Test Notification */}
+            <div className="p-4">
+              <button
+                onClick={sendTestNotification}
+                disabled={testNotifSent}
+                className={`w-full py-3 rounded-xl font-medium transition-all flex items-center justify-center gap-2 ${
+                  testNotifSent
+                    ? 'bg-safety-green/10 text-safety-green'
+                    : 'bg-primary/10 text-primary hover:bg-primary/20'
+                }`}
+              >
+                {testNotifSent ? (
+                  <>
+                    <CheckCircle2 className="w-5 h-5" />
+                    Test Sent! Check your notifications
+                  </>
+                ) : (
+                  <>
+                    <Bell className="w-5 h-5" />
+                    Send Test Notification
+                  </>
+                )}
+              </button>
+              <p className="text-xs text-muted-foreground text-center mt-2">
+                Tap to verify notifications work on your device
+              </p>
+            </div>
           </div>
         </section>
 
