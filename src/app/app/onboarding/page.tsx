@@ -280,21 +280,65 @@ export default function OnboardingPage() {
   }
 
   // Complete onboarding
-  const completeOnboarding = () => {
+  const completeOnboarding = async () => {
     setShowCelebration(true)
 
-    // Convert selected areas to UserLocation format
-    const userLocations: UserLocation[] = selectedAreas.map((area, index) => ({
-      id: `local-${area.slug}`,
-      user_id: 'local',
-      area_name: area.name,
-      area_slug: area.slug,
-      state: area.state,
-      is_primary: index === 0,
-      created_at: new Date().toISOString(),
-    }))
+    // Save locations to database if user is authenticated
+    if (user?.id) {
+      try {
+        const savedLocations: UserLocation[] = []
 
-    setSavedLocations(userLocations)
+        for (let i = 0; i < selectedAreas.length; i++) {
+          const area = selectedAreas[i]
+          const response = await fetch('/api/user/locations', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              user_id: user.id,
+              area_name: area.name,
+              area_slug: area.slug,
+              state: area.state,
+              is_primary: i === 0,
+            }),
+          })
+
+          if (response.ok) {
+            const data = await response.json()
+            savedLocations.push(data.location)
+          }
+        }
+
+        // Update local store with database IDs
+        if (savedLocations.length > 0) {
+          setSavedLocations(savedLocations)
+        }
+      } catch (error) {
+        console.error('Failed to save locations to database:', error)
+        // Fallback to local storage only
+        const userLocations: UserLocation[] = selectedAreas.map((area, index) => ({
+          id: `local-${area.slug}`,
+          user_id: user.id,
+          area_name: area.name,
+          area_slug: area.slug,
+          state: area.state,
+          is_primary: index === 0,
+          created_at: new Date().toISOString(),
+        }))
+        setSavedLocations(userLocations)
+      }
+    } else {
+      // No user - save locally with placeholder
+      const userLocations: UserLocation[] = selectedAreas.map((area, index) => ({
+        id: `local-${area.slug}`,
+        user_id: 'local',
+        area_name: area.name,
+        area_slug: area.slug,
+        state: area.state,
+        is_primary: index === 0,
+        created_at: new Date().toISOString(),
+      }))
+      setSavedLocations(userLocations)
+    }
 
     // Delay to show celebration
     setTimeout(() => {
