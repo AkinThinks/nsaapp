@@ -267,11 +267,10 @@ async function sendBroadcast(
     let subscriptions: any[] = []
 
     if (broadcast.target_type === 'all') {
-      // Get all active subscriptions
+      // Get all subscriptions
       const { data } = await supabase
         .from('push_subscriptions')
-        .select('*, users!inner(status)')
-        .eq('users.status', 'active')
+        .select('*')
 
       subscriptions = data || []
     } else if (broadcast.target_type === 'area' && broadcast.target_areas?.length > 0) {
@@ -286,9 +285,8 @@ async function sendBroadcast(
 
         const { data } = await supabase
           .from('push_subscriptions')
-          .select('*, users!inner(status)')
+          .select('*')
           .in('user_id', userIds)
-          .eq('users.status', 'active')
 
         subscriptions = data || []
       }
@@ -296,9 +294,8 @@ async function sendBroadcast(
       // Get subscriptions for specific users
       const { data } = await supabase
         .from('push_subscriptions')
-        .select('*, users!inner(status)')
+        .select('*')
         .in('user_id', broadcast.target_user_ids)
-        .eq('users.status', 'active')
 
       subscriptions = data || []
     }

@@ -11,7 +11,9 @@
       "Bash(npx tsc:*)",
       "Bash(npm run build:*)",
       "WebFetch(domain:nsaapp.vercel.app)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(git revert:*)",
+      "Bash(npx supabase:*)"
     ]
   }
 }
