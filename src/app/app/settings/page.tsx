@@ -34,6 +34,7 @@ import {
   Share,
   Smartphone,
   MoreVertical,
+  Vibrate,
 } from 'lucide-react'
 import { NigerianShield } from '@/components/landing/NigerianShield'
 import { useDeviceDetect, getInstallInstructions } from '@/hooks/useDeviceDetect'
@@ -105,6 +106,8 @@ export default function SettingsPage() {
     removeLocation,
     reset,
     setHasCompletedOnboarding,
+    vibrationEnabled,
+    setVibrationEnabled,
   } = useAppStore()
 
   // Handle phone verification success
@@ -507,6 +510,46 @@ export default function SettingsPage() {
               <Toggle
                 checked={criticalOnly}
                 onChange={setCriticalOnly}
+              />
+            </div>
+
+            {/* Vibration */}
+            <div className="p-4 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                  vibrationEnabled ? 'bg-primary/10' : 'bg-muted'
+                }`}>
+                  <Vibrate className={`w-5 h-5 ${
+                    vibrationEnabled ? 'text-primary' : 'text-muted-foreground'
+                  }`} />
+                </div>
+                <div>
+                  <p className="font-medium text-foreground">Vibration</p>
+                  <p className="text-sm text-muted-foreground">
+                    Buzz on alert notifications
+                  </p>
+                </div>
+              </div>
+              <Toggle
+                checked={vibrationEnabled}
+                onChange={async (enabled) => {
+                  setVibrationEnabled(enabled)
+                  // Sync to server if user is authenticated
+                  if (user?.id && !user.id.startsWith('test-') && !user.id.startsWith('local-')) {
+                    try {
+                      await fetch('/api/user/push-subscription', {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                          user_id: user.id,
+                          vibration_enabled: enabled,
+                        }),
+                      })
+                    } catch (e) {
+                      console.error('Failed to sync vibration preference:', e)
+                    }
+                  }
+                }}
               />
             </div>
 

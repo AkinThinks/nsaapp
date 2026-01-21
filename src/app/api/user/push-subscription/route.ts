@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json()
-    const { user_id, subscription } = body
+    const { user_id, subscription, vibration_enabled } = body
 
     if (!subscription || !subscription.endpoint) {
       return NextResponse.json(
@@ -27,6 +27,7 @@ export async function POST(request: NextRequest) {
             p256dh: subscription.keys.p256dh,
             auth: subscription.keys.auth,
           },
+          vibration_enabled: vibration_enabled !== false, // Default to true
         },
         { onConflict: 'endpoint' }
       )
@@ -40,6 +41,39 @@ export async function POST(request: NextRequest) {
     console.error('Error saving subscription:', error)
     return NextResponse.json(
       { error: 'Failed to save subscription' },
+      { status: 500 }
+    )
+  }
+}
+
+// PATCH - Update vibration preference for user's subscriptions
+export async function PATCH(request: NextRequest) {
+  const supabase = createServerClient()
+
+  try {
+    const body = await request.json()
+    const { user_id, vibration_enabled } = body
+
+    if (!user_id) {
+      return NextResponse.json(
+        { error: 'user_id is required' },
+        { status: 400 }
+      )
+    }
+
+    // Update all subscriptions for this user
+    const { error } = await supabase
+      .from('push_subscriptions')
+      .update({ vibration_enabled })
+      .eq('user_id', user_id)
+
+    if (error) throw error
+
+    return NextResponse.json({ success: true, vibration_enabled })
+  } catch (error) {
+    console.error('Error updating vibration preference:', error)
+    return NextResponse.json(
+      { error: 'Failed to update preference' },
       { status: 500 }
     )
   }

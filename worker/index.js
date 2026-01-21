@@ -3,6 +3,49 @@
  * Handles push notifications for safety alerts
  */
 
+// Vibration patterns for different alert types
+const VIBRATION_PATTERNS = {
+  // Emergency: Long urgent pulses
+  emergency: [300, 100, 300, 100, 300, 100, 300],
+  // High priority (robbery, kidnapping, gunshots, attack)
+  high: [200, 100, 200, 100, 200],
+  // Normal alerts
+  normal: [150, 50, 150],
+  // Info/broadcast
+  info: [100, 50, 100],
+  // No vibration
+  none: []
+}
+
+// Get vibration pattern based on alert type
+function getVibrationPattern(data) {
+  // Check if vibration is disabled via data
+  if (data.vibrate === false) {
+    return VIBRATION_PATTERNS.none
+  }
+
+  const type = data.data?.broadcast_type || data.type || 'normal'
+  const incidentType = data.data?.incident_type || ''
+
+  // Emergency broadcasts
+  if (type === 'emergency') {
+    return VIBRATION_PATTERNS.emergency
+  }
+
+  // High-risk incidents
+  const highRiskTypes = ['robbery', 'kidnapping', 'gunshots', 'attack']
+  if (highRiskTypes.includes(incidentType)) {
+    return VIBRATION_PATTERNS.high
+  }
+
+  // Broadcasts and info
+  if (type === 'broadcast' || type === 'info' || type === 'announcement') {
+    return VIBRATION_PATTERNS.info
+  }
+
+  return VIBRATION_PATTERNS.normal
+}
+
 // Push notification received
 self.addEventListener('push', (event) => {
   if (!event.data) return
@@ -17,14 +60,17 @@ self.addEventListener('push', (event) => {
     }
   }
 
+  const vibrationPattern = getVibrationPattern(data)
+
   const options = {
     body: data.body || 'New safety alert in your area',
     icon: '/icons/icon-192.png',
     badge: '/icons/icon-72.png',
-    vibrate: [200, 100, 200, 100, 200],
+    vibrate: vibrationPattern,
     tag: data.tag || `safety-alert-${Date.now()}`,
     renotify: true,
     requireInteraction: data.requireInteraction !== false,
+    silent: vibrationPattern.length === 0, // Silent if no vibration
     data: {
       url: data.url || '/app',
       alertId: data.alertId,

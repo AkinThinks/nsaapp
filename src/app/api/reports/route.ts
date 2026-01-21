@@ -158,19 +158,25 @@ async function sendAlertNotifications(supabase: any, report: Report) {
     }
 
     const title = `${incidentLabels[report.incident_type] || '⚠️ ALERT'} near ${report.area_name}`
-    const body = report.landmark
+    const bodyText = report.landmark
       ? `${report.landmark}: ${report.description || 'Tap for details'}`
       : report.description || 'Tap for details'
 
-    const payload = JSON.stringify({
-      title,
-      body: body.slice(0, 100),
-      tag: `report-${report.id}`,
-      url: `/app/alert/${report.id}`,
-    })
-
-    // Send to all subscriptions
+    // Send to all subscriptions with per-user vibration preference
     const sendPromises = subscriptions.map(async (sub: any) => {
+      const payload = JSON.stringify({
+        title,
+        body: bodyText.slice(0, 100),
+        tag: `report-${report.id}`,
+        url: `/app/alert/${report.id}`,
+        alertId: report.id,
+        vibrate: sub.vibration_enabled !== false, // Respect user preference
+        data: {
+          type: 'report',
+          incident_type: report.incident_type,
+        },
+      })
+
       try {
         await webpush.sendNotification(
           {

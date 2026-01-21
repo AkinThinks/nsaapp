@@ -43,6 +43,10 @@ interface AppState {
   isPushEnabled: boolean
   setIsPushEnabled: (value: boolean) => void
 
+  // Notification preferences
+  vibrationEnabled: boolean
+  setVibrationEnabled: (value: boolean) => void
+
   // Reset
   reset: () => void
 }
@@ -56,6 +60,7 @@ const initialState = {
   hasCompletedOnboarding: false,
   isOnline: true,
   isPushEnabled: false,
+  vibrationEnabled: true, // Vibration on by default
 }
 
 export const useAppStore = create<AppState>()(
@@ -102,6 +107,9 @@ export const useAppStore = create<AppState>()(
       setIsOnline: (value) => set({ isOnline: value }),
       setIsPushEnabled: (value) => set({ isPushEnabled: value }),
 
+      // Notification preferences
+      setVibrationEnabled: (value) => set({ vibrationEnabled: value }),
+
       // Reset
       reset: () => set(initialState),
     }),
@@ -112,6 +120,7 @@ export const useAppStore = create<AppState>()(
         savedLocations: state.savedLocations,
         hasCompletedOnboarding: state.hasCompletedOnboarding,
         isPushEnabled: state.isPushEnabled,
+        vibrationEnabled: state.vibrationEnabled,
       }),
     }
   )

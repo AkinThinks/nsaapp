@@ -344,25 +344,11 @@ async function sendBroadcast(
       return result
     }
 
-    // Prepare notification payload
+    // Prepare base notification data
     // If we have a reportId, link to the alert detail page
     const notificationUrl = reportId
       ? `/app/alert/${reportId}`
       : (broadcast.action_url || '/app')
-
-    const payload = JSON.stringify({
-      title: `${broadcast.icon || '🔔'} ${broadcast.title}`,
-      body: broadcast.body,
-      tag: `broadcast-${broadcast.id}`,
-      url: notificationUrl,
-      alertId: reportId,
-      data: {
-        type: 'broadcast',
-        broadcast_id: broadcast.id,
-        broadcast_type: broadcast.broadcast_type,
-        report_id: reportId,
-      },
-    })
 
     // Send notifications in parallel with rate limiting
     const batchSize = 100
@@ -370,6 +356,22 @@ async function sendBroadcast(
       const batch = subscriptions.slice(i, i + batchSize)
 
       const sendPromises = batch.map(async (sub: any) => {
+        // Build payload with user's vibration preference
+        const payload = JSON.stringify({
+          title: `${broadcast.icon || '🔔'} ${broadcast.title}`,
+          body: broadcast.body,
+          tag: `broadcast-${broadcast.id}`,
+          url: notificationUrl,
+          alertId: reportId,
+          vibrate: sub.vibration_enabled !== false, // Respect user preference
+          data: {
+            type: 'broadcast',
+            broadcast_id: broadcast.id,
+            broadcast_type: broadcast.broadcast_type,
+            report_id: reportId,
+          },
+        })
+
         try {
           await webpush.sendNotification(
             {
