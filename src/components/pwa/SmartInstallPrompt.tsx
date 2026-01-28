@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { usePathname } from 'next/navigation'
-import { X, Share, Plus, MoreVertical, Download, Smartphone, CheckCircle2, WifiOff, Bell, Zap } from 'lucide-react'
+import { X, Share, Plus, MoreVertical, Download, Smartphone, CheckCircle2, WifiOff, Bell, Zap, Copy, ExternalLink, Check } from 'lucide-react'
 import { useDeviceDetect, getInstallInstructions } from '@/hooks/useDeviceDetect'
 import { NigerianShield } from '@/components/landing/NigerianShield'
 import { InstallInstructions, detectDevice } from './InstallInstructions'
@@ -12,7 +12,9 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>
 }
 
-type PromptStage = 'hidden' | 'teaser' | 'full' | 'instructions' | 'success'
+type PromptStage = 'hidden' | 'teaser' | 'full' | 'instructions' | 'inapp' | 'success'
+
+const APP_URL = 'app.safetyalertsng.com'
 
 /**
  * Smart PWA Install Prompt
@@ -109,7 +111,10 @@ export function SmartInstallPrompt() {
 
   // Handle expand from teaser
   const handleExpand = useCallback(() => {
-    if (installPrompt) {
+    if (device.isInAppBrowser) {
+      // In-app browser - show copy link UI
+      setStage('inapp')
+    } else if (installPrompt) {
       // Native prompt available, just show it
       handleNativeInstall()
     } else if (device.isIOS) {
@@ -118,7 +123,7 @@ export function SmartInstallPrompt() {
     } else {
       setStage('full')
     }
-  }, [installPrompt, device.isIOS, handleNativeInstall])
+  }, [installPrompt, device.isIOS, device.isInAppBrowser, handleNativeInstall])
 
   const instructions = getInstallInstructions(device)
 
@@ -144,8 +149,20 @@ export function SmartInstallPrompt() {
     )
   }
 
+  // In-app browser - copy link UI
+  if (stage === 'inapp') {
+    return <InAppBrowserPrompt device={device} onDismiss={handleDismiss} />
+  }
+
   // Teaser - minimal prompt
   if (stage === 'teaser') {
+    const getAppName = () => {
+      if (device.inAppBrowserName) {
+        return device.inAppBrowserName.charAt(0).toUpperCase() + device.inAppBrowserName.slice(1)
+      }
+      return null
+    }
+
     return (
       <div className="fixed bottom-4 left-4 right-4 z-40 animate-slide-up">
         <button
@@ -156,15 +173,18 @@ export function SmartInstallPrompt() {
             <NigerianShield className="w-7 h-7 text-white" />
           </div>
           <div className="flex-1 text-left">
-            <p className="font-semibold text-gray-900">Install SafetyAlerts</p>
+            <p className="font-semibold text-gray-900">
+              {device.isInAppBrowser ? 'Open in Browser' : 'Install SafetyAlerts'}
+            </p>
             <p className="text-xs text-gray-500">
-              {device.isIOS ? 'Tap to see how → Safari Share button' :
+              {device.isInAppBrowser ? `Tap to copy link and open in ${device.isIOS ? 'Safari' : 'Chrome'}` :
+               device.isIOS ? 'Tap to see how → Safari Share button' :
                device.isAndroid ? 'Tap to install on your phone' :
                'Add to your home screen'}
             </p>
           </div>
           <div className="bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium">
-            Install
+            {device.isInAppBrowser ? 'Copy' : 'Install'}
           </div>
         </button>
         <button
@@ -243,6 +263,149 @@ export function SmartInstallPrompt() {
         {/* Dismiss option */}
         <button
           onClick={handleDismiss}
+          className="w-full py-2 text-gray-500 text-sm hover:text-gray-700"
+        >
+          Maybe later
+        </button>
+      </div>
+    </div>
+  )
+}
+
+/**
+ * In-App Browser Prompt Component
+ * Shows when user is in Instagram, TikTok, Facebook, etc.
+ * Provides easy way to copy link and open in Safari/Chrome
+ */
+function InAppBrowserPrompt({
+  device,
+  onDismiss
+}: {
+  device: ReturnType<typeof useDeviceDetect>
+  onDismiss: () => void
+}) {
+  const [copied, setCopied] = useState(false)
+
+  const browserName = device.isIOS ? 'Safari' : 'Chrome'
+  const appName = device.inAppBrowserName
+    ? device.inAppBrowserName.charAt(0).toUpperCase() + device.inAppBrowserName.slice(1)
+    : 'this app'
+
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(APP_URL)
+      setCopied(true)
+
+      // Reset after 3 seconds
+      setTimeout(() => {
+        setCopied(false)
+      }, 3000)
+    } catch (err) {
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea')
+      textArea.value = APP_URL
+      textArea.style.position = 'fixed'
+      textArea.style.left = '-999999px'
+      document.body.appendChild(textArea)
+      textArea.select()
+      try {
+        document.execCommand('copy')
+        setCopied(true)
+        setTimeout(() => setCopied(false), 3000)
+      } catch (e) {
+        console.error('Failed to copy:', e)
+      }
+      document.body.removeChild(textArea)
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 z-40 flex items-end sm:items-center justify-center bg-black/50 animate-fade-in">
+      <div className="w-full max-w-md bg-white rounded-t-3xl sm:rounded-3xl p-6 animate-slide-up safe-bottom">
+        <button
+          onClick={onDismiss}
+          className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100"
+          aria-label="Close"
+        >
+          <X className="w-5 h-5" />
+        </button>
+
+        {/* Header */}
+        <div className="flex items-center gap-4 mb-5">
+          <div className="w-14 h-14 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg">
+            <NigerianShield className="w-9 h-9 text-white" />
+          </div>
+          <div>
+            <h2 className="text-xl font-bold text-gray-900">Open in {browserName}</h2>
+            <p className="text-sm text-gray-500">{appName} browser can&apos;t install apps</p>
+          </div>
+        </div>
+
+        {/* Instructions */}
+        <div className="bg-gray-50 rounded-xl p-4 mb-5">
+          <p className="text-sm text-gray-700 mb-3">
+            To install SafetyAlerts, open this link in {browserName}:
+          </p>
+
+          {/* Link display */}
+          <div className="bg-white border border-gray-200 rounded-lg px-4 py-3 flex items-center justify-between gap-3">
+            <span className="text-gray-900 font-medium text-sm truncate">{APP_URL}</span>
+            <button
+              onClick={handleCopyLink}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                copied
+                  ? 'bg-emerald-100 text-emerald-700'
+                  : 'bg-emerald-600 text-white hover:bg-emerald-700'
+              }`}
+            >
+              {copied ? (
+                <>
+                  <Check className="w-4 h-4" />
+                  <span>Copied!</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="w-4 h-4" />
+                  <span>Copy</span>
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Steps */}
+        <div className="space-y-3 mb-5">
+          <div className="flex items-start gap-3">
+            <div className="w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+              <span className="text-emerald-700 text-xs font-bold">1</span>
+            </div>
+            <p className="text-sm text-gray-700">Tap <span className="font-medium">Copy</span> button above</p>
+          </div>
+          <div className="flex items-start gap-3">
+            <div className="w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+              <span className="text-emerald-700 text-xs font-bold">2</span>
+            </div>
+            <p className="text-sm text-gray-700">Open <span className="font-medium">{browserName}</span> on your phone</p>
+          </div>
+          <div className="flex items-start gap-3">
+            <div className="w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+              <span className="text-emerald-700 text-xs font-bold">3</span>
+            </div>
+            <p className="text-sm text-gray-700">Paste the link and visit the site</p>
+          </div>
+        </div>
+
+        {/* Success message when copied */}
+        {copied && (
+          <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 mb-4 flex items-center gap-2">
+            <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+            <span className="text-sm font-medium text-emerald-700">Link copied! Now open {browserName} and paste it.</span>
+          </div>
+        )}
+
+        {/* Dismiss option */}
+        <button
+          onClick={onDismiss}
           className="w-full py-2 text-gray-500 text-sm hover:text-gray-700"
         >
           Maybe later

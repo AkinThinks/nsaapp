@@ -15,6 +15,10 @@ export interface DeviceInfo {
   isFirefox: boolean
   isSamsungBrowser: boolean
 
+  // In-app browser detection (Instagram, TikTok, Facebook, etc.)
+  isInAppBrowser: boolean
+  inAppBrowserName: 'instagram' | 'facebook' | 'tiktok' | 'twitter' | 'linkedin' | 'snapchat' | 'telegram' | 'whatsapp' | null
+
   // PWA status
   isStandalone: boolean  // Running as installed PWA
   canInstall: boolean    // Browser supports installation
@@ -48,6 +52,8 @@ export function useDeviceDetect(): DeviceInfo {
     isChrome: false,
     isFirefox: false,
     isSamsungBrowser: false,
+    isInAppBrowser: false,
+    inAppBrowserName: null,
     isStandalone: false,
     canInstall: false,
     isPWAReady: false,
@@ -76,6 +82,36 @@ export function useDeviceDetect(): DeviceInfo {
     const isChrome = /chrome|chromium/.test(ua) && !/edg|opera|samsung/.test(ua)
     const isFirefox = /firefox/.test(ua)
     const isSamsungBrowser = /samsungbrowser/.test(ua)
+
+    // In-app browser detection
+    let isInAppBrowser = false
+    let inAppBrowserName: DeviceInfo['inAppBrowserName'] = null
+
+    if (/instagram/i.test(ua)) {
+      isInAppBrowser = true
+      inAppBrowserName = 'instagram'
+    } else if (/fban|fbav|fb_iab/i.test(ua)) {
+      isInAppBrowser = true
+      inAppBrowserName = 'facebook'
+    } else if (/tiktok|bytedancewebview|musical_ly/i.test(ua)) {
+      isInAppBrowser = true
+      inAppBrowserName = 'tiktok'
+    } else if (/twitter/i.test(ua)) {
+      isInAppBrowser = true
+      inAppBrowserName = 'twitter'
+    } else if (/linkedin/i.test(ua)) {
+      isInAppBrowser = true
+      inAppBrowserName = 'linkedin'
+    } else if (/snapchat/i.test(ua)) {
+      isInAppBrowser = true
+      inAppBrowserName = 'snapchat'
+    } else if (/telegram/i.test(ua)) {
+      isInAppBrowser = true
+      inAppBrowserName = 'telegram'
+    } else if (/whatsapp/i.test(ua)) {
+      isInAppBrowser = true
+      inAppBrowserName = 'whatsapp'
+    }
 
     // PWA status
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
@@ -120,8 +156,10 @@ export function useDeviceDetect(): DeviceInfo {
       isChrome,
       isFirefox,
       isSamsungBrowser,
+      isInAppBrowser,
+      inAppBrowserName,
       isStandalone,
-      canInstall: !isStandalone && (isChrome || isSamsungBrowser || (isAndroid && !isSafari)),
+      canInstall: !isStandalone && !isInAppBrowser && (isChrome || isSamsungBrowser || (isAndroid && !isSafari)),
       isPWAReady,
       supportsPush,
       supportsGeolocation,
