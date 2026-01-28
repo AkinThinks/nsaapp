@@ -1802,9 +1802,21 @@ input[type="number"] {
   display: none;
 }
 
-/* Safe area bottom for fixed navs */
+/* Safe area utilities for fixed elements */
 .safe-bottom {
   padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}
+
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.h-safe {
+  height: env(safe-area-inset-bottom, 0px);
+}
+
+.mb-safe {
+  margin-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 /* Touch target - minimum 44x44px */
