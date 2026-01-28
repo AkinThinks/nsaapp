@@ -5,6 +5,8 @@ import { useAppStore } from '@/lib/store'
 import { useNetworkStatus } from '@/hooks/useNetworkStatus'
 import { useAppInit } from '@/hooks/useAppInit'
 import { usePushManager } from '@/hooks/usePushManager'
+import { NetworkStatusBanner } from '@/components/app/NetworkStatusBanner'
+import { UploadStatusIndicator } from '@/components/app/UploadStatusIndicator'
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { setIsOnline } = useAppStore()
@@ -21,12 +23,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Offline Banner */}
-      {!isOnline && (
-        <div className="fixed top-0 left-0 right-0 bg-yellow-500 text-white text-center py-2 text-sm z-50">
-          You&apos;re offline. Some features may be limited.
-        </div>
-      )}
+      {/* Enhanced Network Status Banner - shows offline/reconnection */}
+      <NetworkStatusBanner />
+
+      {/* Upload Status Indicator - shows pending photo uploads */}
+      <UploadStatusIndicator />
+
       {/* Loading state while initializing */}
       {isLoading && (
         <div className="fixed inset-0 bg-white/80 backdrop-blur-sm z-50 flex items-center justify-center">

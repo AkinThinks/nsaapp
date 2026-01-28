@@ -16,6 +16,9 @@ import {
   Clock,
   Users,
   ArrowRight,
+  Phone,
+  ShieldCheck,
+  ShieldX,
 } from 'lucide-react'
 import { maskPhone } from '@/lib/admin-auth-client'
 import { Badge } from '@/components/admin/ui'
@@ -24,6 +27,7 @@ import { TableSkeleton, CardListSkeleton } from '@/components/admin/ui/Skeleton'
 interface User {
   id: string
   phone: string | null
+  phone_verified: boolean
   status: string
   trust_score: number
   warning_count: number
@@ -148,6 +152,18 @@ export default function AdminUsersPage() {
             <option value="banned">Banned</option>
           </select>
         </div>
+
+        {/* Quick Stats */}
+        <div className="flex gap-4 mt-3 pt-3 border-t border-gray-100 text-sm">
+          <div className="flex items-center gap-2 text-gray-600">
+            <ShieldCheck className="w-4 h-4 text-emerald-500" />
+            <span>Verified: {users.filter(u => u.phone_verified).length}</span>
+          </div>
+          <div className="flex items-center gap-2 text-gray-600">
+            <ShieldX className="w-4 h-4 text-gray-400" />
+            <span>Unverified: {users.filter(u => !u.phone_verified).length}</span>
+          </div>
+        </div>
       </div>
 
       {/* Content */}
@@ -191,7 +207,20 @@ export default function AdminUsersPage() {
                     className="hover:bg-gray-50 transition-colors"
                   >
                     <td className="px-6 py-4">
-                      <div className="font-medium text-gray-900">{maskPhone(user.phone)}</div>
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium text-gray-900">{maskPhone(user.phone)}</span>
+                        {user.phone_verified ? (
+                          <span className="inline-flex items-center gap-1 px-1.5 py-0.5 text-xs font-medium bg-emerald-100 text-emerald-700 rounded">
+                            <ShieldCheck className="w-3 h-3" />
+                            Verified
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 px-1.5 py-0.5 text-xs font-medium bg-gray-100 text-gray-500 rounded">
+                            <ShieldX className="w-3 h-3" />
+                            Unverified
+                          </span>
+                        )}
+                      </div>
                       <div className="text-xs text-gray-500 mt-0.5">
                         Last active: {user.last_active ? formatDistanceToNow(new Date(user.last_active), { addSuffix: true }) : 'Never'}
                       </div>
@@ -237,7 +266,22 @@ export default function AdminUsersPage() {
               <motion.div key={user.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: index * 0.05 }}>
                 <Link href={`/admin/users/${user.id}`} className="block bg-white rounded-xl border border-gray-200 p-4 hover:shadow-md transition-shadow">
                   <div className="flex items-start justify-between mb-3">
-                    <div className="font-medium text-gray-900">{maskPhone(user.phone)}</div>
+                    <div>
+                      <div className="font-medium text-gray-900">{maskPhone(user.phone)}</div>
+                      <div className="flex items-center gap-1 mt-1">
+                        {user.phone_verified ? (
+                          <span className="inline-flex items-center gap-1 text-xs text-emerald-600">
+                            <ShieldCheck className="w-3 h-3" />
+                            Verified
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 text-xs text-gray-400">
+                            <ShieldX className="w-3 h-3" />
+                            Unverified
+                          </span>
+                        )}
+                      </div>
+                    </div>
                     {getStatusBadge(user.status || 'active')}
                   </div>
                   <div className="flex items-center gap-3 mb-3">

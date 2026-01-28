@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
 
   // Apply filters
   if (search) {
-    query = query.ilike('area_name', `%${search}%`)
+    query = query.or(`area_name.ilike.%${search}%,landmark.ilike.%${search}%`)
   }
   if (type) {
     query = query.eq('incident_type', type)
@@ -33,8 +33,18 @@ export async function GET(request: NextRequest) {
   if (status) {
     query = query.eq('status', status)
   }
+
+  // Handle moderation status filter
   if (moderationStatus) {
-    query = query.eq('moderation_status', moderationStatus)
+    if (moderationStatus === 'needs_review') {
+      // Show reports with flagged images or text, or pending moderation
+      query = query.or('image_moderation_status.eq.flagged,text_moderation_status.eq.flagged,moderation_status.eq.pending')
+    } else if (moderationStatus === 'flagged') {
+      // Show reports with any flagged content
+      query = query.or('image_moderation_status.eq.flagged,text_moderation_status.eq.flagged')
+    } else {
+      query = query.eq('moderation_status', moderationStatus)
+    }
   }
 
   // Apply pagination and ordering

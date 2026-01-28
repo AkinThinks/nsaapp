@@ -9,6 +9,9 @@ import type {
 } from '@/types'
 
 interface AppState {
+  // Hydration state
+  _hasHydrated: boolean
+  setHasHydrated: (value: boolean) => void
   // User
   user: User | null
   setUser: (user: User | null) => void
@@ -52,6 +55,7 @@ interface AppState {
 }
 
 const initialState = {
+  _hasHydrated: false,
   user: null,
   savedLocations: [],
   currentLocation: null,
@@ -67,6 +71,9 @@ export const useAppStore = create<AppState>()(
   persist(
     (set, get) => ({
       ...initialState,
+
+      // Hydration
+      setHasHydrated: (value) => set({ _hasHydrated: value }),
 
       // User
       setUser: (user) => set({ user }),
@@ -122,6 +129,9 @@ export const useAppStore = create<AppState>()(
         isPushEnabled: state.isPushEnabled,
         vibrationEnabled: state.vibrationEnabled,
       }),
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true)
+      },
     }
   )
 )

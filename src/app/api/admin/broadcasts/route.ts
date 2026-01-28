@@ -288,6 +288,11 @@ interface SendResult {
   errors: Array<{ endpoint: string; error: string }>
 }
 
+// VERCEL FREE TIER LIMIT: Max recipients per broadcast
+// Prevents function timeout (10s limit on free tier)
+// For larger broadcasts, use scheduled/batched delivery
+const MAX_BROADCAST_RECIPIENTS = 500
+
 async function sendBroadcast(
   supabase: ReturnType<typeof createServerClient>,
   broadcast: any,
@@ -305,35 +310,55 @@ async function sendBroadcast(
     let subscriptions: any[] = []
 
     if (broadcast.target_type === 'all') {
-      // Get all subscriptions
-      const { data } = await supabase
+      // Get subscriptions with limit for Vercel free tier
+      const { data, count } = await supabase
         .from('push_subscriptions')
-        .select('*')
+        .select('*', { count: 'exact' })
+        .limit(MAX_BROADCAST_RECIPIENTS)
 
       subscriptions = data || []
+
+      // Warn if truncated
+      if (count && count > MAX_BROADCAST_RECIPIENTS) {
+        console.warn(`Broadcast truncated: ${count} total, sending to ${MAX_BROADCAST_RECIPIENTS}`)
+        result.errors.push({
+          endpoint: 'system',
+          error: `Audience limited to ${MAX_BROADCAST_RECIPIENTS} recipients (Vercel free tier). Total: ${count}. Consider scheduled batched delivery.`,
+        })
+      }
     } else if (broadcast.target_type === 'area' && broadcast.target_areas?.length > 0) {
-      // Get subscriptions for users in specific areas
+      // Get subscriptions for users in specific areas (with limit)
       const { data: userLocations } = await supabase
         .from('user_locations')
         .select('user_id')
         .in('area_slug', broadcast.target_areas)
+        .limit(MAX_BROADCAST_RECIPIENTS)
 
       if (userLocations && userLocations.length > 0) {
         const userIds = Array.from(new Set(userLocations.map((ul: any) => ul.user_id)))
 
-        const { data } = await supabase
+        const { data, count } = await supabase
           .from('push_subscriptions')
-          .select('*')
+          .select('*', { count: 'exact' })
           .in('user_id', userIds)
+          .limit(MAX_BROADCAST_RECIPIENTS)
 
         subscriptions = data || []
+
+        if (count && count > MAX_BROADCAST_RECIPIENTS) {
+          result.errors.push({
+            endpoint: 'system',
+            error: `Area audience limited to ${MAX_BROADCAST_RECIPIENTS} recipients.`,
+          })
+        }
       }
     } else if (broadcast.target_type === 'users' && broadcast.target_user_ids?.length > 0) {
-      // Get subscriptions for specific users
+      // Get subscriptions for specific users (with limit)
       const { data } = await supabase
         .from('push_subscriptions')
         .select('*')
         .in('user_id', broadcast.target_user_ids)
+        .limit(MAX_BROADCAST_RECIPIENTS)
 
       subscriptions = data || []
     }

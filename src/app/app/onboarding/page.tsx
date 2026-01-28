@@ -38,10 +38,10 @@ import { PhoneAuthModal } from '@/components/auth/PhoneAuthModal'
 import { INCIDENT_TYPES } from '@/types'
 import type { NigerianLocation, UserLocation, IncidentType } from '@/types'
 
-type Step = 'welcome' | 'phone' | 'areas' | 'preview' | 'location' | 'notifications' | 'ready'
+type Step = 'welcome' | 'phone' | 'areas' | 'preview' | 'verification' | 'notifications' | 'ready'
 
-const stepOrder: Step[] = ['welcome', 'phone', 'areas', 'preview', 'location', 'notifications', 'ready']
-const stepLabels = ['Welcome', 'Verify', 'Areas', 'Alerts', 'Location', 'Notify', 'Ready']
+const stepOrder: Step[] = ['welcome', 'phone', 'areas', 'preview', 'verification', 'notifications', 'ready']
+const stepLabels = ['Welcome', 'Verify', 'Areas', 'Alerts', 'Reports', 'Notify', 'Ready']
 
 // Popular areas in Nigeria
 const popularAreas = [
@@ -645,6 +645,26 @@ export default function OnboardingPage() {
                   </Button>
                 )}
               </div>
+
+              {/* Skip option - only show if not verified */}
+              {!isPhoneVerified && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.3 }}
+                  className="mt-6"
+                >
+                  <button
+                    onClick={goNext}
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    Skip for now
+                  </button>
+                  <p className="text-xs text-muted-foreground mt-2 max-w-xs mx-auto">
+                    You can browse alerts, but you&apos;ll need to verify before reporting incidents
+                  </p>
+                </motion.div>
+              )}
             </motion.div>
           )}
 
@@ -988,10 +1008,10 @@ export default function OnboardingPage() {
             </motion.div>
           )}
 
-          {/* Step 4: Location Permission */}
-          {step === 'location' && (
+          {/* Step 4: Verification Education (No GPS Permission Request) */}
+          {step === 'verification' && (
             <motion.div
-              key="location"
+              key="verification"
               variants={pageVariants}
               initial="initial"
               animate="animate"
@@ -999,56 +1019,55 @@ export default function OnboardingPage() {
             >
               <div className="text-center mb-6">
                 <div className="inline-flex items-center justify-center w-16 h-16 bg-safety-green/10 rounded-full mb-4">
-                  <Navigation className="w-8 h-8 text-safety-green" />
+                  <Shield className="w-8 h-8 text-safety-green" />
                 </div>
                 <h2 className="text-2xl font-bold text-foreground mb-2">
-                  Help your community
+                  How reports are verified
                 </h2>
                 <p className="text-muted-foreground">
-                  Location helps verify reports and show relevant alerts
+                  Location verification keeps our community safe from false reports
                 </p>
               </div>
 
-              {/* Privacy Explanation */}
+              {/* How Verification Works */}
               <div className="bg-background-elevated rounded-2xl p-4 mb-6">
-                <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
-                  <Lock className="w-5 h-5 text-primary" />
-                  Your privacy is protected
+                <h3 className="font-semibold text-foreground mb-4">
+                  When you report an incident:
                 </h3>
 
                 <div className="space-y-4">
                   <div className="flex gap-3">
-                    <div className="w-8 h-8 bg-safety-green/10 rounded-full flex items-center justify-center flex-shrink-0">
-                      <CheckCircle2 className="w-4 h-4 text-safety-green" />
+                    <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                      <span className="text-sm font-bold text-primary">1</span>
                     </div>
                     <div>
-                      <p className="font-medium text-foreground">Used for verification</p>
+                      <p className="font-medium text-foreground">We check your location</p>
                       <p className="text-sm text-muted-foreground">
-                        We check you&apos;re actually nearby when reporting
+                        Confirms you&apos;re at or near the scene
                       </p>
                     </div>
                   </div>
 
                   <div className="flex gap-3">
-                    <div className="w-8 h-8 bg-safety-green/10 rounded-full flex items-center justify-center flex-shrink-0">
-                      <CheckCircle2 className="w-4 h-4 text-safety-green" />
+                    <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                      <span className="text-sm font-bold text-primary">2</span>
                     </div>
                     <div>
-                      <p className="font-medium text-foreground">Never shared exactly</p>
+                      <p className="font-medium text-foreground">Report gets verified badge</p>
                       <p className="text-sm text-muted-foreground">
-                        Others see &quot;Near Lekki Phase 1&quot;, not your exact spot
+                        Verified reports are trusted and spread faster
                       </p>
                     </div>
                   </div>
 
                   <div className="flex gap-3">
-                    <div className="w-8 h-8 bg-safety-green/10 rounded-full flex items-center justify-center flex-shrink-0">
-                      <CheckCircle2 className="w-4 h-4 text-safety-green" />
+                    <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                      <span className="text-sm font-bold text-primary">3</span>
                     </div>
                     <div>
-                      <p className="font-medium text-foreground">You control it</p>
+                      <p className="font-medium text-foreground">Your trust score grows</p>
                       <p className="text-sm text-muted-foreground">
-                        Turn it off anytime in your phone settings
+                        Verified reports earn you +3 trust points
                       </p>
                     </div>
                   </div>
@@ -1056,23 +1075,37 @@ export default function OnboardingPage() {
               </div>
 
               {/* Visual Demonstration */}
-              <div className="bg-muted/50 rounded-xl p-4 mb-6">
+              <div className="bg-muted/50 rounded-xl p-4 mb-4">
                 <p className="text-sm text-center text-muted-foreground mb-3">
-                  How your location appears to others:
+                  How verification appears:
                 </p>
-                <div className="flex items-center justify-center gap-4">
-                  <div className="text-center">
-                    <div className="w-3 h-3 bg-primary rounded-full mx-auto mb-1 animate-pulse" />
-                    <p className="text-xs text-muted-foreground">Your location</p>
-                  </div>
-                  <ChevronRight className="w-4 h-4 text-muted-foreground" />
-                  <div className="text-center">
-                    <div className="bg-primary/10 rounded-lg px-3 py-2">
-                      <p className="text-sm font-medium text-foreground">Near Lekki Phase 1</p>
+                <div className="flex items-center justify-center gap-3">
+                  <div className="bg-white rounded-lg px-3 py-2 border border-border shadow-sm">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-safety-green" />
+                      <span className="text-sm font-medium text-foreground">Verified Report</span>
                     </div>
-                    <p className="text-xs text-muted-foreground mt-1">What others see</p>
+                    <p className="text-xs text-muted-foreground mt-1">Reporter was at the scene</p>
                   </div>
                 </div>
+              </div>
+
+              {/* Privacy Note */}
+              <div className="bg-safety-green/5 border border-safety-green/20 rounded-xl p-3 mb-6">
+                <div className="flex gap-2">
+                  <Lock className="w-5 h-5 text-safety-green flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-medium text-foreground">Your privacy is protected</p>
+                    <p className="text-xs text-muted-foreground">
+                      Your exact location is never shared. Others only see the area name (e.g., &quot;Ikeja&quot;).
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Info about when permission will be requested */}
+              <div className="text-center text-sm text-muted-foreground mb-6">
+                We&apos;ll ask for location access when you submit your first report.
               </div>
 
               {/* Navigation */}
@@ -1081,21 +1114,13 @@ export default function OnboardingPage() {
                   <ChevronLeft className="w-5 h-5" />
                 </Button>
                 <Button
-                  onClick={requestLocation}
-                  disabled={locationLoading}
+                  onClick={goNext}
                   className="flex-1 btn-primary"
                 >
-                  <Navigation className="w-5 h-5 mr-2" />
-                  {locationLoading ? 'Getting location...' : 'Allow Location'}
+                  Got it
+                  <ChevronRight className="w-5 h-5 ml-2" />
                 </Button>
               </div>
-
-              <button
-                onClick={goNext}
-                className="w-full mt-3 text-sm text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Maybe later
-              </button>
             </motion.div>
           )}
 
@@ -1482,12 +1507,10 @@ export default function OnboardingPage() {
                   )}
 
                   <div className="flex items-center gap-3">
-                    <Navigation className="w-5 h-5 text-safety-green" />
+                    <Shield className="w-5 h-5 text-safety-green" />
                     <div>
-                      <p className="text-sm text-muted-foreground">Location</p>
-                      <p className="font-medium text-foreground">
-                        {locationGranted ? 'Enabled' : 'Not enabled'}
-                      </p>
+                      <p className="text-sm text-muted-foreground">Report verification</p>
+                      <p className="font-medium text-foreground">Ready</p>
                     </div>
                   </div>
                 </div>

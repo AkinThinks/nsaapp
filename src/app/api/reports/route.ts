@@ -2,6 +2,13 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase'
 import webpush from 'web-push'
 import type { Report, IncidentType } from '@/types'
+import { moderateReportContent } from '@/lib/text-moderation'
+import {
+  calculateDistanceMeters,
+  VERIFICATION_THRESHOLDS,
+  VERIFICATION_TRUST_BONUS,
+  type VerificationStatus,
+} from '@/lib/location'
 
 // Configure web-push if VAPID keys are available
 if (process.env.VAPID_PRIVATE_KEY && process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY) {
@@ -65,11 +72,21 @@ export async function POST(request: NextRequest) {
       landmark,
       description,
       photo_url,
+      photo_thumb_url,
+      photo_preview_url,
       latitude,
       longitude,
       area_name,
       area_slug,
       state,
+      lga,
+      pending_image, // Flag indicating image will be uploaded separately
+      // Device location for verification
+      device_latitude,
+      device_longitude,
+      device_accuracy_meters,
+      is_safe_distance_report = false,
+      location_source = 'unknown',
     } = body
 
     // Validate required fields
@@ -80,7 +97,49 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Insert report
+    // Moderate text content (language-inclusive, safety-focused)
+    const textModeration = moderateReportContent(description, landmark)
+    const textModerationStatus = textModeration.safe ? 'approved' : 'flagged'
+
+    // Determine image moderation status
+    // If photo provided, set to pending. If pending_image flag, also pending.
+    // If no image at all, set to approved (nothing to moderate)
+    let imageModerationStatus = 'approved'
+    if (photo_url || pending_image) {
+      imageModerationStatus = 'pending'
+    }
+
+    // Calculate location verification
+    let verificationStatus: VerificationStatus = 'pending'
+    let distanceToIncidentMeters: number | null = null
+
+    if (device_latitude != null && device_longitude != null && latitude != null && longitude != null) {
+      // Calculate distance between device and incident location
+      distanceToIncidentMeters = Math.round(
+        calculateDistanceMeters(device_latitude, device_longitude, latitude, longitude)
+      )
+
+      // Determine verification status based on distance
+      if (distanceToIncidentMeters <= VERIFICATION_THRESHOLDS.ONSITE) {
+        verificationStatus = 'verified_onsite'
+      } else if (distanceToIncidentMeters <= VERIFICATION_THRESHOLDS.NEARBY) {
+        verificationStatus = 'verified_nearby'
+      } else if (is_safe_distance_report) {
+        // User indicated they're reporting from safe distance - give them nearby status
+        verificationStatus = 'verified_nearby'
+      } else {
+        verificationStatus = 'unverified_distant'
+      }
+    } else if (location_source === 'manual') {
+      verificationStatus = 'unverified_manual'
+    } else {
+      verificationStatus = 'unverified_gps_failed'
+    }
+
+    // Get trust bonus based on verification status
+    const trustBonus = VERIFICATION_TRUST_BONUS[verificationStatus] || 0
+
+    // Insert report with verification data
     const { data: report, error: insertError } = await supabase
       .from('reports')
       .insert({
@@ -88,15 +147,30 @@ export async function POST(request: NextRequest) {
         incident_type,
         landmark,
         description,
-        photo_url,
+        photo_url: photo_url || null,
+        photo_thumb_url: photo_thumb_url || null,
+        photo_preview_url: photo_preview_url || null,
         latitude,
         longitude,
         area_name,
         area_slug,
         state,
+        lga: lga || null,
+        // Device location for verification
+        device_latitude: device_latitude ?? null,
+        device_longitude: device_longitude ?? null,
+        device_accuracy_meters: device_accuracy_meters ?? null,
+        // Verification data
+        verification_status: verificationStatus,
+        distance_to_incident_meters: distanceToIncidentMeters,
+        is_safe_distance_report: is_safe_distance_report || false,
+        location_source: location_source || 'unknown',
         status: 'active',
-        confirmation_count: 1, // Reporter counts as first confirmation
+        confirmation_count: 1 + trustBonus, // Verified reports start with trust bonus
         denial_count: 0,
+        text_moderation_status: textModerationStatus,
+        image_moderation_status: imageModerationStatus,
+        moderation_notes: !textModeration.safe ? textModeration.reason : null,
       })
       .select()
       .single()
@@ -104,9 +178,22 @@ export async function POST(request: NextRequest) {
     if (insertError) throw insertError
 
     // Send push notifications to users in this area (non-blocking)
+    // Notifications go out immediately regardless of moderation status
     sendAlertNotifications(supabase, report).catch(console.error)
 
-    return NextResponse.json({ report }, { status: 201 })
+    return NextResponse.json({
+      report,
+      moderation: {
+        text: textModerationStatus,
+        image: imageModerationStatus,
+        pending_image: !!pending_image,
+      },
+      verification: {
+        status: verificationStatus,
+        distance_meters: distanceToIncidentMeters,
+        trust_bonus: trustBonus,
+      },
+    }, { status: 201 })
   } catch (error) {
     console.error('Error creating report:', error)
     return NextResponse.json(
@@ -117,28 +204,57 @@ export async function POST(request: NextRequest) {
 }
 
 // Send push notifications to users in affected area
+// Uses incident location (not device location) for alert matching
 async function sendAlertNotifications(supabase: any, report: Report) {
   try {
-    // Get users who have this area saved
-    const { data: userLocations } = await supabase
-      .from('user_locations')
-      .select('user_id')
-      .eq('area_slug', report.area_slug)
+    let userIds: string[] = []
 
-    if (!userLocations || userLocations.length === 0) return
+    // Try enhanced alert matching using incident location
+    // This uses the find_users_to_alert SQL function if available
+    if (report.latitude && report.longitude) {
+      const { data: matchedUsers, error: funcError } = await supabase.rpc(
+        'find_users_to_alert',
+        {
+          incident_lat: report.latitude,
+          incident_lng: report.longitude,
+          incident_lga: (report as any).lga || null,
+          incident_state: report.state || null,
+          is_major_incident: false,
+        }
+      )
 
-    const userIds = Array.from(new Set(userLocations.map((ul: any) => ul.user_id)))
+      if (!funcError && matchedUsers && matchedUsers.length > 0) {
+        userIds = matchedUsers.map((m: any) => m.user_id)
+      }
+    }
+
+    // Fallback to area_slug matching if no users found via location
+    // or if the SQL function isn't available
+    if (userIds.length === 0) {
+      const { data: userLocations } = await supabase
+        .from('user_locations')
+        .select('user_id')
+        .eq('area_slug', report.area_slug)
+
+      if (userLocations && userLocations.length > 0) {
+        userIds = Array.from(new Set(userLocations.map((ul: any) => ul.user_id)))
+      }
+    }
+
+    if (userIds.length === 0) return
 
     // Exclude the reporter
     const filteredUserIds = userIds.filter((id) => id !== report.user_id)
 
     if (filteredUserIds.length === 0) return
 
-    // Get push subscriptions
+    // Get push subscriptions (limit for Vercel free tier)
+    // Max 500 recipients per notification batch to stay under 10s timeout
     const { data: subscriptions } = await supabase
       .from('push_subscriptions')
       .select('*')
       .in('user_id', filteredUserIds)
+      .limit(500)
 
     if (!subscriptions || subscriptions.length === 0) return
 

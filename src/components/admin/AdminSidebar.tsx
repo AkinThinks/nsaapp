@@ -14,6 +14,7 @@ import {
   Shield,
   X,
   Radio,
+  AlertOctagon,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { hasPermission, type AdminRole, type Permission } from '@/lib/admin-auth-client'
@@ -69,11 +70,17 @@ export function AdminSidebar({
       icon: <LayoutDashboard className="w-5 h-5" />,
     },
     {
+      label: 'Moderation Queue',
+      href: '/admin/moderation-queue',
+      icon: <AlertOctagon className="w-5 h-5" />,
+      permission: 'moderate_reports',
+      badge: pendingCount,
+    },
+    {
       label: 'Reports',
       href: '/admin/reports',
       icon: <FileText className="w-5 h-5" />,
       permission: 'view_reports',
-      badge: pendingCount,
     },
     {
       label: 'Users',

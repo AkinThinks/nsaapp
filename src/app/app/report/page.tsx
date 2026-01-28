@@ -23,8 +23,11 @@ import {
   Sparkles,
   Lock,
   Trash2,
+  Shield,
+  Info,
 } from 'lucide-react'
-import { compressImage, validateImageFile, fileToDataUrl } from '@/lib/image-utils'
+import { compressImage, validateImageFile, fileToDataUrl, getCompressionTier } from '@/lib/image-utils'
+import { queueUpload, initializeUploadQueue } from '@/lib/upload-queue'
 import { NigerianShield } from '@/components/landing/NigerianShield'
 import {
   RobberyIcon,
@@ -42,12 +45,15 @@ import { useAppStore } from '@/lib/store'
 import { Button } from '@/components/ui/Button'
 import { Input, Textarea } from '@/components/ui/Input'
 import { ProgressSteps } from '@/components/ui/ProgressSteps'
+import { Toggle } from '@/components/ui/Toggle'
 import { shareToWhatsApp } from '@/lib/share'
+import { VerificationPrompt } from '@/components/app/VerificationPrompt'
 import { INCIDENT_TYPES } from '@/types'
 import type { IncidentType, LocationResult } from '@/types'
 
-type Step = 'type' | 'location' | 'details' | 'review' | 'success'
+type Step = 'verification' | 'type' | 'location' | 'details' | 'review' | 'success'
 
+// Note: 'verification' step is handled differently - it's a modal, not a page step
 const stepOrder: Step[] = ['type', 'location', 'details', 'review', 'success']
 const stepLabels = ['Incident', 'Location', 'Details', 'Review', 'Done']
 
@@ -82,6 +88,14 @@ export default function ReportPage() {
   const [showCelebration, setShowCelebration] = useState(false)
   const [adjustingLocation, setAdjustingLocation] = useState(false)
 
+  // Phone verification state
+  const [showVerificationPrompt, setShowVerificationPrompt] = useState(false)
+  const [isVerified, setIsVerified] = useState(false)
+
+  // Location verification state
+  const [isSafeDistanceReport, setIsSafeDistanceReport] = useState(false)
+  const [deviceAccuracy, setDeviceAccuracy] = useState<number | null>(null)
+
   // Image upload state
   const [selectedImage, setSelectedImage] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
@@ -92,6 +106,34 @@ export default function ReportPage() {
 
   const { getLocation, loading: locationLoading, error: locationError } = useLocation()
   const { user } = useAppStore()
+
+  // Check verification status on mount and when user changes
+  useEffect(() => {
+    const userIsVerified = user?.phone_verified === true
+    setIsVerified(userIsVerified)
+
+    // Show verification prompt immediately if user is not verified
+    if (!userIsVerified) {
+      setShowVerificationPrompt(true)
+    }
+  }, [user])
+
+  // Handle verification success
+  const handleVerificationSuccess = () => {
+    setIsVerified(true)
+    setShowVerificationPrompt(false)
+  }
+
+  // Handle verification dismissed - go back to app
+  const handleVerificationDismissed = () => {
+    setShowVerificationPrompt(false)
+    router.back()
+  }
+
+  // Initialize upload queue for background uploads
+  useEffect(() => {
+    initializeUploadQueue()
+  }, [])
 
   // Handle image selection
   const handleImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -206,7 +248,10 @@ export default function ReportPage() {
     }
   }
 
-  // Submit report
+  // Submit report - Non-blocking upload flow
+  // 1. Submit report immediately (notifications go out)
+  // 2. Queue image upload in background
+  // 3. Attach image when upload completes
   const submitReport = async () => {
     if (!locationResult?.coords || !locationResult.area || !selectedType) return
 
@@ -214,13 +259,8 @@ export default function ReportPage() {
     setSubmitError(null)
 
     try {
-      // Upload image first if selected
-      let photoUrl = uploadedImageUrl
-      if (selectedImage && !uploadedImageUrl) {
-        photoUrl = await uploadImage()
-        // Continue even if image upload fails - report is more important
-      }
-
+      // Submit report FIRST - don't wait for image
+      // This ensures alerts go out immediately
       const response = await fetch('/api/reports', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -229,12 +269,21 @@ export default function ReportPage() {
           incident_type: selectedType,
           landmark: landmark || null,
           description: description || null,
-          photo_url: photoUrl,
+          photo_url: uploadedImageUrl || null, // Use if already uploaded
+          // Incident location (where it's happening)
           latitude: locationResult.coords.lat,
           longitude: locationResult.coords.lng,
           area_name: locationResult.area.name,
           area_slug: locationResult.area.slug,
           state: locationResult.area.state,
+          // Device location (for verification - same as incident in this case)
+          device_latitude: locationResult.coords.lat,
+          device_longitude: locationResult.coords.lng,
+          device_accuracy_meters: deviceAccuracy,
+          // Verification flags
+          is_safe_distance_report: isSafeDistanceReport,
+          location_source: 'gps',
+          pending_image: selectedImage && !uploadedImageUrl, // Flag that image is coming
         }),
       })
 
@@ -242,8 +291,26 @@ export default function ReportPage() {
         throw new Error('Failed to submit report')
       }
 
+      const { report } = await response.json()
+
+      // Show success immediately - don't wait for image
       setShowCelebration(true)
       setStep('success')
+
+      // Queue image upload in background (if not already uploaded)
+      if (selectedImage && !uploadedImageUrl) {
+        try {
+          // Compress image with network-adaptive settings
+          const { options, description: compressionDesc } = getCompressionTier()
+          const compressedBlob = await compressImage(selectedImage, options)
+
+          // Queue for upload - will retry automatically if fails
+          await queueUpload(report.id, compressedBlob, user?.id)
+        } catch (err) {
+          // Don't show error - report is already submitted
+          console.error('Failed to queue image upload:', err)
+        }
+      }
     } catch (error) {
       setSubmitError('Failed to submit report. Please try again.')
     } finally {
@@ -419,6 +486,41 @@ export default function ReportPage() {
                   </Button>
                 </div>
               )}
+
+              {/* Safe Distance Checkbox */}
+              <div className="bg-background-elevated rounded-xl p-4 mb-4">
+                <label className="flex items-start gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={isSafeDistanceReport}
+                    onChange={(e) => setIsSafeDistanceReport(e.target.checked)}
+                    className="mt-1 w-5 h-5 rounded border-border text-primary focus:ring-primary"
+                  />
+                  <div>
+                    <p className="font-medium text-foreground">
+                      I&apos;m reporting from a safe distance
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Check this if you&apos;ve moved away from the incident or are reporting what you saw/heard from nearby
+                    </p>
+                  </div>
+                </label>
+              </div>
+
+              {/* Verification Info */}
+              <div className="flex items-start gap-3 p-3 bg-safety-green/5 border border-safety-green/20 rounded-xl mb-4">
+                <Shield className="w-5 h-5 text-safety-green flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-medium text-foreground">
+                    Your report will be verified
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {isSafeDistanceReport
+                      ? 'We\'ll note that you reported from a safe distance.'
+                      : 'We\'ll verify you\'re near the incident location.'}
+                  </p>
+                </div>
+              </div>
 
               {/* Privacy Note */}
               <div className="flex items-start gap-3 p-3 bg-muted/50 rounded-xl mb-6">
@@ -828,6 +930,14 @@ export default function ReportPage() {
           )}
         </AnimatePresence>
       </div>
+
+      {/* Verification Prompt - shows for unverified users */}
+      <VerificationPrompt
+        isOpen={showVerificationPrompt}
+        onClose={handleVerificationDismissed}
+        onVerified={handleVerificationSuccess}
+        context="report"
+      />
     </div>
   )
 }

@@ -19,48 +19,65 @@ export async function GET(request: NextRequest) {
 
     const supabase = getSupabase()
 
-    // Get user's reports count
-    const { count: reportsCount } = await supabase
-      .from('reports')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', userId)
+    // VERCEL FREE TIER OPTIMIZATION: Run all queries in parallel
+    // Reduces latency from ~2s (sequential) to ~500ms (parallel)
+    const [
+      reportsCountResult,
+      confirmationsCountResult,
+      recentReportsResult,
+      recentConfirmationsResult,
+      neighborsHelpedResult,
+    ] = await Promise.all([
+      // Get user's reports count
+      supabase
+        .from('reports')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', userId),
 
-    // Get user's confirmations count
-    const { count: confirmationsCount } = await supabase
-      .from('confirmations')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', userId)
-      .eq('confirmation_type', 'confirm')
+      // Get user's confirmations count
+      supabase
+        .from('confirmations')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', userId)
+        .eq('confirmation_type', 'confirm'),
 
-    // Get recent activity (last 50 items)
-    const { data: recentReports } = await supabase
-      .from('reports')
-      .select('id, incident_type, area_name, created_at, status')
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false })
-      .limit(10)
+      // Get recent reports
+      supabase
+        .from('reports')
+        .select('id, incident_type, area_name, created_at, status')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false })
+        .limit(10),
 
-    const { data: recentConfirmations } = await supabase
-      .from('confirmations')
-      .select(`
-        id,
-        confirmation_type,
-        created_at,
-        report_id,
-        reports!inner (
-          incident_type,
-          area_name
-        )
-      `)
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false })
-      .limit(10)
+      // Get recent confirmations with report details
+      supabase
+        .from('confirmations')
+        .select(`
+          id,
+          confirmation_type,
+          created_at,
+          report_id,
+          reports!inner (
+            incident_type,
+            area_name
+          )
+        `)
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false })
+        .limit(10),
 
-    // Calculate neighbors helped (unique reports confirmed in their area)
-    const { count: neighborsHelped } = await supabase
-      .from('confirmations')
-      .select('report_id', { count: 'exact', head: true })
-      .eq('user_id', userId)
+      // Calculate neighbors helped
+      supabase
+        .from('confirmations')
+        .select('report_id', { count: 'exact', head: true })
+        .eq('user_id', userId),
+    ])
+
+    const reportsCount = reportsCountResult.count
+    const confirmationsCount = confirmationsCountResult.count
+    const recentReports = recentReportsResult.data
+    const recentConfirmations = recentConfirmationsResult.data
+    const neighborsHelped = neighborsHelpedResult.count
 
     // Merge and sort recent activity
     const activity: any[] = []

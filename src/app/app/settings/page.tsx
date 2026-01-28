@@ -35,9 +35,13 @@ import {
   Smartphone,
   MoreVertical,
   Vibrate,
+  Navigation,
+  Edit3,
+  BellOff,
 } from 'lucide-react'
 import { NigerianShield } from '@/components/landing/NigerianShield'
 import { useDeviceDetect, getInstallInstructions } from '@/hooks/useDeviceDetect'
+import { InstallInstructions } from '@/components/pwa/InstallInstructions'
 import { useDevice } from '@/hooks/useDevice'
 import { useAppStore } from '@/lib/store'
 import { usePushNotifications } from '@/hooks/usePushNotifications'
@@ -72,6 +76,10 @@ export default function SettingsPage() {
   const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null)
   const [showInstallInstructions, setShowInstallInstructions] = useState(false)
   const [testNotifSent, setTestNotifSent] = useState(false)
+  const [editingLocation, setEditingLocation] = useState<UserLocation | null>(null)
+  const [editLocationRadius, setEditLocationRadius] = useState(3)
+  const [editLocationName, setEditLocationName] = useState('')
+  const [editLocationAlertsEnabled, setEditLocationAlertsEnabled] = useState(true)
 
   // Listen for install prompt event (Android/Desktop)
   useEffect(() => {
@@ -167,6 +175,83 @@ export default function SettingsPage() {
   // Remove area
   const handleRemoveArea = (id: string) => {
     removeLocation(id)
+  }
+
+  // Open location edit modal
+  const openEditLocation = (location: UserLocation) => {
+    setEditingLocation(location)
+    setEditLocationName((location as any).name || '')
+    setEditLocationRadius((location as any).alert_radius_km || 3)
+    setEditLocationAlertsEnabled((location as any).alerts_enabled !== false)
+  }
+
+  // Save location edits
+  const handleSaveLocationEdit = async () => {
+    if (!editingLocation || !user?.id) return
+
+    try {
+      // Update via API if user is authenticated
+      if (!user.id.startsWith('local-') && !user.id.startsWith('test-')) {
+        const response = await fetch('/api/user/locations', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: editingLocation.id,
+            user_id: user.id,
+            name: editLocationName || undefined,
+            alert_radius_km: editLocationRadius,
+            alerts_enabled: editLocationAlertsEnabled,
+          }),
+        })
+        if (!response.ok) throw new Error('Failed to update location')
+      }
+
+      // Update local store (extend location with new fields)
+      const updatedLocation: UserLocation = {
+        ...editingLocation,
+        ...(editLocationName && { name: editLocationName } as any),
+        alert_radius_km: editLocationRadius,
+        alerts_enabled: editLocationAlertsEnabled,
+      } as any
+
+      // Find and update in store
+      removeLocation(editingLocation.id)
+      addLocation(updatedLocation)
+
+      setEditingLocation(null)
+    } catch (error) {
+      console.error('Error updating location:', error)
+      alert('Failed to update location. Please try again.')
+    }
+  }
+
+  // Set location as primary
+  const handleSetPrimary = async (locationId: string) => {
+    if (!user?.id) return
+
+    try {
+      // Update via API if user is authenticated
+      if (!user.id.startsWith('local-') && !user.id.startsWith('test-')) {
+        await fetch('/api/user/locations', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: locationId,
+            user_id: user.id,
+            is_primary: true,
+          }),
+        })
+      }
+
+      // Update local store - mark this as primary, unmark others
+      savedLocations.forEach(loc => {
+        const updatedLoc = { ...loc, is_primary: loc.id === locationId }
+        removeLocation(loc.id)
+        addLocation(updatedLoc)
+      })
+    } catch (error) {
+      console.error('Error setting primary location:', error)
+    }
   }
 
   // Toggle push notifications
@@ -315,27 +400,15 @@ export default function SettingsPage() {
                 </Button>
               </div>
 
-              {/* Show instructions inline for iOS or when expanded */}
+              {/* Show illustrated instructions for iOS */}
               {showInstallInstructions && device.isIOS && (
                 <motion.div
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: 'auto', opacity: 1 }}
                   className="mt-4 pt-4 border-t border-white/20"
                 >
-                  <p className="font-medium mb-3">{installInstructions.title}</p>
-                  <ol className="space-y-2">
-                    {installInstructions.steps.map((step, index) => (
-                      <li key={index} className="flex items-start gap-3 text-sm">
-                        <span className="w-5 h-5 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0 text-xs">
-                          {index + 1}
-                        </span>
-                        <span className="text-emerald-50">{step}</span>
-                      </li>
-                    ))}
-                  </ol>
-                  <div className="mt-3 p-2 bg-white/10 rounded-lg flex items-center justify-center gap-2">
-                    <Share className="w-5 h-5" />
-                    <span className="text-sm">Look for this Share icon below</span>
+                  <div className="bg-white rounded-2xl overflow-hidden">
+                    <InstallInstructions variant="compact" />
                   </div>
                 </motion.div>
               )}
@@ -384,44 +457,94 @@ export default function SettingsPage() {
               </div>
             ) : (
               <div className="divide-y divide-border">
-                {savedLocations.map((location, index) => (
-                  <motion.div
-                    key={location.id}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.05 }}
-                    className="p-4 flex items-center justify-between"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-                        location.is_primary ? 'bg-primary/10' : 'bg-muted'
-                      }`}>
-                        <MapPin className={`w-5 h-5 ${
-                          location.is_primary ? 'text-primary' : 'text-muted-foreground'
-                        }`} />
-                      </div>
-                      <div>
-                        <div className="font-medium text-foreground flex items-center gap-2">
-                          {location.area_name}
-                          {location.is_primary && (
-                            <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full">
-                              Primary
-                            </span>
-                          )}
-                        </div>
-                        <div className="text-sm text-muted-foreground">
-                          {location.state}
-                        </div>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => handleRemoveArea(location.id)}
-                      className="p-2 text-muted-foreground hover:text-safety-red hover:bg-safety-red/10 rounded-lg transition-colors"
+                {savedLocations.map((location, index) => {
+                  const extLoc = location as any
+                  const hasCoords = extLoc.latitude != null && extLoc.longitude != null
+                  const alertsOn = extLoc.alerts_enabled !== false
+                  const radius = extLoc.alert_radius_km || 3
+
+                  return (
+                    <motion.div
+                      key={location.id}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                      className="p-4"
                     >
-                      <X className="w-5 h-5" />
-                    </button>
-                  </motion.div>
-                ))}
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-start gap-3 flex-1 min-w-0">
+                          <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
+                            location.is_primary ? 'bg-primary/10' : alertsOn ? 'bg-muted' : 'bg-muted/50'
+                          }`}>
+                            {alertsOn ? (
+                              <MapPin className={`w-5 h-5 ${
+                                location.is_primary ? 'text-primary' : 'text-muted-foreground'
+                              }`} />
+                            ) : (
+                              <BellOff className="w-5 h-5 text-muted-foreground/50" />
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="font-medium text-foreground flex items-center gap-2 flex-wrap">
+                              <span className="truncate">
+                                {extLoc.name || location.area_name}
+                              </span>
+                              {location.is_primary && (
+                                <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full flex-shrink-0">
+                                  Primary
+                                </span>
+                              )}
+                              {!alertsOn && (
+                                <span className="text-xs bg-muted text-muted-foreground px-2 py-0.5 rounded-full flex-shrink-0">
+                                  Alerts Off
+                                </span>
+                              )}
+                            </div>
+                            <div className="text-sm text-muted-foreground">
+                              {extLoc.name ? location.area_name + ', ' : ''}{location.state}
+                            </div>
+                            <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
+                              {hasCoords && (
+                                <span className="flex items-center gap-1">
+                                  <Navigation className="w-3 h-3" />
+                                  GPS
+                                </span>
+                              )}
+                              <span className="flex items-center gap-1">
+                                <Bell className="w-3 h-3" />
+                                {radius}km radius
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1 flex-shrink-0">
+                          <button
+                            onClick={() => openEditLocation(location)}
+                            className="p-2 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
+                            title="Edit location"
+                          >
+                            <Edit3 className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => handleRemoveArea(location.id)}
+                            className="p-2 text-muted-foreground hover:text-safety-red hover:bg-safety-red/10 rounded-lg transition-colors"
+                            title="Remove location"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                      {!location.is_primary && (
+                        <button
+                          onClick={() => handleSetPrimary(location.id)}
+                          className="mt-2 text-xs text-primary hover:underline"
+                        >
+                          Set as primary
+                        </button>
+                      )}
+                    </motion.div>
+                  )
+                })}
               </div>
             )}
           </div>
@@ -893,6 +1016,112 @@ export default function SettingsPage() {
         onClose={() => setShowPhoneAuth(false)}
         onSuccess={handlePhoneAuthSuccess}
       />
+
+      {/* Edit Location Modal */}
+      <Modal
+        isOpen={!!editingLocation}
+        onClose={() => setEditingLocation(null)}
+        title="Edit Location"
+      >
+        <div className="space-y-6">
+          {/* Location Name */}
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-2">
+              Location Name (optional)
+            </label>
+            <Input
+              placeholder="e.g., Home, Work, School"
+              value={editLocationName}
+              onChange={(e) => setEditLocationName(e.target.value)}
+            />
+            <p className="text-xs text-muted-foreground mt-1">
+              Give this location a friendly name
+            </p>
+          </div>
+
+          {/* Alert Radius */}
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-2">
+              Alert Radius
+            </label>
+            <div className="flex gap-2">
+              {[1, 3, 5, 10].map((radius) => (
+                <button
+                  key={radius}
+                  onClick={() => setEditLocationRadius(radius)}
+                  className={`flex-1 py-2 rounded-xl text-sm font-medium transition-all ${
+                    editLocationRadius === radius
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-muted text-muted-foreground hover:bg-muted/80'
+                  }`}
+                >
+                  {radius}km
+                </button>
+              ))}
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">
+              Receive alerts for incidents within this distance
+            </p>
+          </div>
+
+          {/* Alerts Toggle */}
+          <div className="flex items-center justify-between p-4 bg-muted/50 rounded-xl">
+            <div className="flex items-center gap-3">
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                editLocationAlertsEnabled ? 'bg-safety-green/10' : 'bg-muted'
+              }`}>
+                {editLocationAlertsEnabled ? (
+                  <Bell className="w-5 h-5 text-safety-green" />
+                ) : (
+                  <BellOff className="w-5 h-5 text-muted-foreground" />
+                )}
+              </div>
+              <div>
+                <p className="font-medium text-foreground">Alerts Enabled</p>
+                <p className="text-sm text-muted-foreground">
+                  {editLocationAlertsEnabled ? 'Receiving alerts for this area' : 'Alerts paused'}
+                </p>
+              </div>
+            </div>
+            <Toggle
+              checked={editLocationAlertsEnabled}
+              onChange={setEditLocationAlertsEnabled}
+            />
+          </div>
+
+          {/* Location Info */}
+          {editingLocation && (
+            <div className="p-4 bg-muted/30 rounded-xl">
+              <p className="text-sm text-muted-foreground mb-1">Area</p>
+              <p className="font-medium text-foreground">{editingLocation.area_name}</p>
+              <p className="text-sm text-muted-foreground">{editingLocation.state}</p>
+              {(editingLocation as any).latitude && (
+                <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
+                  <Navigation className="w-3 h-3" />
+                  GPS coordinates saved
+                </p>
+              )}
+            </div>
+          )}
+
+          {/* Actions */}
+          <div className="flex gap-3">
+            <Button
+              variant="secondary"
+              onClick={() => setEditingLocation(null)}
+              className="flex-1"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSaveLocationEdit}
+              className="flex-1"
+            >
+              Save Changes
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

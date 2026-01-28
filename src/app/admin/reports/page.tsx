@@ -30,6 +30,10 @@ interface Report {
   area_name: string
   status: string
   moderation_status: string
+  image_moderation_status?: string
+  text_moderation_status?: string
+  photo_url?: string
+  photo_thumb_url?: string
   confirmation_count: number
   denial_count: number
   created_at: string
@@ -119,6 +123,13 @@ export default function AdminReportsPage() {
             Pending
           </Badge>
         )
+      case 'flagged':
+        return (
+          <Badge variant="danger">
+            <AlertTriangle className="w-3 h-3 mr-1" />
+            Flagged
+          </Badge>
+        )
       case 'approved':
         return (
           <Badge variant="success">
@@ -191,7 +202,9 @@ export default function AdminReportsPage() {
             className="px-4 py-2.5 border border-gray-300 rounded-lg text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors min-w-[140px]"
           >
             <option value="">All Status</option>
+            <option value="needs_review">Needs Review</option>
             <option value="pending">Pending</option>
+            <option value="flagged">Flagged</option>
             <option value="approved">Approved</option>
             <option value="removed">Removed</option>
           </select>
