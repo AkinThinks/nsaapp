@@ -4,6 +4,7 @@ import { useEffect, useState, createContext, useContext, useCallback } from 'rea
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, CheckCircle2, AlertCircle, AlertTriangle, Info } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { triggerHaptic } from '@/hooks/useHaptic'
 
 type ToastType = 'success' | 'error' | 'warning' | 'info'
 
@@ -82,6 +83,17 @@ function ToastContainer({
 }
 
 function ToastItem({ toast, onClose }: { toast: Toast; onClose: () => void }) {
+  // Trigger haptic feedback when toast appears
+  useEffect(() => {
+    const hapticMap: Record<ToastType, 'success' | 'error' | 'warning' | 'light'> = {
+      success: 'success',
+      error: 'error',
+      warning: 'warning',
+      info: 'light',
+    }
+    triggerHaptic(hapticMap[toast.type])
+  }, [toast.type])
+
   useEffect(() => {
     const timer = setTimeout(() => {
       onClose()
@@ -125,8 +137,12 @@ function ToastItem({ toast, onClose }: { toast: Toast; onClose: () => void }) {
         )}
       </div>
       <button
-        onClick={onClose}
-        className="flex-shrink-0 p-1 -m-1 text-muted-foreground hover:text-foreground rounded-lg transition-colors"
+        onClick={() => {
+          triggerHaptic('selection')
+          onClose()
+        }}
+        className="flex-shrink-0 p-1.5 -m-1 text-muted-foreground hover:text-foreground rounded-lg transition-all duration-150 hover:bg-black/5 active:scale-90"
+        aria-label="Dismiss"
       >
         <X className="w-4 h-4" />
       </button>

@@ -1855,4 +1855,273 @@ input[type="number"] {
   margin: 0 auto;
 }
 
+/* ============================================
+   MICRO-INTERACTIONS - FEEL-GOOD FEEDBACK
+   High-performance, works on all devices
+   ============================================ */
+
+/* Enhanced button press feedback - subtle and satisfying */
+.btn-press {
+  transition: transform 0.1s ease, box-shadow 0.1s ease, opacity 0.1s ease;
+  will-change: transform;
+}
+
+.btn-press:active {
+  transform: scale(0.97);
+  opacity: 0.9;
+}
+
+/* Softer press for cards and list items */
+.press-soft {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  will-change: transform;
+}
+
+.press-soft:active {
+  transform: scale(0.985);
+}
+
+/* Interactive list item - subtle highlight on press */
+.list-item-interactive {
+  transition: background-color 0.1s ease, transform 0.1s ease;
+  will-change: transform;
+}
+
+.list-item-interactive:active {
+  background-color: rgba(0, 135, 81, 0.05);
+  transform: scale(0.995);
+}
+
+/* Touch ripple effect - CSS only, no JS needed */
+.touch-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.touch-ripple::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(0, 135, 81, 0.15);
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.touch-ripple:active::after {
+  width: 200%;
+  height: 200%;
+  opacity: 1;
+  transition: width 0s, height 0s, opacity 0s;
+}
+
+/* Icon button bounce - for FABs and icon-only buttons */
+.icon-bounce {
+  transition: transform 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.icon-bounce:active {
+  transform: scale(0.85);
+}
+
+/* Success flash - brief green highlight */
+@keyframes successFlash {
+  0% { background-color: transparent; }
+  50% { background-color: rgba(16, 185, 129, 0.15); }
+  100% { background-color: transparent; }
+}
+
+.flash-success {
+  animation: successFlash 0.4s ease;
+}
+
+/* Error shake - subtle horizontal shake */
+@keyframes errorShake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-4px); }
+  40%, 80% { transform: translateX(4px); }
+}
+
+.shake-error {
+  animation: errorShake 0.4s ease;
+}
+
+/* Checkbox/toggle tick animation */
+@keyframes tickPop {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.tick-pop {
+  animation: tickPop 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Smooth number counter */
+@keyframes countPop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+.count-pop {
+  animation: countPop 0.2s ease;
+}
+
+/* Toast slide in from top */
+@keyframes toastSlideIn {
+  from {
+    transform: translateY(-100%) translateX(-50%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) translateX(-50%);
+    opacity: 1;
+  }
+}
+
+@keyframes toastSlideOut {
+  from {
+    transform: translateY(0) translateX(-50%);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-100%) translateX(-50%);
+    opacity: 0;
+  }
+}
+
+.toast-enter {
+  animation: toastSlideIn 0.3s cubic-bezier(0.21, 1.02, 0.73, 1) forwards;
+}
+
+.toast-exit {
+  animation: toastSlideOut 0.2s ease forwards;
+}
+
+/* Pulse attention - for important elements */
+@keyframes pulseAttention {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(0, 135, 81, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(0, 135, 81, 0);
+  }
+}
+
+.pulse-attention {
+  animation: pulseAttention 2s ease infinite;
+}
+
+/* Loading dots */
+@keyframes loadingDot {
+  0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+  40% { opacity: 1; transform: scale(1); }
+}
+
+.loading-dot {
+  animation: loadingDot 1.4s ease-in-out infinite;
+}
+
+.loading-dot:nth-child(1) { animation-delay: 0s; }
+.loading-dot:nth-child(2) { animation-delay: 0.2s; }
+.loading-dot:nth-child(3) { animation-delay: 0.4s; }
+
+/* Skeleton shimmer - enhanced */
+@keyframes skeletonShimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--muted) 0%,
+    var(--background-elevated) 50%,
+    var(--muted) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.5s ease-in-out infinite;
+  border-radius: 0.5rem;
+}
+
+/* Button loading state */
+.btn-loading {
+  position: relative;
+  pointer-events: none;
+}
+
+.btn-loading::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 50%;
+  left: 50%;
+  margin-left: -8px;
+  margin-top: -8px;
+  border: 2px solid transparent;
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Smooth expand/collapse */
+.expand-collapse {
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  overflow: hidden;
+}
+
+/* Focus ring animation */
+@keyframes focusRing {
+  0% { box-shadow: 0 0 0 0 rgba(0, 135, 81, 0.4); }
+  100% { box-shadow: 0 0 0 4px rgba(0, 135, 81, 0.1); }
+}
+
+.focus-ring:focus-visible {
+  animation: focusRing 0.2s ease forwards;
+  outline: none;
+}
+
+/* Tap highlight for mobile - Nigerian green tint */
+@media (hover: none) and (pointer: coarse) {
+  .tap-highlight {
+    -webkit-tap-highlight-color: rgba(0, 135, 81, 0.1);
+  }
+
+  .tap-highlight:active {
+    background-color: rgba(0, 135, 81, 0.05);
+  }
+}
+
+/* Reduced motion - respect user preferences */
+@media (prefers-reduced-motion: reduce) {
+  .btn-press,
+  .press-soft,
+  .list-item-interactive,
+  .icon-bounce,
+  .touch-ripple::after,
+  .skeleton,
+  .btn-loading::after {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .btn-press:active,
+  .press-soft:active,
+  .list-item-interactive:active,
+  .icon-bounce:active {
+    transform: none !important;
+  }
+}
+
 

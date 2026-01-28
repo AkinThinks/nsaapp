@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
+import { triggerHaptic } from '@/hooks/useHaptic'
 
 interface ToggleProps {
   checked: boolean
@@ -37,7 +38,12 @@ export function Toggle({
         role="switch"
         aria-checked={checked}
         disabled={disabled}
-        onClick={() => !disabled && onChange(!checked)}
+        onClick={() => {
+          if (!disabled) {
+            triggerHaptic('selection')
+            onChange(!checked)
+          }
+        }}
         className={cn(
           'relative inline-flex shrink-0 cursor-pointer rounded-full',
           'transition-colors duration-normal ease-in-out',
@@ -103,7 +109,10 @@ export function ToggleGroup({ value, onChange, options, className }: ToggleGroup
         <button
           key={option.value}
           type="button"
-          onClick={() => onChange(option.value)}
+          onClick={() => {
+            triggerHaptic('selection')
+            onChange(option.value)
+          }}
           className={cn(
             'w-full p-4 rounded-xl border text-left transition-all duration-fast',
             'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary',

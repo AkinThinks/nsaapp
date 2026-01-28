@@ -4,6 +4,7 @@ import { Fragment, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { triggerHaptic } from '@/hooks/useHaptic'
 
 interface ModalProps {
   isOpen: boolean
@@ -99,8 +100,11 @@ export function Modal({
                   </div>
                   {showClose && (
                     <button
-                      onClick={onClose}
-                      className="p-2 -m-2 text-muted-foreground hover:text-foreground rounded-lg hover:bg-muted transition-colors"
+                      onClick={() => {
+                        triggerHaptic('selection')
+                        onClose()
+                      }}
+                      className="p-2 -m-2 text-muted-foreground hover:text-foreground rounded-lg hover:bg-muted transition-all active:scale-90"
                     >
                       <X className="w-5 h-5" />
                     </button>
@@ -152,17 +156,23 @@ export function ConfirmModal({
         )}
         <div className="flex gap-3">
           <button
-            onClick={onClose}
+            onClick={() => {
+              triggerHaptic('selection')
+              onClose()
+            }}
             disabled={loading}
-            className="flex-1 px-4 py-2.5 rounded-lg border border-border text-foreground font-medium hover:bg-muted transition-colors disabled:opacity-50"
+            className="flex-1 px-4 py-2.5 rounded-lg border border-border text-foreground font-medium hover:bg-muted transition-all active:scale-[0.97] disabled:opacity-50"
           >
             {cancelText}
           </button>
           <button
-            onClick={onConfirm}
+            onClick={() => {
+              triggerHaptic('medium')
+              onConfirm()
+            }}
             disabled={loading}
             className={cn(
-              'flex-1 px-4 py-2.5 rounded-lg font-medium transition-colors disabled:opacity-50',
+              'flex-1 px-4 py-2.5 rounded-lg font-medium transition-all active:scale-[0.97] disabled:opacity-50',
               variant === 'danger'
                 ? 'bg-safety-red text-white hover:bg-safety-red-hover'
                 : 'bg-primary text-primary-foreground hover:bg-primary-hover'

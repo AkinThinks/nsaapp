@@ -4,6 +4,7 @@ import { forwardRef, InputHTMLAttributes, TextareaHTMLAttributes, useState } fro
 import { motion, AnimatePresence } from 'framer-motion'
 import { Eye, EyeOff, AlertCircle, CheckCircle2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { triggerHaptic } from '@/hooks/useHaptic'
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string
@@ -53,8 +54,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           {isPassword && (
             <button
               type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+              onClick={() => {
+                triggerHaptic('selection')
+                setShowPassword(!showPassword)
+              }}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors active:scale-90"
             >
               {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
             </button>
